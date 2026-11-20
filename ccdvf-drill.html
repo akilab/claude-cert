@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F 基礎固めドリル</title>
+<style>
+:root{
+  --bg:#f6f5f1; --card:#ffffff; --ink:#1f2328; --sub:#5b6370; --line:#d9d6cc;
+  --accent:#c2562b; --accent-ink:#ffffff; --ok:#1c7c4a; --ok-bg:#e3f4ea; --ng:#b3261e; --ng-bg:#fbe7e5;
+  --warn-bg:#fff4d6; --code-bg:#f0eee7; --sel:#e8eefc; --sel-line:#3b63c9;
+}
+:root[data-theme="dark"]{
+  --bg:#15171a; --card:#1e2125; --ink:#e8e6e1; --sub:#a0a6b0; --line:#343a42;
+  --accent:#e0794d; --accent-ink:#1a1a1a; --ok:#58c58a; --ok-bg:#16322398; --ng:#ff8f86; --ng-bg:#3a1c1a98;
+  --warn-bg:#3b3318; --code-bg:#14161a; --sel:#1f2c4d; --sel-line:#7fa0ff;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]):not([data-theme="dark"]){
+    --bg:#15171a; --card:#1e2125; --ink:#e8e6e1; --sub:#a0a6b0; --line:#343a42;
+    --accent:#e0794d; --accent-ink:#1a1a1a; --ok:#58c58a; --ok-bg:#16322398; --ng:#ff8f86; --ng-bg:#3a1c1a98;
+    --warn-bg:#3b3318; --code-bg:#14161a; --sel:#1f2c4d; --sel-line:#7fa0ff;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;line-height:1.75;font-size:16px}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 64px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.hbar{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hbar h1{font-size:18px;margin:0;flex:1;min-width:180px}
+.tabs{display:flex;gap:4px;max-width:860px;margin:0 auto;padding:0 16px 8px;overflow-x:auto}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button{font:inherit;color:inherit}
+.btn{border:1px solid var(--line);background:var(--card);padding:8px 16px;border-radius:8px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.btn.small{padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+h2{font-size:20px;margin:24px 0 8px}
+h3{font-size:16px;margin:0 0 6px}
+.muted{color:var(--sub);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.round{display:block;text-align:left;width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer}
+.round:hover{border-color:var(--accent)}
+.round b{font-size:16px}
+.badge{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--sub);margin-left:6px}
+.badge.ok{color:var(--ok);border-color:var(--ok)}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 14px}
+.progress>i{display:block;height:100%;background:var(--accent);width:0}
+.tag{display:inline-block;font-size:12px;background:var(--code-bg);padding:2px 10px;border-radius:999px;color:var(--sub)}
+.stem{font-size:18px;font-weight:600;margin:10px 0 14px}
+.opt{display:flex;gap:8px;align-items:stretch;margin:10px 0}
+.opt .main{flex:1;text-align:left;padding:12px 14px;border:2px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;display:flex;gap:10px}
+.opt .main:hover:not(:disabled){border-color:var(--sel-line)}
+.opt .no{font-weight:700;color:var(--sub);min-width:1.4em}
+.opt.sel .main{background:var(--sel);border-color:var(--sel-line)}
+.opt .x{width:44px;border:1px solid var(--line);background:var(--card);border-radius:10px;cursor:pointer;font-size:18px;color:var(--sub)}
+.opt .x:hover{border-color:var(--ng);color:var(--ng)}
+.opt.gone .main{opacity:.4;text-decoration:line-through;background:var(--code-bg)}
+.opt.gone .x{color:var(--accent)}
+.opt.right .main{background:var(--ok-bg);border-color:var(--ok)}
+.opt.wrong .main{background:var(--ng-bg);border-color:var(--ng)}
+.exp{margin:-4px 0 6px 0;padding:8px 14px;font-size:14.5px;color:var(--sub);border-left:3px solid var(--line)}
+.exp.c{border-left-color:var(--ok);color:var(--ink)}
+.verdict{font-size:20px;font-weight:700;margin:14px 0 4px}
+.verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+.point{background:var(--warn-bg);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:15px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:14px}
+.bar .lab{width:230px;flex-shrink:0}
+.bar .track{flex:1;height:14px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar .track i{display:block;height:100%;background:var(--accent)}
+.bar .num{width:92px;text-align:right;color:var(--sub);flex-shrink:0}
+@media(max-width:560px){.bar{flex-wrap:wrap}.bar .lab{width:100%}}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font-size:13px;line-height:1.6;margin:8px 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+table{border-collapse:collapse;width:100%;font-size:14.5px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--code-bg)}
+.flow{display:grid;grid-template-columns:1fr 60px 1fr;gap:6px;align-items:center;text-align:center;margin:10px 0}
+.flow .node{border:2px solid var(--line);border-radius:10px;padding:10px;background:var(--card);font-weight:600}
+.flow .arr{color:var(--accent);font-size:13px;line-height:1.3}
+.dir{display:inline-block;font-size:12px;font-weight:700;padding:1px 10px;border-radius:999px;background:var(--accent);color:var(--accent-ink);margin-right:6px}
+.dir.back{background:var(--sel-line);color:#fff}
+.dir.self{background:var(--ok);color:#fff}
+.hide{display:none}
+details{margin:6px 0}
+summary{cursor:pointer}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbar">
+    <h1>CCDV-F 基礎固めドリル</h1>
+    <button class="btn small" id="themeBtn" title="表示モードを切り替え">🌓 自動</button>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="quiz" aria-selected="true">問題を解く</button>
+    <button class="tab" role="tab" data-tab="stats" aria-selected="false">成績</button>
+    <button class="tab" role="tab" data-tab="api" aria-selected="false">Messages API のやり取り</button>
+    <button class="tab" role="tab" data-tab="info" aria-selected="false">試験情報</button>
+  </div>
+</header>
+<main class="wrap">
+  <section id="tab-quiz"></section>
+  <section id="tab-stats" class="hide"></section>
+  <section id="tab-api" class="hide"></section>
+  <section id="tab-info" class="hide"></section>
+</main>
+
+<script>
+/* ============ 分野 ============ */
+var DOM = {
+  app:  {name:"アプリケーションと統合", w:33.1},
+  model:{name:"モデル選択と最適化", w:16.8},
+  agent:{name:"エージェントとワークフロー", w:14.7},
+  prompt:{name:"プロンプトとコンテキスト", w:11.0},
+  tools:{name:"ツールと MCP", w:10.6},
+  sec:  {name:"セキュリティと安全", w:8.1},
+  code: {name:"Claude Code", w:3.1},
+  eval: {name:"評価・テスト・デバッグ", w:2.6}
+};
+
+/* ============ 問題 ============
+   o の先頭 n 個が正解（表示時にシャッフルされる）。ex は o と同じ順の選択肢ごとの解説。 */
+var Q = [
+/* ---- アプリケーションと統合 ---- */
+{d:"app", q:"Claude の Messages API にリクエストを送るとき、最低限必要な項目の組み合わせはどれですか。",
+ o:["model（モデル名）、max_tokens（出力の上限）、messages（会話の内容）","model、prompt、system","messages、system、tools","model、messages、stream"],
+ ex:["正解。この3つが必須です。system・tools・stream などは任意です。",
+     "prompt は古い形式のフィールドです。Messages API では会話を messages に入れます。また max_tokens が足りません。",
+     "model と max_tokens がありません。system と tools は必要なときだけ付ける任意項目です。",
+     "stream は任意（省略すると一括で返る）で、必須の max_tokens が抜けています。"],
+ pt:"必須は model / max_tokens / messages の3つ。まずこれを覚える。"},
+{d:"app", q:"Messages API は「ステートレス」です。会話を続けたいとき、アプリ側はどうしますか。",
+ o:["毎回、これまでのやり取り（履歴）をすべて messages に入れて送る","最初に発行された会話IDだけを毎回送る","Claude が前回の内容を覚えているので、新しい発言だけを送る","履歴は送らず、system に「前の続きです」と書く"],
+ ex:["正解。API はやり取りを覚えません。履歴の管理はアプリ側の仕事で、毎回全部送ります。",
+     "Messages API に会話IDの仕組みはありません。履歴は自分で持ちます。",
+     "覚えていません。新しい発言だけ送ると、Claude は文脈なしで答えることになります。",
+     "「続きです」と書いても、中身を渡さなければ Claude は前の内容を知りません。"],
+ pt:"ステートレス＝毎回、履歴ごと送る。履歴が増えるほど入力トークンも増える。"},
+{d:"app", q:"messages 配列の各要素に指定する role として、正しいのはどれですか。",
+ o:["user と assistant を交互に使う","system と user を使う","human と ai を使う","system・user・assistant を自由に混ぜて入れる"],
+ ex:["正解。ユーザーの発言は user、Claude の発言は assistant です。",
+     "system は messages の中ではなく、トップレベルの system パラメータで指定します。",
+     "human / ai は他のライブラリで見かける呼び方です。Claude の API では使いません。",
+     "system は messages の中に入れません。また user と assistant は基本的に交互に並べます。"],
+ pt:"messages の role は user / assistant の2種類。役割指示は system パラメータ。"},
+{d:"app", q:"「あなたは丁寧なサポート担当です」のような役割や方針を、会話全体に効かせたいとき、基本的にどこへ書きますか。",
+ o:["リクエストのトップレベルにある system パラメータ","messages の先頭に role を system にして入れる","model 名の後ろに付け足す","毎回ユーザーの発言の末尾に手作業で足す"],
+ ex:["正解。system パラメータが、会話全体に効く指示の置き場所です。",
+     "messages の role に system はありません。",
+     "model はモデルを指定する項目で、指示を書く場所ではありません。",
+     "動くこともありますが、基本の置き場所ではありません。手間が増え、書き忘れも起きます。"],
+ pt:"全体に効かせる指示 → system パラメータ。"},
+{d:"app", q:"レスポンスの stop_reason が「max_tokens」だったとき、何が起きたと考えられますか。",
+ o:["出力が max_tokens の上限に達して、文章が途中で切れた","Claude が答えを書き終えて、自然に終了した","Claude がツールの実行を求めている","入力が長すぎて、リクエストが拒否された"],
+ ex:["正解。上限で打ち切られています。max_tokens を増やす、または出力を短くするよう指示します。",
+     "それは end_turn の説明です。",
+     "それは tool_use の説明です。",
+     "入力が長すぎる場合はエラー（400 系）が返り、stop_reason は付きません。"],
+ pt:"stop_reason：end_turn＝完了／max_tokens＝上限で切れた／tool_use＝ツール要求。"},
+{d:"app", q:"レスポンスの stop_reason が「tool_use」だったとき、アプリがすべきことはどれですか。",
+ o:["要求されたツールを自分のコードで実行し、結果を tool_result として返して続きを呼び出す","text の内容をそのまま画面に出して終わる","同じリクエストをそのまま送り直す","Claude が自動でツールを実行済みなので、結果を待つ"],
+ ex:["正解。ツールの実行はアプリの仕事です。結果を返すと Claude が続きを作ります。",
+     "このときの Claude は、まだ答えを出していません。ツールの結果を待っている状態です。",
+     "同じ内容を送ると、同じ要求が返ってくるだけです。",
+     "自分で定義したツールは Claude が実行しません。呼び出しを「要求」するだけです。"],
+ pt:"tool_use が返ったら、実行 → tool_result を返す → 再び API を呼ぶ。"},
+{d:"app", q:"API キーの扱いとして、適切なのはどれですか。",
+ o:["サーバー側で環境変数やシークレット管理から読み込み、ブラウザには渡さない","ブラウザの JavaScript に書き込み、利用者の端末から直接 API を呼ぶ","ソースコードに直接書いて、Git で共有する","チームのチャットに貼って、全員で共有する"],
+ ex:["正解。キーはサーバー側で守り、フロントエンドからはサーバーを経由して呼びます。",
+     "ブラウザに入れると、開発者ツールで誰でも見られます。",
+     "Git に入ると履歴に残り、漏えいの原因になります。",
+     "チャットには履歴が残り、見られる人も増えます。共有ではなく適切な管理が必要です。"],
+ pt:"API キー＝サーバー側の環境変数／シークレット管理。フロントや Git に置かない。"},
+{d:"app", q:"API が 429（レート制限）を返したとき、対応として適切なのはどれですか。",
+ o:["少し待ってから、間隔を延ばしながら（指数バックオフで）再試行する","すぐに何度も連続で再試行する","リクエストの内容を書き換えて送り直す","エラーを無視して、空の結果を返す"],
+ ex:["正解。一時的な混雑なので、待って再試行します。間隔を延ばすのが定石です。",
+     "連打すると制限をさらに悪化させます。",
+     "429 は内容の誤りではなく、回数や量の制限です。内容を直しても解決しません（内容の誤りは 400 系）。",
+     "失敗を隠すと、利用者もアプリも異常に気づけません。"],
+ pt:"429・500・529 は待って再試行。400・401・403 は直さないと同じ失敗が続く。"},
+{d:"app", q:"ストリーミング（stream を有効にする）を使う、主な利点はどれですか。",
+ o:["生成中の文字から順に表示でき、利用者の体感の待ち時間が短くなる","料金が半額になる","回答の品質が上がる","トークン数を数えなくてよくなる"],
+ ex:["正解。全部できあがるのを待たずに、先頭から見せられます。",
+     "料金は変わりません（半額になるのはバッチ処理のほうです）。",
+     "品質は変わりません。届け方が変わるだけです。",
+     "トークンは通常どおり使われ、課金されます。"],
+ pt:"ストリーミング＝体感速度の改善。品質や料金は変わらない。"},
+{d:"app", q:"レスポンスの content は、どのような形ですか。",
+ o:["ブロック（text など）のリストで、テキストは content[0].text のように取り出す","常に1つの文字列","必ず構造化された JSON オブジェクト","base64 でエンコードされたバイナリ"],
+ ex:["正解。text ブロックのほか、ツール利用ブロックなども並びます。",
+     "文字列ではなく、ブロックのリストです。",
+     "JSON として返すかは、プロンプトで頼んだ内容次第です。content の形そのものは決まっています。",
+     "バイナリではありません。"],
+ pt:"content はブロックのリスト。text 以外のブロックも入り得る。"},
+{d:"app", q:"1回のリクエストで使われたトークン数は、どこで確認できますか。",
+ o:["レスポンスの usage（input_tokens と output_tokens）","リクエストに指定した model の名前","レスポンスの stop_reason","確認できず、請求書でしかわからない"],
+ ex:["正解。入力と出力の使用量が毎回返ります。費用の見積もりやログに使います。",
+     "model はモデルを指定する項目で、トークン数は示しません。",
+     "stop_reason は終了の理由を示します。",
+     "毎回のレスポンスにありますので、アプリ側で記録できます。"],
+ pt:"usage を記録しておけば、コストの監視ができる。"},
+{d:"app", q:"プロンプトやモデル名の扱いとして、保守しやすいのはどれですか。",
+ o:["コードに直書きせず、設定ファイルや環境変数など、変更しやすい場所で管理する","同じ文言をコードの各所にコピーして書く","本番でも、個人のメモから毎回貼り付けて使う","変更のたびに、全員へ手作業で連絡する"],
+ ex:["正解。1か所で管理すれば、モデルの切り替えや文言の修正が安全にできます。",
+     "コピーが散らばると、修正漏れが出ます。",
+     "ミスが起きやすく、再現もできません。",
+     "手作業は漏れの元です。仕組みで管理します。"],
+ pt:"モデル名・プロンプト・上限値は設定として切り出す（構成管理）。"},
+{d:"app", q:"外部サービスの一時的な障害で、アプリ全体が落ちないようにしたい。基本の設計はどれですか。",
+ o:["回数に上限をつけた再試行と、失敗時の代替表示（フォールバック）を用意する","成功するまで、無制限に再試行し続ける","例外を握りつぶして、何もなかったように進める","障害が起きないよう、利用者数を制限する"],
+ ex:["正解。上限付きの再試行と代替手段で、機能を縮めながら動かし続けます（グレースフルな劣化）。",
+     "無制限だと、処理が詰まり、相手にも負荷をかけ続けます。",
+     "失敗を隠すと、誤った結果を出したまま進みます。",
+     "障害は利用者数と無関係に起こります。"],
+ pt:"再試行は上限つき＋フォールバック。失敗を隠さない。"},
+{d:"app", q:"夜間に大量の文書を要約したい。結果はすぐ必要ではない。コストを抑える手段はどれですか。",
+ o:["Message Batches API で非同期にまとめて処理する","1件ずつ同期で、最高性能のモデルに送る","ストリーミングで1件ずつ表示させる","すべての文書を1つの巨大なプロンプトにつなげて1回で送る"],
+ ex:["正解。急がない大量処理向けの仕組みで、通常より割安です（結果は後で受け取ります）。",
+     "即時性が不要なのに、最も高い方法を選んでいます。",
+     "ストリーミングは待ち時間の見せ方の工夫で、コスト削減の手段ではありません。",
+     "上限を超えやすく、精度も落ちます。1件ずつの独立した処理に分けるほうが扱いやすいです。"],
+ pt:"急がない大量処理 → Batch API（非同期・割安）。"},
+{d:"app", q:"SDK を使わず HTTP で Messages API を呼ぶとき、リクエストヘッダに必要なものはどれですか。",
+ o:["x-api-key（認証）と anthropic-version（APIバージョン）","Cookie にセッションIDを入れる","URL のクエリ文字列に API キーを付ける","X-Model と X-Region"],
+ ex:["正解。content-type: application/json と合わせて、この3つが基本です。",
+     "Cookie による認証は使いません。",
+     "URL にキーを付けると、ログや履歴に残ります。キーはヘッダで渡します。",
+     "そのようなヘッダは必要ありません。モデルは本文の model で指定します。"],
+ pt:"ヘッダ：x-api-key / anthropic-version / content-type。"},
+{d:"app", q:"会話が長くなり、履歴がコンテキストウィンドウの上限に近づいてきました。適切な対応はどれですか。",
+ o:["古いやり取りを要約して置き換えるなど、送る履歴を整理する","上限を超えても、そのまま送り続ける","max_tokens を大きくすれば、入力の上限も増える","履歴の途中のメッセージを、無作為に削除する"],
+ ex:["正解。重要な情報を残しつつ、送る量を減らします。",
+     "上限を超えるとエラーになります。",
+     "max_tokens は出力の上限です。入力の上限は増えません。",
+     "無作為に消すと、文脈がつながらなくなります。"],
+ pt:"履歴の管理はアプリの責任。要約・選別で上限内に収める。"},
+
+/* ---- モデル選択と最適化 ---- */
+{d:"model", q:"分類や短い抽出のような簡単な処理を、大量に・安く・速く行いたい。モデル選びの基本はどれですか。",
+ o:["小型で高速なモデルから試し、精度が足りなければ上のモデルへ上げる","常に最上位のモデルを使う","最も古いモデルが、いつでも一番安い","モデルは精度に影響しないので、名前順で選ぶ"],
+ ex:["正解。簡単な処理は小型モデルで十分なことが多く、コストと速度で有利です。",
+     "必要以上に高くて遅くなります。",
+     "モデルの世代と料金は一律ではなく、古い=安いとは限りません。",
+     "モデルによって、精度・速度・費用は大きく違います。"],
+ pt:"小さいモデルから試し、足りなければ上げる。評価して決める。"},
+{d:"model", q:"複雑な多段階の推論や難しいコード生成が必要で、品質を最優先したい。選び方として適切なのはどれですか。",
+ o:["高性能な上位モデルを選び、必要なら評価して小さいモデルで足りるかを確かめる","小型モデルを選ぶ。速ければ品質は同じ","プロンプトを短くすれば、小型モデルでも同じ品質になる","モデルは1種類しかないので、選択の余地はない"],
+ ex:["正解。難しい課題は上位モデルが得意です。評価で十分と確認できれば、下げてコストを減らせます。",
+     "難しい課題では、小型モデルは品質が足りないことがあります。",
+     "プロンプトを短くしても、モデルの能力は上がりません。",
+     "モデルには複数の段階があり、用途で選びます。"],
+ pt:"難しい課題ほど上位モデル。ただし評価で必要十分を確認する。"},
+{d:"model", q:"「トークン」の説明として、正しいのはどれですか。",
+ o:["モデルがテキストを処理するときの単位で、単語や文字と1対1にはならない","必ず1単語が1トークンになる","必ず1文字が1トークンになる","API キーの別名"],
+ ex:["正解。日本語は、同じ意味でも英語よりトークン数が多くなりやすいです。",
+     "単語と一致するとは限りません。",
+     "文字と一致するとは限りません。",
+     "認証とは無関係です。"],
+ pt:"料金・上限はトークンで数える。文字数や単語数とは別物。"},
+{d:"model", q:"コンテキストウィンドウとは、何のことですか。",
+ o:["1回の呼び出しで、モデルが扱える入力と出力の合計の上限","モデルが学習したデータ全体の量","1日に使える呼び出し回数","ブラウザの表示領域の大きさ"],
+ ex:["正解。入力が長いほど、出力に使える余地は小さくなります。",
+     "学習データの量とは別の概念です。",
+     "それはレート制限などの話です。",
+     "画面の話ではありません。"],
+ pt:"コンテキストウィンドウ＝1回で扱える量（入力＋出力）の上限。"},
+{d:"model", q:"同じ長いシステムプロンプトや資料を毎回送っている。費用と待ち時間を減らす手段はどれですか。",
+ o:["プロンプトキャッシュで、繰り返し使う先頭部分を再利用する","資料の並び順を毎回ランダムにする","資料を毎回、少しずつ書き換える","max_tokens を小さくする"],
+ ex:["正解。変わらない先頭部分をキャッシュすると、2回目以降が安く速くなります。",
+     "順序が毎回変わると、キャッシュが効かなくなります。",
+     "先頭部分が毎回変わると、同じ内容として再利用できません。",
+     "出力の上限を下げるだけで、毎回送る入力は減りません。"],
+ pt:"繰り返す部分は先頭にまとめてキャッシュ。変わる部分は後ろへ。"},
+{d:"model", q:"プロンプトに長い資料をたくさん入れると、一般にどうなりますか。",
+ o:["入力トークンが増え、費用が増え、処理にかかる時間も長くなりやすい","費用は変わらず、品質だけが必ず上がる","入力の長さは、費用にも時間にも影響しない","出力トークンだけが増える"],
+ ex:["正解。入力は課金の対象で、長いほど処理にも時間がかかります。必要な情報に絞る理由です。",
+     "品質が上がるとは限りません。関係のない情報はかえってノイズになります。",
+     "入力トークンにも課金され、長いほど処理も重くなります。",
+     "出力トークンは、入力の長さとは別に決まります。入力側も増えます。"],
+ pt:"入力が長い＝費用と時間が増える。必要な情報だけを入れる。"},
+{d:"model", q:"API の料金の考え方として、正しいのはどれですか。",
+ o:["入力トークンと出力トークンで単価が別で、一般に出力のほうが高い","リクエスト1回あたりの定額","出力だけに課金され、入力は無料","画面に表示された時間で課金される"],
+ ex:["正解。長い出力は費用が増えやすいので、必要な長さに絞る工夫が効きます。",
+     "定額ではなく、トークン量に応じた従量課金です。",
+     "入力にも課金されます。",
+     "表示時間は課金と無関係です。"],
+ pt:"課金＝入力トークン＋出力トークン（出力のほうが単価は高い）。"},
+{d:"model", q:"LLM が、もっともらしい誤り（ハルシネーション）を出すのを減らす手段として、有効なのはどれですか。",
+ o:["根拠となる資料を渡し、その範囲で答えるよう指示する","「間違えないで」と強く書くだけにする","最上位モデルに変えれば誤りはなくなると考える","質問を短くして、情報を減らす"],
+ ex:["正解。根拠を与えると、モデルの記憶に頼らず答えられます。",
+     "強い言葉だけでは、事実を知らない部分は埋まりません。",
+     "モデルが良くなっても誤りはゼロになりません。根拠を渡す工夫は引き続き必要です。",
+     "情報が減ると、推測で補う余地が増えます。"],
+ pt:"根拠資料を渡す（RAG など）＋「資料にないときは分からないと答える」。"},
+
+/* ---- エージェントとワークフロー ---- */
+{d:"agent", q:"エージェントの基本的な動きとして、正しいのはどれですか。",
+ o:["モデルが次の行動を判断し、ツールを呼び、結果を受け取る流れを、目的が終わるまで繰り返す","最初に人が全手順を書き、モデルは一度も判断しない","1回だけ回答して終わり、ツールは使わない","毎回ランダムに行動を選ぶ"],
+ ex:["正解。判断 → 行動 → 観察のループがエージェントの核心です。",
+     "それは固定の手順（ワークフロー）に近い形です。",
+     "ツールを使うループがないと、エージェントとは言えません。",
+     "ランダムではなく、状況を見て判断します。"],
+ pt:"エージェント＝モデルが次の一手を決めながら、ループで進める仕組み。"},
+{d:"agent", q:"手順がいつも同じで、入力の形も決まっている処理があります。基本の設計はどれですか。",
+ o:["コードで手順を組むワークフロー（プロンプトチェーンなど）","とりあえずエージェントに全部任せる","手順を決めず、複数のエージェントを競わせる","人が毎回手作業で実行する"],
+ ex:["正解。手順が決まるなら、ワークフローのほうが安く、速く、予測しやすいです。",
+     "経路を事前に書けるときは、エージェントに任せる必要はありません。",
+     "複雑さとコストが増えるだけです。",
+     "自動化の目的に反します。"],
+ pt:"手順が決まる → ワークフロー。決められないときだけ → エージェント。そもそも、まず単発の呼び出しで足りないかを考える（公式：最もシンプルな方法から始め、必要なときだけ複雑にする）。"},
+{d:"agent", q:"エージェントが終わらず、同じ操作を延々と繰り返してしまうのを防ぐ基本策はどれですか。",
+ o:["最大ターン数や終了条件を設け、超えたら止めて報告する","上限なしで、止まるまで待つ","ツールの説明文をすべて削除する","最上位モデルを使えば必ず止まると考える"],
+ ex:["正解。ループには必ず上限と出口を用意します。",
+     "止まらないとコストが膨らみ続けます。",
+     "説明がなくなると、ツールをうまく使えなくなります。",
+     "モデルの性能は停止を保証しません。仕組みとして上限を設けます。"],
+ pt:"ループには上限（最大ターン）と終了条件を。"},
+{d:"agent", q:"互いに依存しない複数の調査（A社・B社・C社の情報収集）を、速く終わらせたい。有効な方法はどれですか。",
+ o:["独立したタスクとして並列に実行し、最後に結果をまとめる","前の結果が出るまで、1つずつ待つ","すべてを1つのプロンプトに詰め込み、1回で済ませる","一番遅いものだけを実行する"],
+ ex:["正解。依存関係がないものは並列にすると、全体の時間が短くなります。",
+     "依存がないのに直列にすると、時間が無駄になります。",
+     "長くなって精度が落ちやすく、並列化の利点も得られません。",
+     "調査の目的を満たせません。"],
+ pt:"独立 → 並列。依存あり → 直列。"},
+{d:"agent", q:"サブエージェントに仕事を渡すとき、気をつけることはどれですか。",
+ o:["親の会話履歴は引き継がれないので、必要な背景と条件を指示に明記して渡す","親の履歴は自動で全部見えるので、一言で十分","サブエージェントには指示を渡さない","結果は親に返ってこない"],
+ ex:["正解。サブエージェントは自分だけの文脈で動きます。必要な情報は明示します。",
+     "見えません。短すぎる指示では、意図が伝わりません。",
+     "指示がなければ何をするか決まりません。",
+     "結果は親に返り、親がまとめます。"],
+ pt:"サブエージェントは親の履歴を持たず、親から渡るのは指示（プロンプト）だけ。返ってくるのも最終メッセージだけ。"},
+{d:"agent", q:"中央の司令役が仕事を分解して作業役に割り当て、結果を統合する構成を、何と呼びますか。",
+ o:["オーケストレーター・ワーカー型","プロンプトキャッシュ型","ストリーミング型","バッチ型"],
+ ex:["正解。司令役（オーケストレーター）が分解・統合し、作業役（ワーカー）が実行します。",
+     "キャッシュは費用削減の仕組みで、構成の名前ではありません。",
+     "ストリーミングは出力の届け方です。",
+     "バッチは非同期の一括処理です。"],
+ pt:"オーケストレーター＝分解と統合、ワーカー＝実行。必要な小タスクを事前に決められない複雑な課題に向く（例：変更するファイルの数が状況で変わるコード修正）。"},
+{d:"agent", q:"エージェントが「顧客への一斉メール送信」や「データ削除」のような、取り消せない操作をします。適切な設計はどれですか。",
+ o:["実行の前に、人が内容を確認して承認するステップを入れる","速度優先で、確認なしに自動実行する","失敗したら、その都度あやまる","ログは取らない"],
+ ex:["正解。取り消せない操作の前には、人の承認（human-in-the-loop）を入れます。",
+     "誤操作が起きたときの被害が大きすぎます。",
+     "事後対応では取り返しがつきません。",
+     "ログがないと、原因を追えません。"],
+ pt:"取り消せない操作 → 人の承認。監査のためにログも残す。"},
+
+/* ---- プロンプトとコンテキスト ---- */
+{d:"prompt", q:"プロンプトの書き方として、まず基本になるのはどれですか。",
+ o:["目的・条件・出力の形式を、具体的に書く","「いい感じにお願い」とだけ書く","禁止事項だけを並べる","毎回、違う言い回しで書く"],
+ ex:["正解。何を、誰のために、どんな形で欲しいかを書くと、結果が安定します。",
+     "曖昧だと、期待と違う答えが出やすくなります。",
+     "禁止だけでは、何を求めているかが伝わりません。",
+     "言い回しが変わると、結果もぶれます。"],
+ pt:"明確・具体的に。目的／条件／形式の3点を書く。"},
+{d:"prompt", q:"プロンプトに「入力例と望ましい出力例」を数個入れる手法（few-shot）の効果は、どれですか。",
+ o:["期待する形式・口調・判断基準が伝わりやすく、出力が安定する","モデルが再学習され、永久に覚える","必ず料金が安くなる","例が多いほど、常に精度が下がる"],
+ ex:["正解。言葉で説明しにくい基準も、例で示すと伝わります。",
+     "モデルは再学習されません。その呼び出しの中で効くだけです。",
+     "例の分だけ入力が増えるので、むしろ高くなります。",
+     "適切な例は精度を上げます。"],
+ pt:"例（few-shot）は、形式と基準を伝える近道。"},
+{d:"prompt", q:"指示・参考資料・ユーザー入力が混ざったプロンプトで、どこが何かを読み分けさせる方法はどれですか。",
+ o:["XML タグなどで区切り、どこが何かを明示する","区切らず、順序だけで察してもらう","すべてを大文字で書く","改行を一切入れずにつなげる"],
+ ex:["正解。<document> や <question> のようなタグで、境界がはっきりします。",
+     "境界が曖昧になり、指示と資料が混ざりやすくなります。",
+     "大文字にしても、区別は伝わりません。",
+     "読みにくくなり、誤解のもとになります。"],
+ pt:"指示とデータは、タグで区切る。"},
+{d:"prompt", q:"長い資料をすべて貼り付けると、関係ない情報で回答がぶれます。コンテキスト設計の基本はどれですか。",
+ o:["質問に必要な情報だけを選んで入れる","とにかく大量に入れる","資料の順序を毎回ランダムにする","資料は入れず、推測で答えさせる"],
+ ex:["正解。入れる情報を選ぶことが、コンテキストエンジニアリングの基本です。",
+     "不要な情報はノイズになり、費用も増えます。",
+     "順序をランダムにしても改善しません。",
+     "根拠がなく、誤りが増えます。"],
+ pt:"多ければ良いわけではない。必要な情報だけを入れる。"},
+{d:"prompt", q:"Claude の出力を JSON として、プログラムで処理します。適切な備えはどれですか。",
+ o:["形式を指定したうえで、受け取った JSON を検証し、失敗時は再試行や代替処理を用意する","出力は必ず正しい JSON になるので、検証は不要","正規表現ひとつで必ず取り出せるので、例外処理は不要","人が毎回目で確認する前提にする"],
+ ex:["正解。形式の崩れは起こり得るので、検証と失敗時の手当てが必要です。",
+     "必ずとは限りません。前置きの文章が混ざることもあります。",
+     "想定外の形が来ると、取り出しに失敗します。",
+     "自動化の意味がなくなります。"],
+ pt:"LLM の出力は、使う前に検証する。失敗時の手当ても用意する。"},
+
+/* ---- ツールと MCP ---- */
+{d:"tools", q:"Claude にツールを使わせるための「ツール定義」に含めるものはどれですか。",
+ o:["name、description、input_schema","model、max_tokens、stream","API キーとパスワード","ツールのソースコード全体"],
+ ex:["正解。名前・説明・入力の形（JSON スキーマ）を渡します。",
+     "それらはリクエスト全体の設定で、ツール定義の中身ではありません。",
+     "秘密情報は、渡してはいけません。",
+     "コードは渡しません。Claude には「どんなツールか」という情報だけ見えます。"],
+ pt:"ツール定義＝name / description / input_schema。"},
+{d:"tools", q:"自分のアプリで定義した通常のツール（関数）を、実際に実行するのは誰ですか。",
+ o:["自分のアプリ。Claude は呼び出しの要求を出すだけ","Claude が直接実行する","Anthropic のサーバーが必ず実行する","利用者のブラウザが自動で実行する"],
+ ex:["正解。要求を受け取って実行し、結果を返すのはアプリの役割です。",
+     "Claude は文章（要求）を出力するだけで、関数を直接実行しません。",
+     "自分で定義したツールは、Anthropic のサーバーでは動きません。",
+     "ブラウザが勝手に実行する仕組みではありません。"],
+ pt:"クライアントツール＝要求は Claude、実行はアプリ。"},
+{d:"tools", q:"MCP（Model Context Protocol）の説明として、正しいのはどれですか。",
+ o:["AI アプリと外部のツールやデータをつなぐための、標準的なプロトコル","モデルを小さく圧縮する技術","料金プランの名前","プロンプトを自動生成するモデル"],
+ ex:["正解。ツールやデータの接続口を標準化する仕組みです。",
+     "圧縮技術ではありません。",
+     "料金とは無関係です。",
+     "モデルではなく、通信の取り決めです。"],
+ pt:"MCP＝AI と外部ツール・データをつなぐ共通の規格。"},
+{d:"tools", q:"ツールの description の書き方として、良いのはどれですか。",
+ o:["何をするか・いつ使うか・何を返すかを、具体的に書く","「ツール1」とだけ書く","空にして、名前だけで判断させる","他のツールと同じ説明を使い回す"],
+ ex:["正解。Claude は description を読んで、使うかどうかを判断します。",
+     "何のツールか伝わりません。",
+     "判断材料がなく、使い分けを誤ります。",
+     "区別がつかず、取り違えが起きます。"],
+ pt:"description は、Claude がツールを選ぶ唯一の手がかり。具体的に。"},
+{d:"tools", q:"MCP サーバーが提供できるものとして、正しい組み合わせはどれですか。",
+ o:["ツール、リソース、プロンプト","モデル、料金、ログ","キャッシュ、バッチ、ストリーム","ロール、ステータス、ヘッダ"],
+ ex:["正解。実行できる機能（ツール）、読めるデータ（リソース）、定型の指示（プロンプト）です。",
+     "それらは MCP の提供物ではありません。",
+     "それらは API の機能や仕組みです。",
+     "それらは API の用語です。"],
+ pt:"MCP の3要素＝ツール／リソース／プロンプト。"},
+
+/* ---- セキュリティと安全 ---- */
+{d:"sec", q:"メールや Web ページの本文に「これまでの指示を無視して…」と書かれ、Claude の動作が乗っ取られる攻撃を、何と呼びますか。また基本の対策はどれですか。",
+ o:["プロンプトインジェクション。外部データは信頼せず、ツールの権限を最小にして、重要な操作は確認を入れる","ハルシネーション。出力を短くすれば防げる","DDoS。レート制限を上げれば防げる","過学習。モデルを再学習すれば防げる"],
+ ex:["正解。外部の文章は「データ」であって「命令」ではありません。権限を絞り、重要操作は人が確認します。",
+     "ハルシネーションは誤情報の生成で、別の問題です。",
+     "DDoS は大量アクセスによる妨害で、別の攻撃です。",
+     "過学習は学習時の問題で、無関係です。"],
+ pt:"外部の文章は命令として扱わない。権限は最小に。重要操作は確認。"},
+{d:"sec", q:"API キーを、誤って公開リポジトリに載せてしまいました。まずすべきことはどれですか。",
+ o:["ただちにキーを無効化し、新しいキーに入れ替える","リポジトリから削除すれば安全なので、キーはそのまま使う","しばらく様子を見る","キーはそのままで、リポジトリを非公開にだけする"],
+ ex:["正解。公開された時点で漏れたものとして扱い、無効化と再発行を最優先にします。",
+     "履歴や、すでに取得されたコピーに残っています。",
+     "その間に悪用される恐れがあります。",
+     "非公開にしても、すでに見られた可能性は消えません。"],
+ pt:"漏えいしたキー＝即・無効化して再発行。"},
+{d:"sec", q:"最小権限の原則の例として、適切なのはどれですか。",
+ o:["読み取りだけが必要なエージェントには、書き込みできないツールや認証情報だけを渡す","便利なので、管理者権限を持たせておく","全員が同じキーを使う","権限の範囲は、問題が起きてから考える"],
+ ex:["正解。できることを必要最小限に絞ると、被害が小さくなります。",
+     "乗っ取られたときの被害が最大になります。",
+     "誰が何をしたか追えず、漏えい時の影響も大きくなります。",
+     "事後では遅いです。最初に絞ります。"],
+ pt:"必要な権限だけ渡す。"},
+{d:"sec", q:"ユーザーの個人情報の扱いとして、適切なのはどれですか。",
+ o:["必要のない個人情報は送らない、またはマスキングしてから送る","念のため、すべて送る","ログに平文で全部残す","公開チャンネルに貼って共有する"],
+ ex:["正解。扱う情報を減らすことが、最も確実な保護です。",
+     "必要以上に渡すと、漏えいの危険が増えます。",
+     "ログも漏えい経路になります。",
+     "公開の場に出してはいけません。"],
+ pt:"個人情報は、送らない・伏せる。ログにも気をつける。"},
+
+/* ---- Claude Code ---- */
+{d:"code", q:"Claude Code の CLAUDE.md の役割として、正しいのはどれですか。",
+ o:["プロジェクトの規約や背景を、毎回の文脈として Claude に伝えるファイル","API キーを保存するファイル","Claude のモデルを入れ替えるファイル","テスト結果の自動出力先"],
+ ex:["正解。コーディング規約、コマンド、構成などを書いておくと、毎回読み込まれます。",
+     "秘密情報は置いてはいけません。",
+     "モデルの切り替えは別の設定です。",
+     "出力先ではなく、入力の指示書です。"],
+ pt:"CLAUDE.md＝プロジェクトの取扱説明書。秘密情報は書かない。"},
+{d:"code", q:"「ファイルを編集するたびに、必ず整形コマンドを実行したい」。確実に動かす手段はどれですか。",
+ o:["フック（hooks）を設定する","CLAUDE.md に「整形してね」と書くだけにする","毎回、口頭でお願いする","モデルを大きくする"],
+ ex:["正解。フックは決まったタイミングで必ず実行されます。",
+     "お願いにすぎず、実行は保証されません。",
+     "忘れたり、守られなかったりします。",
+     "モデルを変えても、必ず実行される保証にはなりません。"],
+ pt:"「必ず」やりたい処理 → フック。「お願い」は CLAUDE.md。"},
+{d:"code", q:"Claude Code を、人の操作なしに1回だけ実行し、結果を標準出力に返したい（CI など）。どうしますか。",
+ o:["-p（ヘッドレス）オプションをつけて起動する","対話画面を開いて、人が待つ","/init を実行する","CLAUDE.md を削除する"],
+ ex:["正解。-p は対話なしで1回実行して終了します。自動化に向きます。",
+     "自動化にならず、CI では実行できません。",
+     "/init は CLAUDE.md の雛形を作る機能です。",
+     "実行方法とは関係がありません。"],
+ pt:"自動実行 → -p。"},
+
+/* ---- 評価・テスト・デバッグ ---- */
+{d:"eval", q:"プロンプトを改良しました。良くなったかを判断する、基本の方法はどれですか。",
+ o:["同じテストケース集で、変更の前後の結果を比べる","1つの例がうまくいけば十分とする","雰囲気で判断する","評価はせず、本番で様子を見る"],
+ ex:["正解。固定したテストで比べると、改善と悪化を客観的に判断できます。",
+     "たまたまかもしれません。",
+     "再現できず、他の人にも説明できません。",
+     "問題が利用者に届いてからでは遅いです。"],
+ pt:"評価＝同じテスト集を、変更の前後で比べる。"},
+{d:"eval", q:"Claude の回答が想定外でした。デバッグの最初の一手として、適切なのはどれですか。",
+ o:["実際に送ったリクエスト（プロンプトと履歴）とレスポンスを、ログで確認する","原因を推測して、すぐモデルを変える","同じ質問を何度も送り、うまくいくまで試す","プロンプトを全部書き直す"],
+ ex:["正解。まず事実を見ます。意図と違うものが送られていることも多いです。",
+     "推測で変えると、原因が分からないままになります。",
+     "当たりを引くまで試しても、原因は分からず、費用だけが増えます。",
+     "どこが悪かったか分からず、改善の根拠も残りません。"],
+ pt:"まずログ。実際に何を送り、何が返ったかを見る。"}
+];
+Q.forEach(function(x,i){ x.id = "q"+(i+1); x.n = x.n || 1; });
+
+/* ============ 保存 ============ */
+var KEY = "ccdvf-ogura-v1";
+var S = {rec:{}, theme:"auto", shuffle:true, best:{}};
+function load(){ try{ var t=localStorage.getItem(KEY); if(t){ var o=JSON.parse(t); for(var k in o) S[k]=o[k]; } }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+load();
+
+/* ============ テーマ ============ */
+var THEMES=["auto","light","dark"], TLAB={auto:"🌓 自動",light:"☀️ ノーマル",dark:"🌙 ダーク"};
+function applyTheme(){
+  var r=document.documentElement;
+  if(S.theme==="auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme",S.theme);
+  document.getElementById("themeBtn").textContent=TLAB[S.theme];
+}
+document.getElementById("themeBtn").onclick=function(){
+  S.theme=THEMES[(THEMES.indexOf(S.theme)+1)%3]; applyTheme(); save();
+};
+applyTheme();
+
+/* ============ タブ ============ */
+var tabs=document.querySelectorAll(".tab");
+function showTab(n){
+  tabs.forEach(function(t){ t.setAttribute("aria-selected", t.dataset.tab===n); });
+  ["quiz","stats","api","info"].forEach(function(k){
+    document.getElementById("tab-"+k).classList.toggle("hide", k!==n);
+  });
+  if(n==="stats") renderStats();
+  window.scrollTo(0,0);
+}
+tabs.forEach(function(t){ t.onclick=function(){ showTab(t.dataset.tab); }; });
+
+/* ============ ユーティリティ ============ */
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+var qbox=document.getElementById("tab-quiz");
+var ROUND=10;
+
+/* 回ごとの問題：分野が混ざるよう、番号を回数で割った余りで振り分ける */
+function roundIds(r){ return Q.filter(function(x,i){ return i%5===r; }).map(function(x){return x.id;}); }
+function byId(id){ return Q.filter(function(x){return x.id===id;})[0]; }
+function nRounds(){ return 5; }
+
+/* ============ スタート画面 ============ */
+var cur=null;
+function home(){
+  cur=null;
+  var wrong=Q.filter(function(x){ var r=S.rec[x.id]; return r && r.last===0; });
+  var fresh=Q.filter(function(x){ return !S.rec[x.id]; });
+  var h='<div class="card"><h2 style="margin-top:0">基礎固め 全'+Q.length+'問</h2>'+
+    '<p class="muted">1回10問。基本的な内容を中心に、解説を厚くしてあります。試験の配点（8分野）に合わせて出題を配分しています。</p>'+
+    '<label class="muted"><input type="checkbox" id="shufChk" '+(S.shuffle?"checked":"")+'> 選択肢の並びをシャッフルする</label></div>';
+  h+='<h2>回を選ぶ</h2><div class="grid">';
+  for(var r=0;r<nRounds();r++){
+    var ids=roundIds(r), b=S.best[r];
+    h+='<button class="round" data-r="'+r+'"><b>第'+(r+1)+'回</b><span class="badge'+(b!=null&&b>=ids.length*0.8?' ok':'')+'">'+(b==null?'未挑戦':'最高 '+b+'/'+ids.length)+'</span><div class="muted">'+ids.length+'問</div></button>';
+  }
+  h+='</div><h2>解き方を選ぶ</h2><div class="grid">'+
+    '<button class="round" id="goWrong" '+(wrong.length?'':'disabled')+'><b>間違えた問題だけ</b><span class="badge">'+wrong.length+'問</span><div class="muted">直近で間違えたもの</div></button>'+
+    '<button class="round" id="goFresh" '+(fresh.length?'':'disabled')+'><b>未回答の問題から10問</b><span class="badge">'+fresh.length+'問</span><div class="muted">まだ解いていないもの</div></button>'+
+    '<button class="round" id="goRand"><b>ランダム10問</b><div class="muted">全問から無作為に</div></button>'+
+    '<button class="round" id="goAll"><b>全問を通しで</b><span class="badge">'+Q.length+'問</span><div class="muted">本番形式の通し練習</div></button>'+
+    '</div>';
+  qbox.innerHTML=h;
+  document.getElementById("shufChk").onchange=function(){ S.shuffle=this.checked; save(); };
+  qbox.querySelectorAll("[data-r]").forEach(function(b){ b.onclick=function(){ var r=+b.dataset.r; start(roundIds(r),"第"+(r+1)+"回",r); }; });
+  document.getElementById("goWrong").onclick=function(){ start(wrong.map(function(x){return x.id;}).slice(0,Math.max(wrong.length,1)),"間違えた問題"); };
+  document.getElementById("goFresh").onclick=function(){ start(fresh.slice(0,ROUND).map(function(x){return x.id;}),"未回答から"); };
+  document.getElementById("goRand").onclick=function(){ start(shuffle(Q.map(function(x){return x.id;})).slice(0,ROUND),"ランダム"); };
+  document.getElementById("goAll").onclick=function(){ start(Q.map(function(x){return x.id;}),"通し"); };
+}
+
+/* 確認ダイアログの代わり：1回目で文言が変わり、4秒以内にもう1回押すと実行 */
+function twoTap(btn,msg,fn){
+  var orig=btn.textContent, armed=false, t;
+  btn.onclick=function(){
+    if(armed){ clearTimeout(t); fn(); return; }
+    armed=true; btn.textContent=msg; btn.classList.add("primary");
+    t=setTimeout(function(){ armed=false; btn.textContent=orig; btn.classList.remove("primary"); },4000);
+  };
+}
+/* ============ 出題 ============ */
+function start(ids,label,round){
+  cur={ids:ids,label:label,round:round,i:0,results:[],view:null};
+  question();
+}
+function question(){
+  var q=byId(cur.ids[cur.i]);
+  var order=[]; for(var k=0;k<q.o.length;k++) order.push(k);
+  if(S.shuffle) order=shuffle(order);
+  cur.view={q:q,order:order,sel:{},gone:{},done:false};
+  drawQ();
+}
+function drawQ(){
+  var v=cur.view,q=v.q,total=cur.ids.length;
+  var h='<div class="row" style="justify-content:space-between;align-items:center;margin-top:16px"><span class="muted">'+esc(cur.label)+'　'+(cur.i+1)+' / '+total+'</span>'+
+    '<button class="btn small" id="quit">やめる</button></div>'+
+    '<div class="progress"><i style="width:'+((cur.i+(v.done?1:0))/total*100)+'%"></i></div>'+
+    '<div class="card"><span class="tag">'+esc(DOM[q.d].name)+'</span>'+
+    '<div class="stem">'+esc(q.q)+(q.n>1?'（'+q.n+'つ選ぶ）':'')+'</div>';
+  v.order.forEach(function(oi,pos){
+    var cls="opt", correct=oi<q.n;
+    if(v.sel[oi]) cls+=" sel";
+    if(v.gone[oi]) cls+=" gone";
+    if(v.done){ if(correct) cls+=" right"; else if(v.sel[oi]) cls+=" wrong"; }
+    h+='<div class="'+cls+'"><button class="main" data-o="'+oi+'" '+(v.done?'disabled':'')+'><span class="no">'+(pos+1)+'</span><span>'+esc(q.o[oi])+'</span></button>'+
+       (v.done?'':'<button class="x" data-x="'+oi+'" title="'+(v.gone[oi]?'元に戻す':'この選択肢を消す')+'" aria-label="'+(v.gone[oi]?'元に戻す':'この選択肢を消す')+'">'+(v.gone[oi]?'↩':'✕')+'</button>')+'</div>';
+    if(v.done) h+='<div class="exp'+(correct?' c':'')+'">'+(correct?'<b>○ 正解の選択肢。</b>':'<b>× 誤り。</b>')+esc(q.ex[oi])+'</div>';
+  });
+  if(!v.done){
+    h+='<div class="row"><button class="btn primary" id="submit" disabled>回答する</button><span class="muted" style="align-self:center">✕ で消去／キー：1〜4で選択、Enterで回答</span></div>';
+  } else {
+    var ok=v.ok;
+    h+='<div class="verdict '+(ok?'ok':'ng')+'">'+(ok?'⭕ 正解':'❌ 不正解')+'</div>'+
+       '<div class="point"><b>ここがポイント：</b>'+esc(q.pt)+'</div>'+
+       '<div class="row"><button class="btn primary" id="next">'+(cur.i+1<total?'次の問題へ':'結果を見る')+'</button></div>';
+  }
+  h+='</div>';
+  qbox.innerHTML=h;
+  qbox.querySelectorAll("[data-o]").forEach(function(b){ b.onclick=function(){ pick(+b.dataset.o); }; });
+  qbox.querySelectorAll("[data-x]").forEach(function(b){ b.onclick=function(){ eliminate(+b.dataset.x); }; });
+  var sb=document.getElementById("submit"); if(sb){ sb.onclick=submit; updSubmit(); }
+  var nb=document.getElementById("next"); if(nb) nb.onclick=next;
+  twoTap(document.getElementById("quit"),"本当にやめる（回答は残ります）",home);
+}
+function updSubmit(){
+  var v=cur.view, n=Object.keys(v.sel).filter(function(k){return v.sel[k];}).length;
+  var sb=document.getElementById("submit"); if(sb) sb.disabled = n!==v.q.n;
+}
+function pick(oi){
+  var v=cur.view; if(v.done) return;
+  if(v.gone[oi]) return;
+  if(v.q.n===1){ v.sel={}; v.sel[oi]=true; }
+  else { v.sel[oi]=!v.sel[oi]; }
+  drawQ();
+}
+function eliminate(oi){
+  var v=cur.view; if(v.done) return;
+  v.gone[oi]=!v.gone[oi];
+  if(v.gone[oi]) v.sel[oi]=false;
+  drawQ();
+}
+function submit(){
+  var v=cur.view,q=v.q; if(v.done) return;
+  var picked=Object.keys(v.sel).filter(function(k){return v.sel[k];}).map(Number);
+  if(picked.length!==q.n) return;
+  v.ok = picked.every(function(oi){return oi<q.n;});
+  v.done=true;
+  var r=S.rec[q.id]||{r:0,w:0,last:null};
+  if(v.ok) r.r++; else r.w++;
+  r.last=v.ok?1:0; S.rec[q.id]=r;
+  cur.results.push({id:q.id,ok:v.ok});
+  save(); drawQ();
+}
+function next(){
+  if(cur.i+1<cur.ids.length){ cur.i++; question(); } else finish();
+}
+document.addEventListener("keydown",function(e){
+  if(!cur||!cur.view||document.getElementById("tab-quiz").classList.contains("hide")) return;
+  var v=cur.view;
+  if(e.key==="Enter"){ e.preventDefault(); if(v.done) next(); else { var sb=document.getElementById("submit"); if(sb&&!sb.disabled) submit(); } return; }
+  if(/^[1-9]$/.test(e.key) && !v.done){ var oi=v.order[+e.key-1]; if(oi!==undefined) pick(oi); }
+});
+
+/* ============ 結果 ============ */
+function finish(){
+  var res=cur.results, ok=res.filter(function(x){return x.ok;}).length, total=res.length;
+  if(cur.round!=null){ if(S.best[cur.round]==null||ok>S.best[cur.round]){ S.best[cur.round]=ok; save(); } }
+  var wrong=res.filter(function(x){return !x.ok;}).map(function(x){return x.id;});
+  var rate=total?Math.round(ok/total*100):0;
+  var h='<div class="card"><h2 style="margin-top:0">結果：'+ok+' / '+total+'問（'+rate+'%）</h2>'+
+    '<p>'+(rate>=80?'よくできています。この調子で他の回も進めましょう。':rate>=60?'あと一歩です。間違えた問題の解説を読み返しましょう。':'基礎の確認が必要です。解説を読んでから、もう一度挑戦しましょう。')+'</p>';
+  if(wrong.length){
+    h+='<h3>間違えた問題</h3>';
+    wrong.forEach(function(id){
+      var q=byId(id);
+      h+='<details><summary>'+esc(q.q)+'</summary><div class="exp c" style="margin-top:6px"><b>正解：</b>'+q.o.slice(0,q.n).map(esc).join(' ／ ')+'<br><b>ポイント：</b>'+esc(q.pt)+'</div></details>';
+    });
+  } else h+='<p class="muted">全問正解です。</p>';
+  h+='<div class="row">';
+  if(wrong.length) h+='<button class="btn primary" id="retryWrong">間違えた'+wrong.length+'問を解き直す</button>';
+  h+='<button class="btn" id="retryAll">同じ問題をもう一度</button><button class="btn" id="goHome">回の選択へ戻る</button></div></div>';
+  qbox.innerHTML=h;
+  var rw=document.getElementById("retryWrong"); if(rw) rw.onclick=function(){ start(wrong,"解き直し"); };
+  document.getElementById("retryAll").onclick=function(){ start(cur.ids,cur.label,cur.round); };
+  document.getElementById("goHome").onclick=home;
+  window.scrollTo(0,0);
+}
+
+/* ============ 成績 ============ */
+function renderStats(){
+  var box=document.getElementById("tab-stats");
+  var tr=0,tw=0; for(var k in S.rec){ tr+=S.rec[k].r; tw+=S.rec[k].w; }
+  var h='<div class="card"><h2 style="margin-top:0">成績</h2><p>延べ回答 '+(tr+tw)+'回　正解率 '+((tr+tw)?Math.round(tr/(tr+tw)*100):0)+'%</p>'+
+    '<p class="muted">分野ごとの正解率です。試験では、配点の大きい分野ほど合否に効きます。</p>';
+  Object.keys(DOM).forEach(function(d){
+    var r=0,w=0; Q.forEach(function(q){ if(q.d===d && S.rec[q.id]){ r+=S.rec[q.id].r; w+=S.rec[q.id].w; } });
+    var p=(r+w)?Math.round(r/(r+w)*100):0;
+    h+='<div class="bar"><span class="lab">'+DOM[d].name+'（配点 '+DOM[d].w+'%）</span><span class="track"><i style="width:'+p+'%"></i></span><span class="num">'+((r+w)?p+'%（'+r+'/'+(r+w)+'）':'未回答')+'</span></div>';
+  });
+  var wr=Q.filter(function(q){ return S.rec[q.id] && S.rec[q.id].last===0; });
+  h+='<h3 style="margin-top:20px">いま間違えたままの問題：'+wr.length+'問</h3>';
+  wr.forEach(function(q){ h+='<details><summary>'+esc(q.q)+'</summary><div class="exp c" style="margin-top:6px"><b>正解：</b>'+q.o.slice(0,q.n).map(esc).join(' ／ ')+'<br><b>ポイント：</b>'+esc(q.pt)+'</div></details>'; });
+  h+='<div class="row"><button class="btn" id="reset">記録を消して最初からやり直す</button></div></div>';
+  box.innerHTML=h;
+  twoTap(document.getElementById("reset"),"もう一度押すと全記録を消します",function(){ S.rec={}; S.best={}; save(); renderStats(); home(); });
+}
+
+/* ============ Messages API ============ */
+document.getElementById("tab-api").innerHTML = `
+<div class="card">
+<h2 style="margin-top:0">Messages API のやり取り</h2>
+<p>アプリと Claude の API は、「リクエストを送る → レスポンスが返る」を繰り返します。API は会話を覚えない（ステートレス）ので、続きを頼むときは、履歴ごと毎回送ります。</p>
+<div class="flow"><div class="node">あなたのアプリ</div><div class="arr">→ リクエスト<br>← レスポンス</div><div class="node">Claude API<br><span class="muted">api.anthropic.com</span></div></div>
+</div>
+
+<div class="card">
+<h3><span class="dir">アプリ → API</span>① 最初のリクエスト</h3>
+<p>必須は <code>model</code>・<code>max_tokens</code>・<code>messages</code> の3つ。役割や方針は <code>system</code> に書きます。HTTP で直接呼ぶときは <code>anthropic-version</code> ヘッダが必要です（SDK を使うと自動で付きます）。</p>
+<pre><code>POST https://api.anthropic.com/v1/messages
+x-api-key: （自分の API キー。サーバー側で管理）
+anthropic-version: 2026-10-21
+content-type: application/json
+
+{
+  "model": "（使うモデルの ID）",
+  "max_tokens": 1024,
+  "system": "あなたは丁寧なサポート担当です。",
+  "messages": [
+    {"role": "user", "content": "返品の手順を教えてください"}
+  ]
+}</code></pre>
+</div>
+
+<div class="card">
+<h3><span class="dir back">API → アプリ</span>② レスポンス</h3>
+<p><code>content</code> はブロックのリストです。使ったトークン数は <code>usage</code>、終わった理由は <code>stop_reason</code> で分かります。</p>
+<pre><code>{
+  "id": "msg_01...",
+  "type": "message",
+  "role": "assistant",
+  "content": [
+    {"type": "text", "text": "返品は次の手順で行います。まず…"}
+  ],
+  "model": "（使ったモデル）",
+  "stop_reason": "end_turn",
+  "usage": {"input_tokens": 25, "output_tokens": 120}
+}</code></pre>
+</div>
+
+<div class="card">
+<h3><span class="dir">アプリ → API</span>③ 会話を続ける（履歴ごと送る）</h3>
+<p>Claude の返事を <code>assistant</code> として履歴に足し、新しい質問を <code>user</code> で足して、全部を送り直します。API は前回を覚えていません。</p>
+<pre><code>"messages": [
+  {"role": "user",      "content": "返品の手順を教えてください"},
+  {"role": "assistant", "content": "返品は次の手順で行います。まず…"},
+  {"role": "user",      "content": "期限はいつまでですか？"}
+]</code></pre>
+</div>
+
+<div class="card">
+<h3>④ ツールを使うやり取り（<code>tool_use</code> の往復）</h3>
+<p><b>手順1</b>　<span class="dir">アプリ → API</span>質問と一緒に、ツール定義（name / description / input_schema）を送る。</p>
+<pre><code>"tools": [{
+  "name": "get_weather",
+  "description": "指定した都市の現在の天気を返す。天気を聞かれたときに使う。",
+  "input_schema": {
+    "type": "object",
+    "properties": {"city": {"type": "string"}},
+    "required": ["city"]
+  }
+}],
+"messages": [{"role": "user", "content": "東京の天気は？"}]</code></pre>
+<p><b>手順2</b>　<span class="dir back">API → アプリ</span>Claude は答えず、ツールの実行を<b>要求</b>する。<code>stop_reason</code> が <code>tool_use</code>。</p>
+<pre><code>"content": [
+  {"type": "text", "text": "天気を調べます。"},
+  {"type": "tool_use", "id": "toolu_01", "name": "get_weather", "input": {"city": "東京"}}
+],
+"stop_reason": "tool_use"</code></pre>
+<p><b>手順3</b>　<span class="dir self">アプリの中</span>アプリが自分のコードで <code>get_weather("東京")</code> を実行する。Claude は実行しません。</p>
+<p><b>手順4</b>　<span class="dir">アプリ → API</span>履歴に、Claude の要求と、ツールの結果（<code>tool_result</code>）を足して送る。</p>
+<pre><code>"messages": [
+  {"role": "user", "content": "東京の天気は？"},
+  {"role": "assistant", "content": [
+    {"type": "text", "text": "天気を調べます。"},
+    {"type": "tool_use", "id": "toolu_01", "name": "get_weather", "input": {"city": "東京"}}
+  ]},
+  {"role": "user", "content": [
+    {"type": "tool_result", "tool_use_id": "toolu_01", "content": "晴れ、18℃"}
+  ]}
+]</code></pre>
+<p><b>手順5</b>　<span class="dir back">API → アプリ</span>結果を受けた Claude が、最終の答えを返す。<code>stop_reason</code> は <code>end_turn</code>。</p>
+<pre><code>"content": [{"type": "text", "text": "東京は晴れで、気温は18℃です。"}],
+"stop_reason": "end_turn"</code></pre>
+<div class="point"><b>覚えること：</b><code>tool_use</code> が返る間は、「実行 → <code>tool_result</code> を返す → 再度呼ぶ」を繰り返す。<code>tool_result</code> の <code>tool_use_id</code> は、要求の <code>id</code> と同じにする。</div>
+</div>
+
+<div class="card">
+<h3>stop_reason の一覧</h3>
+<table>
+<tr><th>値</th><th>意味</th><th>アプリの対応</th></tr>
+<tr><td><code>end_turn</code></td><td>Claude が答え終えた</td><td>結果を使う</td></tr>
+<tr><td><code>max_tokens</code></td><td>出力が上限で途中で切れた</td><td>上限を増やす／短くさせる</td></tr>
+<tr><td><code>tool_use</code></td><td>ツールの実行を求めている</td><td>実行して <code>tool_result</code> を返す</td></tr>
+<tr><td><code>stop_sequence</code></td><td>指定した停止文字列が出た</td><td>どれが出たかを読み、そこまでを結果として使う</td></tr>
+<tr><td><code>pause_turn</code></td><td>サーバー側ツールのループが回数の上限に達した</td><td>Claude の内容をそのまま送り返して続ける</td></tr>
+<tr><td><code>refusal</code></td><td>Claude が応答を断った</td><td><code>stop_details</code> を読み、必要なら別モデルで再試行</td></tr>
+<tr><td><code>model_context_window_exceeded</code></td><td>出力がモデルのコンテキストウィンドウを埋めた</td><td>途中で切れた結果として扱う</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>主なエラーと対応</h3>
+<table>
+<tr><th>コード</th><th>意味</th><th>再試行</th></tr>
+<tr><td>400</td><td>リクエストの内容が誤り</td><td>× 直してから送る</td></tr>
+<tr><td>401</td><td>API キーが無効・未指定</td><td>× キーを確認</td></tr>
+<tr><td>403</td><td>権限がない</td><td>× 権限を確認</td></tr>
+<tr><td>404</td><td>指定したものが見つからない（URL や ID の誤りなど）</td><td>× 指定を直す</td></tr>
+<tr><td>413</td><td>リクエストが大きすぎる</td><td>× 小さくする</td></tr>
+<tr><td>429</td><td>レート制限</td><td>○ 待って再試行（指数バックオフ）</td></tr>
+<tr><td>500</td><td>API 側の内部エラー</td><td>○ 待って再試行</td></tr>
+<tr><td>504</td><td>処理がタイムアウトした（長い要求はストリーミングを使う）</td><td>△ ストリーミングに切り替える</td></tr>
+<tr><td>529</td><td>API が混雑している</td><td>○ 待って再試行</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>ストリーミングでは</h3>
+<p>リクエストに <code>"stream": true</code> を足すと、レスポンスが文字の断片として順に届きます。完成を待たずに画面へ出せるので、体感の待ち時間が短くなります。品質や料金は変わりません。</p>
+</div>
+`;
+
+/* ============ 試験情報 ============ */
+(function(){
+  var h='<div class="card"><h2 style="margin-top:0">CCDV-F（Claude Certified Developer – Foundations）</h2>'+
+  '<table><tr><th>項目</th><td>内容</td></tr>'+
+  '<tr><th>対象</th><td>Claude を使ったアプリ・エージェント・ワークフローを作る開発者（基礎レベル）</td></tr>'+
+  '<tr><th>問題数・時間</th><td>53問・120分（選択式。複数選択の問題もあり、選ぶ数は問題に書いてある）</td></tr>'+
+  '<tr><th>合格点</th><td>1000点満点中 720点（スコアレポートで分野別の正答率が分かる）</td></tr>'+
+  '<tr><th>受験料・形式</th><td>1回 125ドル。Pearson VUE で、自宅（オンライン監督）またはテストセンター</td></tr>'+
+  '<tr><th>有効期間</th><td>合格から12か月</td></tr>'+
+  '<tr><th>言語</th><td>日本語で受験可能</td></tr></table>'+
+  '<p class="muted">出典：第三者の解説サイト（AI Cert Guides、AI Skill Certs など）と、Qiita の受験記。公式の試験ガイドそのものは確認できていません。受験前に、公式（Partner Academy / Pearson VUE）の案内を必ず確認してください。</p></div>';
+  h+='<div class="card"><h2 style="margin-top:0">8分野の配点</h2>';
+  Object.keys(DOM).sort(function(a,b){return DOM[b].w-DOM[a].w;}).forEach(function(d){
+    h+='<div class="bar"><span class="lab">'+DOM[d].name+'</span><span class="track"><i style="width:'+(DOM[d].w/33.1*100)+'%"></i></span><span class="num">'+DOM[d].w+'%</span></div>';
+  });
+  h+='<p class="muted">「アプリケーションと統合」だけで約1/3。API の仕組み・アプリ設計・ソフトウェア工学の基本が中心です。「Claude Code」と「評価・テスト・デバッグ」は軽めです。</p></div>';
+  h+='<div class="card"><h2 style="margin-top:0">受験記から分かること</h2><ul>'+
+  '<li>体感の難しさは「CCDV-F ＜ CCAO-F ＜ CCAR-P ≪ CCAR-F」の順で、CCDV-F は選択肢を絞りやすい問題が多い。</li>'+
+  '<li>120分で53〜63問だが、約1時間で解き終わる分量だった。</li>'+
+  '<li>12月7日（月）から出題内容が改訂される。12/4の受験は、改訂前の現行版にあたる。</li>'+
+  '<li>自宅受験は終わるまで席を立てない。トイレの心配があるなら、テストセンターが安心。</li>'+
+  '<li>Partner Academy に SSO で初めて登録すると、ログイン中アカウントの氏名がそのまま登録される。氏名を事前に確認しておく。</li></ul>'+
+  '<p class="muted">出典：<a href="https://qiita.com/minorun365/items/59783841e48f5467594f" target="_blank" rel="noopener">Qiita「目指せClaude全冠！」</a></p></div>';
+  h+='<div class="card"><h2 style="margin-top:0">12/4 までの進め方（案）</h2><ol>'+
+  '<li>まず第1〜5回を1周する（1日1回で5日間）。</li>'+
+  '<li>「成績」タブで弱い分野を確認する。配点の大きい「アプリケーションと統合」を優先する。</li>'+
+  '<li>「間違えた問題だけ」で解き直す。正解できるまで繰り返す。</li>'+
+  '<li>「Messages API のやり取り」タブを読み、リクエストとレスポンスの形を頭に入れる。</li>'+
+  '<li>前日は「全問を通しで」を1回。間違えた問題の解説だけ読み返す。</li></ol></div>';
+  document.getElementById("tab-info").innerHTML=h;
+})();
+
+home();
+</script>
+</body>
+</html>
