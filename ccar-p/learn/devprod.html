@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCAR-P：開発生産性と運用支援 | Claude 認定資格 学習サイト</title>
+<meta name="description" content="チームへの Claude Code の展開、AI を使った開発の流れ、運用上の問題の解決を扱います。CCDV-F の Claude Code の知識を、組織の視点で使う分野です。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCAR-P 学習</a>
+      <a href="../exercises.html">CCAR-P 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCAR-P 学習</a> › 開発生産性と運用支援</p>
+    <h1>開発生産性と運用支援 <span class="badge accent">配点 7%</span></h1>
+    <p class="lead">チームへの Claude Code の展開、AI を使った開発の流れ、運用上の問題の解決を扱います。CCDV-F の Claude Code の知識を、組織の視点で使う分野です。</p>
+<h2 id="tooling">チームへのツールの展開</h2>
+<div class="table-wrap"><table>
+<tr><th>設定の層</th><th>置く場所</th><th>置くもの</th></tr>
+<tr><td>組織</td><td>管理者が配布する設定（managed settings）</td><td>全員に強制する安全基準（禁止するコマンド、読ませないファイル、許可する MCP）</td></tr>
+<tr><td>プロジェクト</td><td>リポジトリの CLAUDE.md、共有の settings.json</td><td>そのリポジトリの決まり、テストのコマンド、プロジェクト用の権限やフック</td></tr>
+<tr><td>個人</td><td>~/.claude/ の設定</td><td>個人の好み</td></tr>
+</table></div>
+<ul>
+<li>安全基準は個人に任せず、<b>組織の設定で一律に</b>適用する。</li>
+<li>カスタムコマンド・Skills・プラグインで、チームのやり方を共有する。</li>
+<li>MCP サーバーは出どころと権限を確認し、許可したものだけを使えるようにする。</li>
+</ul>
+<p>Claude Code の基本は <a href="../../ccdv-f/learn/code-eval.html">CCDV-F の Claude Code のページ</a> にまとめています。</p>
+
+<h2 id="workflow">AI を使った開発の流れ</h2>
+<svg viewBox="0 0 640 110" role="img" aria-label="開発の流れ"><defs><marker id="ar-wf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker><marker id="ar-wf2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-accent"/></marker></defs><rect x="6" y="16" width="140" height="50" rx="8" class="d-box-blue"/><text x="76" y="46" text-anchor="middle" class="d-text">計画を立てさせる</text><rect x="168" y="16" width="140" height="50" rx="8" class="d-box"/><text x="238" y="46" text-anchor="middle" class="d-text">人が計画を確認</text><rect x="330" y="16" width="140" height="50" rx="8" class="d-box-blue"/><text x="400" y="46" text-anchor="middle" class="d-text">小さく実装</text><rect x="492" y="16" width="142" height="50" rx="8" class="d-box-accent"/><text x="563" y="40" text-anchor="middle" class="d-text">テスト→レビュー</text><path d="M146 41 H164" class="d-line" marker-end="url(#ar-wf)"/><path d="M308 41 H326" class="d-line" marker-end="url(#ar-wf)"/><path d="M470 41 H488" class="d-line" marker-end="url(#ar-wf)"/><path d="M563 66 C 563 104, 400 104, 400 70" class="d-line-accent" marker-end="url(#ar-wf2)"/><text x="320" y="100" text-anchor="middle" class="d-sub">小さな単位で繰り返す</text></svg>
+<ul>
+<li>大きな変更をいきなり頼まず、<b>計画 → 確認 → 小さく実装 → テスト → レビュー</b>を繰り返す。</li>
+<li>テストを成功基準にすると、AI に任せられる範囲を広げやすい。</li>
+<li>CI でヘッドレスモードを使い、レビューの補助や定型作業を自動化する。</li>
+<li>AI が書いたコードもレビューする。セキュリティの観点は特に。</li>
+</ul>
+
+<h2 id="operations">運用上の問題の解決</h2>
+<ol>
+<li><b>影響の把握</b>：誰に、どれだけ、いつから。</li>
+<li><b>再現条件の特定</b>：request-id とトレースで、該当するリクエストを探す。</li>
+<li><b>層ごとの切り分け</b>：データの取得・変換（統合部分）／API のエラーや stop_reason／モデルの出力。</li>
+<li><b>修正と確認</b>：原因に合った修正。プロンプトやモデルを闇雲に変えない。</li>
+<li><b>再発防止</b>：失敗したケースを評価データに加える。監視とアラートを見直す。</li>
+</ol>
+<div class="table-wrap"><table>
+<tr><th>症状</th><th>考えられる原因</th></tr>
+<tr><td>特定の顧客だけ何も返らない</td><td>顧客データの取得の例外、空のコンテキスト、refusal、タイムアウト</td></tr>
+<tr><td>時間帯によって遅い・失敗する</td><td>レート制限（429）、過負荷（529）、同時実行数</td></tr>
+<tr><td>ある日から品質が落ちた</td><td>モデル・プロンプト・データの変更（何が変わったか）</td></tr>
+</table></div>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>安全基準は組織の設定で一律に。プロジェクトの決まりはリポジトリで共有。</li>
+<li>開発は計画 → 小さく実装 → テスト → レビュー。</li>
+<li>障害は記録で再現条件を特定し、層ごとに切り分ける。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="models.html">← モデル・プロンプト・コンテキスト</a>
+      <a class="btn primary" href="../exercises.html">問題演習で確認する →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

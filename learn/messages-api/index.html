@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messages API をしくみから学ぶ | Claude 認定資格 学習サイト</title>
+<meta name="description" content="Claude の Messages API のリクエスト・レスポンス・stop_reason・ストリーミング・ツール利用・キャッシュ・エラー・Batches を図と疑似環境で学ぶ">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">Messages API 解説</a>
+      <a href="./playground.html">疑似環境</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › Messages API</p>
+    <h1>Messages API をしくみから学ぶ</h1>
+    <p class="lead">Claude をアプリから使うときの入口が Messages API です。CCDV-F では「Claude API Mechanics」（6.8%）を中心に、ツール・キャッシュ・コストなど多くの分野の土台になります。CCAR-P でも、設計の判断の前提として必要です。</p>
+
+    <div class="callout">
+      <p><b>このページの使い方</b>：各章に「<b>疑似環境で試す</b>」のリンクがあります。読んだらすぐに、ブラウザの中だけで動く疑似環境でリクエストを書いて送ってみましょう。API キーは不要です。</p>
+      <p><a class="btn primary small" href="./playground.html">疑似環境を開く →</a></p>
+    </div>
+
+    <h2 id="overview">全体像：1回のやり取り</h2>
+    <p>Messages API は、<b>「会話の内容を JSON で送ると、Claude の返答が JSON で返る」</b> だけのシンプルな HTTP の API です。</p>
+    <ol>
+      <li>アプリが <code>POST https://api.anthropic.com/v1/messages</code> に、ヘッダー（API キーなど）とボディ（モデル・会話・設定）を送る。</li>
+      <li>API がリクエストを検証し、Claude が返答を生成する。</li>
+      <li>レスポンスとして、返答の内容（<code>content</code>）、止まった理由（<code>stop_reason</code>）、使ったトークン数（<code>usage</code>）が返る。</li>
+    </ol>
+    <p>このシンプルさの裏返しとして、<b>会話の履歴の管理、ツールの実行、再試行</b>などは、すべてアプリ側の仕事になります。試験ではこの「アプリの責任の範囲」がよく問われます。</p>
+
+    <h2 id="request">リクエストの形</h2>
+    <h3>ヘッダー</h3>
+    <div class="table-wrap"><table>
+      <tr><th>ヘッダー</th><th>内容</th></tr>
+      <tr><td><code>x-api-key</code></td><td>API キー。<b>サーバー側で保管</b>し、ブラウザやソースコードに置かない。</td></tr>
+      <tr><td><code>anthropic-version</code></td><td><b>必須</b>。API の挙動のバージョン（例：<code>2026-10-21</code>）。同じバージョンを指定している限り、挙動が急に変わらない。</td></tr>
+      <tr><td><code>content-type</code></td><td><code>application/json</code></td></tr>
+    </table></div>
+    <h3>ボディ（必須の3項目）</h3>
+<pre><code>{
+  "model": "claude-sonnet-5-5",        // どのモデルで
+  "max_tokens": 1024,                  // 出力をどこまで許すか（上限）
+  "messages": [                        // 会話の内容
+    {"role": "user", "content": "こんにちは"}
+  ]
+}</code></pre>
+    <p>よく使う任意の項目：</p>
+    <div class="table-wrap"><table>
+      <tr><th>項目</th><th>用途</th></tr>
+      <tr><td><code>system</code></td><td>役割・方針・制約など、会話全体に効く指示</td></tr>
+      <tr><td><code>stop_sequences</code></td><td>この文字列が出たら止める</td></tr>
+      <tr><td><code>stream</code></td><td><code>true</code> で少しずつ受け取る（ストリーミング）</td></tr>
+      <tr><td><code>tools</code>／<code>tool_choice</code></td><td>ツールの定義と、使わせ方</td></tr>
+      <tr><td><code>thinking</code>／<code>output_config.effort</code></td><td>思考（推論）の設定と量の目安</td></tr>
+      <tr><td><code>output_config.format</code></td><td>構造化出力（JSON スキーマで出力の形を決める）</td></tr>
+      <tr><td><code>cache_control</code></td><td>プロンプトキャッシュ</td></tr>
+    </table></div>
+    <div class="callout warn">
+      <p><b>注意（API バージョン 2026-10-21）</b>：<code>temperature</code>・<code>top_p</code>・<code>top_k</code> は廃止され、送ると 400 エラーになります。古い教材やサンプルコードには残っていることがあるので気をつけましょう。</p>
+    </div>
+    <p class="try"><b>疑似環境で試す</b> 必須の項目を消したり、モデル名を間違えたりすると何が返る？ <a href="./playground.html#basic">演習1：最小のリクエスト →</a></p>
+
+    <h2 id="response">レスポンスの形</h2>
+<pre><code>{
+  "id": "msg_01...",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-5-5",
+  "content": [ {"type": "text", "text": "こんにちは！…"} ],   // ブロックの配列
+  "stop_reason": "end_turn",                                  // なぜ止まったか
+  "stop_sequence": null,
+  "usage": {                                                  // 使ったトークン数
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 48
+  }
+}</code></pre>
+    <ul>
+      <li><b>content は配列</b>：text のほかに、tool_use（ツールの要求）や thinking（思考）のブロックが並ぶことがあります。テキストだけを取り出すなら、<code>type</code> が <code>text</code> のブロックを集めます。</li>
+      <li><b>usage を記録する</b>：費用の計算、異常な使用量の検知、キャッシュの効果の確認に使います。入力の合計は <code>input_tokens + cache_creation_input_tokens + cache_read_input_tokens</code> です。</li>
+      <li>レスポンスヘッダーの <code>request-id</code> は、問題の調査や問い合わせに必要なので、ログに残します。</li>
+    </ul>
+
+    <h2 id="stateless">ステートレス：履歴はアプリが持つ</h2>
+    <p>Messages API は<b>前回のやり取りを覚えていません</b>。会話を続けるには、これまでの user と assistant のやり取りを <b>毎回すべて</b> <code>messages</code> に入れて送ります。</p>
+    <figure class="diagram" data-src="../../assets/img/stateless.svg"><figcaption>2回目のリクエストには、1回目のやり取りも含める</figcaption></figure>
+    <ul>
+      <li><code>role</code> は <code>user</code> と <code>assistant</code> の2種類。同じ role が続くと1つのターンにまとめられます。</li>
+      <li><code>system</code> は messages の中ではなく、<b>トップレベルの system パラメータ</b>に書きます。</li>
+      <li>履歴が長くなるほど、入力トークン（＝費用と待ち時間）が増えます。話題が変わったら新しい会話にする、古い部分を要約する、といった工夫が必要です（セッションの衛生管理・コンテキストエンジニアリング）。</li>
+    </ul>
+    <div class="exam-tip">「会話 ID を送れば続きになる」「API が覚えている」といった選択肢は誤り。履歴の管理はアプリの責任。</div>
+    <p class="try"><b>疑似環境で試す</b> 履歴なしで「では大阪は？」と聞くとどうなる？ <a href="./playground.html#stateless">演習2：system と会話の履歴 →</a></p>
+
+    <h2 id="content-blocks">content ブロックの種類</h2>
+    <div class="table-wrap"><table>
+      <tr><th>type</th><th>どこに入る</th><th>内容</th></tr>
+      <tr><td><code>text</code></td><td>user／assistant</td><td>文章</td></tr>
+      <tr><td><code>image</code></td><td>user</td><td>画像（base64・URL・Files API）</td></tr>
+      <tr><td><code>document</code></td><td>user</td><td>PDF やテキストの文書</td></tr>
+      <tr><td><code>tool_use</code></td><td>assistant</td><td>Claude からのツールの要求（id・name・input）</td></tr>
+      <tr><td><code>tool_result</code></td><td>user</td><td>アプリが返すツールの結果（tool_use_id で対応づけ）</td></tr>
+      <tr><td><code>thinking</code></td><td>assistant</td><td>思考の内容と署名。<b>変えずに送り返す</b></td></tr>
+    </table></div>
+
+    <h2 id="stop-reason">stop_reason：なぜ止まったか</h2>
+    <p>アプリは <code>stop_reason</code> を見て、次に何をするかを決めます。</p>
+    <figure class="diagram" data-src="../../assets/img/stop-reason.svg"><figcaption>stop_reason ごとのアプリの対応</figcaption></figure>
+    <div class="table-wrap"><table>
+      <tr><th>値</th><th>意味</th><th>アプリの対応</th></tr>
+      <tr><td><code>end_turn</code></td><td>自然に書き終えた</td><td>そのまま使う</td></tr>
+      <tr><td><code>max_tokens</code></td><td>上限に達して途中で切れた</td><td>上限を上げる／続きを生成する／短く出させる</td></tr>
+      <tr><td><code>stop_sequence</code></td><td>指定した文字列が出た</td><td>想定どおりの停止として扱う</td></tr>
+      <tr><td><code>tool_use</code></td><td>ツールを呼んでほしい</td><td>実行して tool_result を返し、再度呼ぶ</td></tr>
+      <tr><td><code>pause_turn</code></td><td>サーバーツールのループが上限に達した</td><td>返ってきた内容をそのまま送り返して続ける</td></tr>
+      <tr><td><code>refusal</code></td><td>応答を断った（HTTP 200）</td><td><code>stop_details</code> を確認する</td></tr>
+      <tr><td><code>model_context_window_exceeded</code></td><td>コンテキストウィンドウがいっぱい</td><td>途中で切れたものとして扱う</td></tr>
+    </table></div>
+    <h3>プリフィルは使えない（新しいモデル）</h3>
+    <p>以前は、messages の最後を assistant にして「<code>{</code>」などを書いておき、その続きから書かせる「プリフィル」という技法がありました。<b>Claude 4.6 以降のモデルではプリフィルは 400 エラー</b>になります。出力の形を決めたいときは、構造化出力を使います。</p>
+    <p class="try"><b>疑似環境で試す</b> max_tokens を小さくしたり、stop_sequences を付けたりすると？ <a href="./playground.html#stop-reason">演習3：stop_reason →</a></p>
+
+    <h2 id="streaming">ストリーミング</h2>
+    <p><code>"stream": true</code> にすると、返答ができた部分から少しずつ届きます（Server-Sent Events）。<b>生成の速さや料金は同じ</b>ですが、利用者が最初の文字を見るまでの時間が短くなり、体感が大きく改善します。</p>
+    <figure class="diagram" data-src="../../assets/img/streaming-events.svg"><figcaption>イベントの順番</figcaption></figure>
+    <ul>
+      <li>文章は <code>text_delta</code>、ツールの入力は <code>input_json_delta</code>（JSON の断片。全部つなげてからパース）で届きます。</li>
+      <li><code>stop_reason</code> と出力トークン数は、最後のほうの <code>message_delta</code> で届きます。</li>
+      <li>途中で <code>error</code> イベント（例：overloaded_error）が来ることがあります。HTTP は 200 のままなので、イベントの中身で判断します。</li>
+      <li>知らない種類のイベントが来ても、無視して処理を続けられるように作ります。</li>
+    </ul>
+    <p class="try"><b>疑似環境で試す</b> イベントが1つずつ届く様子を見てみよう。 <a href="./playground.html#streaming">演習4：ストリーミング →</a></p>
+
+    <h2 id="tool-use">ツール利用（tool use）のループ</h2>
+    <p>ツールを定義すると、Claude は必要に応じて「このツールをこの入力で呼んで」と要求します。<b>Claude は要求するだけで、実行するのはアプリ</b>です（自分で定義したクライアントツールの場合）。</p>
+    <figure class="diagram" data-src="../../assets/img/tool-use-loop.svg"><figcaption>①〜⑤の流れ。③はアプリの仕事</figcaption></figure>
+    <h3>ツールの定義</h3>
+<pre><code>{
+  "name": "get_weather",
+  "description": "指定した都市の現在の天気と気温を返す。利用者が天気・気温を尋ねたときに使う。",
+  "input_schema": {
+    "type": "object",
+    "properties": { "city": {"type": "string", "description": "都市名（例：大阪）"} },
+    "required": ["city"]
+  }
+}</code></pre>
+    <p><b>description が最も重要</b>です。Claude は名前と説明を読んで、いつ・どう使うかを判断します。何をするか、いつ使うか、入力の意味、何が返るかを具体的に書きます。</p>
+    <h3>結果の返し方（よくある誤り）</h3>
+<pre><code>[
+  {"role": "user", "content": "大阪の天気は？"},
+  {"role": "assistant", "content": [                       // ← 返ってきた内容をそのまま入れる
+    {"type": "tool_use", "id": "toolu_01A", "name": "get_weather", "input": {"city": "大阪"}}
+  ]},
+  {"role": "user", "content": [                            // ← 直後の user に
+    {"type": "tool_result", "tool_use_id": "toolu_01A",    // ← id を対応づける
+     "content": "{\"weather\":\"晴れ\",\"temp_c\":18}"}      // ← content の先頭に置く
+  ]}
+]</code></pre>
+    <ul>
+      <li>tool_result は、tool_use を含む assistant の<b>直後の user メッセージ</b>に置く。</li>
+      <li>tool_result は user の content の<b>先頭</b>に置く。テキストを添えるなら後ろに。</li>
+      <li>複数のツールが並列に呼ばれたら、<b>1つの user メッセージにすべての結果</b>を入れる。</li>
+      <li>ツールが失敗しても tool_result は返す。<code>is_error: true</code> を付け、何が起きたかを簡潔に書く。</li>
+      <li>API はステートレスなので、2回目以降も <code>tools</code> の定義を毎回送る。</li>
+    </ul>
+    <h3>tool_choice</h3>
+    <div class="table-wrap"><table>
+      <tr><th>値</th><th>意味</th></tr>
+      <tr><td><code>auto</code></td><td>使うかどうかは Claude が決める（既定）</td></tr>
+      <tr><td><code>any</code>／<code>tool</code></td><td>必ずツール（指定したもの）を使う。<b>Opus 5.5・Sonnet 5.5 などは非対応</b></td></tr>
+      <tr><td><code>none</code></td><td>ツールを使わない</td></tr>
+    </table></div>
+    <h3>クライアントツールとサーバーツール</h3>
+    <p>自分で定義するツールはアプリが実行します（クライアントツール）。一方、Web 検索（web_search）などの<b>サーバーツールは Anthropic 側で実行</b>され、結果がレスポンスに含まれて返ります。</p>
+    <p class="try"><b>疑似環境で試す</b> ツールの要求 → 実行 → 結果の返却を体験しよう。わざと順番を間違えるとどうなる？ <a href="./playground.html#tool-use">演習5：ツール利用のループ →</a></p>
+
+    <h2 id="structured">構造化出力</h2>
+    <p>後続のシステムが機械的に読む出力は、<code>output_config.format</code> に JSON スキーマを指定して、形を保証します。</p>
+<pre><code>"output_config": {
+  "format": {
+    "type": "json_schema",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "category": {"type": "string", "enum": ["billing", "technical", "cancellation", "other"]},
+        "urgency":  {"type": "string", "enum": ["low", "medium", "high"]}
+      },
+      "required": ["category", "urgency"],
+      "additionalProperties": false
+    }
+  }
+}</code></pre>
+    <ul>
+      <li>値の候補は <code>enum</code> で固定し、<code>additionalProperties: false</code> で余計な項目を出させない。</li>
+      <li>再帰、<code>oneOf</code>、数値の範囲や文字数の制約（minimum・maxLength など）は使えない。範囲の確認はアプリ側で行う。</li>
+      <li>形が保証されても、<b>内容が業務的に正しいか</b>は別の話。重要な値はアプリで検証する。</li>
+      <li>ツールの入力の形を保証したいときは、ツール定義に <code>"strict": true</code> を付ける方法もある。</li>
+    </ul>
+    <p class="try"><b>疑似環境で試す</b> 問い合わせメールを分類して JSON で受け取ろう。 <a href="./playground.html#structured">演習6：構造化出力 →</a></p>
+
+    <h2 id="vision">画像の入力</h2>
+<pre><code>{"role": "user", "content": [
+  {"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": "iVBORw0K..."}},
+  {"type": "text", "text": "この領収書の合計金額は？"}
+]}</code></pre>
+    <ul>
+      <li>対応形式は JPEG・PNG・GIF・WebP。<code>media_type</code> は画像の中身と一致させる。</li>
+      <li>1枚あたり最大 10MB（base64）、最大 8000×8000 px。</li>
+      <li>トークン数の目安は <b>⌈幅/28⌉ × ⌈高さ/28⌉</b>。大きい画像は自動で縮小される。</li>
+      <li>画像は質問のテキストより<b>前</b>に置くと、精度が上がりやすい。</li>
+    </ul>
+    <p class="try"><b>疑似環境で試す</b> サンプル画像のトークン数を確認しよう。 <a href="./playground.html#vision">演習7：画像の入力 →</a></p>
+
+    <h2 id="thinking">思考（thinking）と effort</h2>
+    <p>思考を有効にすると、Claude は回答の前に推論を行い、その内容が <code>thinking</code> ブロックとして返ります。複雑な推論や多段の判断で精度が上がります。</p>
+    <div class="table-wrap"><table>
+      <tr><th>設定</th><th>内容</th><th>対象</th></tr>
+      <tr><td><code>{"type": "adaptive"}</code></td><td>考えるかどうか・どれだけ考えるかを Claude が判断</td><td>Claude 4.6 以降</td></tr>
+      <tr><td><code>output_config.effort</code></td><td>low／medium／high／xhigh／max。思考の量と速さ・費用の目安</td><td>新しいモデル</td></tr>
+      <tr><td><code>{"type": "enabled", "budget_tokens": N}</code></td><td>思考の予算を指定（N ≥ 1024、N &lt; max_tokens）</td><td>旧世代。<b>Claude 4.7 以降は 400</b></td></tr>
+    </table></div>
+    <ul>
+      <li>思考トークンは<b>出力として課金</b>され、<code>max_tokens</code> の中に含まれる。</li>
+      <li>ツールのループでは、thinking ブロックを<b>変えずにそのまま</b>送り返す（変えると 400）。</li>
+      <li>簡単な処理は effort を下げて速く・安く、難しい処理は上げて精度を優先する。</li>
+    </ul>
+    <p class="try"><b>疑似環境で試す</b> effort を変えると思考トークンがどう変わる？ <a href="./playground.html#thinking">演習8：思考と effort →</a></p>
+
+    <h2 id="caching">プロンプトキャッシュ</h2>
+    <p>毎回同じ長い指示や資料を送っているなら、プロンプトキャッシュで<b>費用と最初のトークンまでの時間</b>を大きく下げられます。</p>
+    <figure class="diagram" data-src="../../assets/img/prompt-cache.svg"><figcaption>キャッシュは「先頭から一致する部分」を再利用する</figcaption></figure>
+    <ul>
+      <li><code>cache_control: {"type": "ephemeral"}</code> を付けたブロックまでが区切り（最大4つ）。トップレベルに付ける自動キャッシュもある。</li>
+      <li>キャッシュされる順番は <b>tools → system → messages</b>。<b>変わらない内容を先に、変わる内容を後に</b>置く。</li>
+      <li>有効期限は既定 5分（<code>"ttl": "1h"</code> で1時間）。読み込むたびに延長される。</li>
+      <li>料金：書き込み＝入力の 1.25倍（1時間なら 2倍）、読み込み＝0.1倍程度（モデルによりさらに安い）。</li>
+      <li>最小の長さ（例：Opus 5.5・Sonnet 5.5・Haiku 5.5 は 512 トークン）に満たないと、エラーにはならずキャッシュされないだけ。</li>
+      <li>効果は usage の <code>cache_creation_input_tokens</code>（書き込み）と <code>cache_read_input_tokens</code>（読み込み）で確かめる。</li>
+    </ul>
+    <div class="exam-tip">「同じ長い system を毎回送っていて、速度と費用の両方を改善したい」→ 変わらない部分を先頭に置いてキャッシュ。切り詰めやモデルの縮小は、必要な情報や品質を失う。</div>
+    <p class="try"><b>疑似環境で試す</b> 2回送ると何が変わる？ 先頭に時刻を入れると？ <a href="./playground.html#caching">演習9：プロンプトキャッシュ →</a></p>
+
+    <h2 id="errors">エラーと再試行</h2>
+    <figure class="diagram" data-src="../../assets/img/retry-backoff.svg"><figcaption>再試行するエラーと、直すべきエラー</figcaption></figure>
+<pre><code>{"type": "error",
+ "error": {"type": "rate_limit_error", "message": "..."},
+ "request_id": "req_011..."}</code></pre>
+    <ul>
+      <li><b>429・500・529</b>：一時的。待って再試行（429 は <code>retry-after</code> の秒数、その他は指数バックオフ＋ゆらぎ）。<b>回数には上限</b>を付ける。</li>
+      <li><b>400・401・403・404</b>：リクエストや設定の誤り。再試行しても同じなので、原因を直す。</li>
+      <li>公式 SDK は一時的なエラーを既定で2回まで自動で再試行する。二重に再試行を組まないよう注意。</li>
+      <li>レート制限は RPM（リクエスト／分）、ITPM（入力トークン／分）、OTPM（出力トークン／分）で管理され、トークンバケット方式で回復する。キャッシュの読み込みは ITPM に数えない。</li>
+    </ul>
+    <p class="try"><b>疑似環境で試す</b> 混雑を再現して、指数バックオフの流れを見てみよう。 <a href="./playground.html#errors">演習10：エラーと再試行 →</a></p>
+
+    <h2 id="batches">Message Batches API</h2>
+    <figure class="diagram" data-src="../../assets/img/batch-vs-realtime.svg"><figcaption>リアルタイムとバッチの使い分け</figcaption></figure>
+    <ol>
+      <li><b>作成</b>：<code>POST /v1/messages/batches</code> に、<code>custom_id</code> と <code>params</code>（Messages のボディ）の組を並べて送る。</li>
+      <li><b>状態の確認</b>：<code>GET /v1/messages/batches/{id}</code>。<code>processing_status</code> が <code>ended</code> になるまで待つ。</li>
+      <li><b>結果の取得</b>：<code>GET …/{id}/results</code>（JSONL）。<b>順番は保証されない</b>ので <code>custom_id</code> で対応づける。</li>
+    </ol>
+    <ul>
+      <li>料金は通常の <b>50%</b>。最長24時間で処理（終わらないものは expired）。</li>
+      <li>1バッチ最大 100,000 件または 256MB。結果は29日間取得できる。</li>
+      <li>個々のリクエストの失敗は、バッチ全体ではなく、その1件の <code>errored</code> として返る（課金されない）。</li>
+      <li>ストリーミングは使えない。利用者が画面で待つ処理には向かない。</li>
+    </ul>
+    <p class="try"><b>疑似環境で試す</b> 3件のレビューをまとめて分類しよう。 <a href="./playground.html#batches">演習11：Message Batches →</a></p>
+
+    <h2 id="models">モデルの選び方</h2>
+    <div class="table-wrap"><table>
+      <tr><th>モデル</th><th>API の ID</th><th>入力／出力（$/100万トークン）</th><th>向いている用途</th></tr>
+      <tr><td>Claude Opus 5.5</td><td><code>claude-opus-5-5</code></td><td>$4 ／ $20</td><td>難しい推論、複雑なエージェント</td></tr>
+      <tr><td>Claude Sonnet 5.5</td><td><code>claude-sonnet-5-5</code></td><td>$2 ／ $10</td><td>品質とコストのバランス。多くの本番用途</td></tr>
+      <tr><td>Claude Haiku 5.5</td><td><code>claude-haiku-5-5</code></td><td>$0.10 ／ $0.50〜</td><td>大量の分類・抽出、速さが重要な処理</td></tr>
+    </table></div>
+    <p class="small muted">2026年11月時点。料金やモデルは変わるので、最新は公式ドキュメントで確認してください。</p>
+    <ul>
+      <li>要件（品質・速度・費用）を満たす<b>最小のモデル</b>から評価する。</li>
+      <li>本番ではモデルのバージョンを固定し、切り替えは評価で確認してから行う（モデルの更新で挙動が変わることがある）。</li>
+      <li>送る前に <code>POST /v1/messages/count_tokens</code> で入力トークン数を確認できる。</li>
+    </ul>
+
+    <div class="key-points">
+      <h3>この章のまとめ</h3>
+      <ul>
+        <li>必須は <code>model</code>・<code>max_tokens</code>・<code>messages</code>、ヘッダーは <code>x-api-key</code>・<code>anthropic-version</code>。</li>
+        <li>API はステートレス。履歴・ツールの実行・再試行はアプリの仕事。</li>
+        <li><code>stop_reason</code> で次の動作を決める。<code>tool_use</code> なら実行して <code>tool_result</code> を返す。</li>
+        <li>速く見せたい → ストリーミング。急がない大量処理 → Batches（50%）。同じ長い前置き → キャッシュ。</li>
+        <li>429・5xx は待って再試行、4xx は直す。</li>
+      </ul>
+    </div>
+
+    <div class="page-nav">
+      <a class="btn" href="../../">← トップへ</a>
+      <a class="btn primary" href="./playground.html">疑似環境で試す →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。仕様は公式ドキュメント（2026年11月時点）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

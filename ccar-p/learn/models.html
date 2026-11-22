@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCAR-P：モデル・プロンプト・コンテキスト | Claude 認定資格 学習サイト</title>
+<meta name="description" content="モデルの選び方、system プロンプトとテンプレートの設計、プロンプトの技法、コンテキストの最適化、プロンプトの再利用を、アーキテクトの視点で扱います。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCAR-P 学習</a>
+      <a href="../exercises.html">CCAR-P 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCAR-P 学習</a> › モデル・プロンプト・コンテキスト</p>
+    <h1>モデル・プロンプト・コンテキスト <span class="badge accent">配点 13%</span></h1>
+    <p class="lead">モデルの選び方、system プロンプトとテンプレートの設計、プロンプトの技法、コンテキストの最適化、プロンプトの再利用を、アーキテクトの視点で扱います。</p>
+<h2 id="selection">モデルの選択</h2>
+<div class="compare">
+<div><h4>Haiku</h4><ul><li>速く安い</li><li>大量の分類・抽出、一次振り分け</li></ul></div>
+<div><h4>Sonnet</h4><ul><li>バランス</li><li>多くの本番用途</li></ul></div>
+<div><h4>Opus</h4><ul><li>最高性能</li><li>難しい推論、計画役、複雑なエージェント</li></ul></div>
+</div>
+<ul>
+<li>1つのシステムでも、<b>処理ごとに</b>要件（品質・速度・費用）を評価してモデルを選ぶ。</li>
+<li>要件を満たす最小のモデルを選び、難しいものだけ上位に回す（ルーティング）。</li>
+<li>モデルの更新では挙動が変わりうるので、評価してから切り替える。</li>
+</ul>
+<p>API の詳細は <a href="../../learn/messages-api/#models">Messages API 解説のモデルの章</a> を参照してください。</p>
+
+<h2 id="templates">system プロンプト・テンプレート・ガードレール</h2>
+<svg viewBox="0 0 640 170" role="img" aria-label="モジュール化したプロンプト"><rect x="10" y="10" width="300" height="150" rx="10" class="d-box"/><text x="160" y="34" text-anchor="middle" class="d-text" font-weight="700">共通部分（1か所で管理）</text><rect x="26" y="48" width="268" height="30" rx="6" class="d-box-ok"/><text x="160" y="68" text-anchor="middle" class="d-sub">安全のルール・禁止事項</text><rect x="26" y="84" width="268" height="30" rx="6" class="d-box-ok"/><text x="160" y="104" text-anchor="middle" class="d-sub">出力の形式・トーン</text><rect x="26" y="120" width="268" height="30" rx="6" class="d-box-ok"/><text x="160" y="140" text-anchor="middle" class="d-sub">会社の基本情報</text><text x="330" y="90" class="d-text">＋</text><rect x="360" y="10" width="270" height="150" rx="10" class="d-box"/><text x="495" y="34" text-anchor="middle" class="d-text" font-weight="700">部署ごとの部分</text><rect x="376" y="48" width="238" height="30" rx="6" class="d-box-blue"/><text x="495" y="68" text-anchor="middle" class="d-sub">営業：製品と価格の方針</text><rect x="376" y="84" width="238" height="30" rx="6" class="d-box-blue"/><text x="495" y="104" text-anchor="middle" class="d-sub">人事：規程の参照範囲</text><rect x="376" y="120" width="238" height="30" rx="6" class="d-box-blue"/><text x="495" y="140" text-anchor="middle" class="d-sub">…</text></svg>
+<ul>
+<li>共通部分と個別部分を分けたテンプレートにする（モジュール化）。共通の変更は1か所で全体に反映。</li>
+<li>テンプレートはバージョン管理し、変更時には評価を実行する。</li>
+<li>ガードレール（禁止事項・エスカレーションの条件）は system に明記しつつ、強制が必要なものは仕組み（権限・フック）で担保する。</li>
+</ul>
+
+<h2 id="techniques">プロンプトの技法</h2>
+<div class="table-wrap"><table>
+<tr><th>技法</th><th>内容</th><th>使いどころ</th></tr>
+<tr><td>zero-shot</td><td>指示だけ</td><td>単純で明確な作業</td></tr>
+<tr><td>few-shot</td><td>入出力の例を示す</td><td>書式や判断基準を安定させたい</td></tr>
+<tr><td>chain-of-thought</td><td>段階的に考えさせる（新しいモデルでは思考の機能）</td><td>複数の条件を組み合わせる推論</td></tr>
+<tr><td>根拠の引用</td><td>資料の該当箇所を示してから答えさせる</td><td>規程・約款・契約書の質問</td></tr>
+<tr><td>分解（プロンプトチェーン）</td><td>段階に分けて処理</td><td>複雑な多段の作業</td></tr>
+</table></div>
+
+<h2 id="context">コンテキストの最適化</h2>
+<div class="table-wrap"><table>
+<tr><th>手段</th><th>内容</th></tr>
+<tr><td>要約による圧縮（compaction）</td><td>古い履歴を要点にまとめる</td></tr>
+<tr><td>外部メモリ</td><td>長期で必要な情報を保存し、必要なときに読み込む</td></tr>
+<tr><td>不要な出力の削除</td><td>使い終わった大きなツール出力を削る</td></tr>
+<tr><td>検索で必要な分だけ</td><td>資料を全部入れず、関係する部分だけ</td></tr>
+<tr><td>分離</td><td>サブエージェントやワークフローの段階ごとにコンテキストを分ける</td></tr>
+</table></div>
+
+<h2 id="reuse">プロンプトの再利用</h2>
+<figure class="diagram" data-src="../../assets/img/prompt-cache.svg"><figcaption>キャッシュ：変わらない部分を先頭に</figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>方法</th><th>何を再利用するか</th><th>効果</th></tr>
+<tr><td>プロンプトキャッシュ</td><td>毎回同じ長い前置き（system・規程・ツール定義）</td><td>費用と最初のトークンまでの時間の削減</td></tr>
+<tr><td>モジュール化したプロンプト</td><td>共通部分のテンプレート</td><td>保守性・一貫性</td></tr>
+<tr><td>Skills</td><td>手順・書式・専門的なやり方の知識</td><td>必要なときだけ読み込み、複数の場面で再利用</td></tr>
+</table></div>
+<div class="exam-tip">「同じ 8,000 トークンの前置きを毎回送っていて、速度と費用の両方が課題」→ 変わらない部分を先頭に置いてキャッシュ。切り詰め・モデルの縮小・few-shot への移動は的外れ。</div>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>モデルは処理ごとに評価して選ぶ。</li>
+<li>system はテンプレート化・モジュール化・バージョン管理。</li>
+<li>技法：zero/few-shot、chain-of-thought、根拠の引用、分解。</li>
+<li>コンテキストは要約・外部メモリ・削除・検索・分離で最適化。</li>
+<li>再利用：キャッシュ・モジュール化・Skills。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="stakeholder.html">← 関係者とのコミュニケーション・ライフサイクル</a>
+      <a class="btn primary" href="devprod.html">開発生産性と運用支援 →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

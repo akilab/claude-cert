@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F：ツールと MCP | Claude 認定資格 学習サイト</title>
+<meta name="description" content="ツールの実装、MCP サーバーの開発、そして組み込みツール・カスタムツール・Skills・MCP の使い分けを扱います。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › ツールと MCP</p>
+    <h1>ツールと MCP <span class="badge accent">配点 10.6%</span></h1>
+    <p class="lead">ツールの実装、MCP サーバーの開発、そして組み込みツール・カスタムツール・Skills・MCP の使い分けを扱います。</p>
+<h2 id="implementation">ツールの実装</h2>
+<p>ツールの基本の流れは <a href="../../learn/messages-api/#tool-use">Messages API 解説のツール利用</a> と <a href="../../learn/messages-api/playground.html#tool-use">疑似環境の演習5</a> で確認できます。</p>
+<figure class="diagram" data-src="../../assets/img/tool-use-loop.svg"><figcaption>ツール利用のループ</figcaption></figure>
+<h3>良いツール定義</h3>
+<div class="compare">
+<div class="bad"><h4>✕ 曖昧</h4><pre><code>{"name": "search",
+ "description": "検索する"}</code></pre></div>
+<div class="good"><h4>◯ 具体的</h4><pre><code>{"name": "search_orders",
+ "description": "注文履歴を検索する。利用者が注文の状況・配送・返品を尋ねたときに使う。order_id（例：A-00123、先頭のゼロも含む文字列）か email のどちらかが必要。注文の状態と日付を返す。"}</code></pre></div>
+</div>
+<ul>
+<li><b>何をするか・いつ使うか・入力の意味と形式・何が返るか</b>を書く。</li>
+<li>入力の型を正しく定義する（ID は文字列。数値にすると先頭のゼロが消える）。</li>
+<li>似たツールを増やしすぎない。目的ごとにまとまったツールにする。</li>
+<li>出力は必要な情報に絞る（巨大な JSON をそのまま返すとコンテキストを圧迫する）。</li>
+</ul>
+<h3>エラーの返し方</h3>
+<p>失敗も <code>tool_result</code> で返します。<code>is_error: true</code> を付け、何が起きたか・再試行できるかを簡潔に。架空の結果を作ったり、結果を返さなかったりしてはいけません。</p>
+<h3>使い方のパターン</h3>
+<div class="table-wrap"><table>
+<tr><th>パターン</th><th>内容</th></tr>
+<tr><td>クライアントツール</td><td>アプリが実行して結果を返す</td></tr>
+<tr><td>サーバーツール</td><td>Anthropic 側で実行（web_search、code_execution など）</td></tr>
+<tr><td>承認のパターン</td><td>影響の大きいツール（送金・削除・送信）は、実行前に人の承認を挟む</td></tr>
+<tr><td>ハーネスでの振り分け</td><td>エージェントの実行基盤（ハーネス）が、要求されたツールを適切な実装に振り分け、権限を確認する</td></tr>
+</table></div>
+
+<h2 id="mcp">MCP サーバーの開発</h2>
+<figure class="diagram" data-src="../../assets/img/mcp-architecture.svg"><figcaption>1つの MCP サーバーを、複数のアプリから使う</figcaption></figure>
+<p>MCP（Model Context Protocol）は、ツールやデータを Claude のアプリにつなぐための共通の規格です。一度サーバーを作れば、MCP に対応したアプリ（Claude Code、Claude Desktop、Agent SDK で作ったアプリなど）から同じ方法で使えます。</p>
+<div class="table-wrap"><table>
+<tr><th>MCP が提供するもの</th><th>内容</th></tr>
+<tr><td>tools</td><td>Claude が呼び出せる操作（検索、登録など）</td></tr>
+<tr><td>resources</td><td>読み込めるデータ（ファイル、レコードなど）</td></tr>
+<tr><td>prompts</td><td>定型の指示のテンプレート</td></tr>
+</table></div>
+<h3>通信の方式</h3>
+<div class="compare">
+<div><h4>stdio（標準入出力）</h4><ul><li>アプリがサーバーをローカルのプロセスとして起動</li><li>ローカルのファイルや開発環境向け</li><li>ネットワークに公開しない</li></ul></div>
+<div><h4>HTTP（リモート）</h4><ul><li>ネットワーク越しに複数の利用者・アプリで共有</li><li>認証・認可が必須</li></ul></div>
+</div>
+<div class="exam-tip">「複数のアプリで再利用したい」「独立して保守したい」→ MCP サーバー。「ローカルのファイルを扱う」→ stdio。</div>
+
+<h2 id="customization">拡張方法の使い分け（Agentic Customization）</h2>
+<div class="table-wrap"><table>
+<tr><th>方法</th><th>何か</th><th>選ぶ場面</th></tr>
+<tr><td>組み込みツール</td><td>Claude Code や Agent SDK に最初からある（ファイル操作、コマンド実行、検索など）</td><td>用意されているものはまずこれを使う</td></tr>
+<tr><td>カスタムツール</td><td>自分のアプリの中で関数を tools として定義</td><td>1つのアプリだけで使う簡単な連携</td></tr>
+<tr><td>MCP</td><td>外部のサーバーとしてツールやデータを提供</td><td>複数のアプリで共有、独立した保守、外部システムとの連携</td></tr>
+<tr><td>Skills</td><td>指示・資料・スクリプトをまとめた「やり方の知識」。関係するときだけ読み込まれる</td><td>手順書、書式のルール、専門的な作業のやり方を再利用</td></tr>
+</table></div>
+<p>MCP は「何ができるか（道具）」を増やし、Skills は「どうやるか（知識・手順）」を与える、と考えると区別しやすくなります。</p>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>ツールの説明は具体的に。型を正しく。失敗も is_error で返す。</li>
+<li>クライアントツールはアプリが実行、サーバーツールは Anthropic が実行。</li>
+<li>MCP：tools・resources・prompts。ローカルは stdio、共有は HTTP＋認証。</li>
+<li>組み込み → カスタム → MCP → Skills を目的で使い分ける。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="prompt.html">← プロンプトとコンテキスト</a>
+      <a class="btn primary" href="security.html">セキュリティと安全 →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

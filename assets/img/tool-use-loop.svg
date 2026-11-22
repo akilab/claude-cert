@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" role="img" aria-labelledby="t-tool">
+  <title id="t-tool">ツール利用のループ：Claude は要求するだけで、実行するのはアプリ</title>
+  <defs>
+    <marker id="ar-tool-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-blue"/></marker>
+    <marker id="ar-tool-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-accent"/></marker>
+  </defs>
+  <rect x="20" y="20" width="140" height="340" rx="12" class="d-box-blue"/>
+  <text x="90" y="46" text-anchor="middle" class="d-text" font-weight="700">あなたのアプリ</text>
+  <rect x="250" y="20" width="140" height="340" rx="12" class="d-box-accent"/>
+  <text x="320" y="46" text-anchor="middle" class="d-text" font-weight="700">Claude API</text>
+  <rect x="480" y="20" width="140" height="340" rx="12" class="d-box"/>
+  <text x="550" y="46" text-anchor="middle" class="d-text" font-weight="700">外部の仕組み</text>
+  <text x="550" y="64" text-anchor="middle" class="d-sub">天気 API・DB など</text>
+
+  <path d="M160 90 H246" class="d-line-blue" marker-end="url(#ar-tool-b)"/>
+  <text x="203" y="80" text-anchor="middle" class="d-sub">① tools＋質問</text>
+  <path d="M250 135 H164" class="d-line-accent" marker-end="url(#ar-tool-a)"/>
+  <text x="205" y="127" text-anchor="middle" class="d-sub">② tool_use</text>
+  <text x="205" y="152" text-anchor="middle" class="d-mono" font-size="10">stop_reason: tool_use</text>
+
+  <path d="M160 185 C 300 185, 340 185, 476 185" class="d-line-blue d-dash" marker-end="url(#ar-tool-b)"/>
+  <text x="318" y="177" text-anchor="middle" class="d-sub">③ アプリがツールを実行</text>
+  <path d="M480 215 C 340 215, 300 215, 164 215" class="d-line d-dash" marker-end="url(#ar-tool-b)"/>
+  <text x="318" y="233" text-anchor="middle" class="d-sub">実行結果</text>
+
+  <path d="M160 275 H246" class="d-line-blue" marker-end="url(#ar-tool-b)"/>
+  <text x="203" y="258" text-anchor="middle" class="d-sub">④ 履歴＋tool_result</text>
+  <path d="M250 320 H164" class="d-line-accent" marker-end="url(#ar-tool-a)"/>
+  <text x="205" y="312" text-anchor="middle" class="d-sub">⑤ 最終回答</text>
+  <text x="205" y="340" text-anchor="middle" class="d-mono" font-size="10">stop_reason: end_turn</text>
+</svg>

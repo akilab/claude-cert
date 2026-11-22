@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 270" role="img" aria-labelledby="t-batch">
+  <title id="t-batch">リアルタイム（Messages API）とバッチ（Message Batches API）の使い分け</title>
+  <rect x="20" y="20" width="290" height="230" rx="12" class="d-box-blue"/>
+  <text x="165" y="48" text-anchor="middle" class="d-text" font-weight="700">Messages API（リアルタイム）</text>
+  <text x="40" y="82" class="d-sub">・すぐに結果が返る（同期）</text>
+  <text x="40" y="106" class="d-sub">・ストリーミングできる</text>
+  <text x="40" y="130" class="d-sub">・通常の料金</text>
+  <text x="40" y="164" class="d-text">向いている用途</text>
+  <text x="40" y="188" class="d-sub">チャット、画面で待つ利用者がいる処理、</text>
+  <text x="40" y="208" class="d-sub">ツールを使うエージェント</text>
+
+  <rect x="330" y="20" width="290" height="230" rx="12" class="d-box-accent"/>
+  <text x="475" y="48" text-anchor="middle" class="d-text" font-weight="700">Message Batches API</text>
+  <text x="350" y="82" class="d-sub">・まとめて送り、後で結果を受け取る（非同期）</text>
+  <text x="350" y="106" class="d-sub">・多くは1時間以内、最長24時間で処理</text>
+  <text x="350" y="130" class="d-sub">・料金は通常の 50%</text>
+  <text x="350" y="164" class="d-text">向いている用途</text>
+  <text x="350" y="188" class="d-sub">夜間の大量要約・分類、評価の一括実行、</text>
+  <text x="350" y="208" class="d-sub">急がないデータ処理</text>
+  <text x="350" y="234" class="d-sub">結果は custom_id で対応づける（順不同）</text>
+</svg>

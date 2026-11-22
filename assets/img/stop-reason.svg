@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 330" role="img" aria-labelledby="t-stop">
+  <title id="t-stop">stop_reason ごとのアプリの対応</title>
+  <defs><marker id="ar-stop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="20" y="140" width="150" height="50" rx="10" class="d-box-accent"/>
+  <text x="95" y="162" text-anchor="middle" class="d-text" font-weight="700">レスポンス</text>
+  <text x="95" y="181" text-anchor="middle" class="d-mono">stop_reason</text>
+  <g>
+    <path d="M170 165 C 200 165, 200 40, 232 40" class="d-line" marker-end="url(#ar-stop)"/>
+    <path d="M170 165 C 205 165, 205 100, 232 100" class="d-line" marker-end="url(#ar-stop)"/>
+    <path d="M170 165 H 232" class="d-line" marker-end="url(#ar-stop)"/>
+    <path d="M170 165 C 205 165, 205 230, 232 230" class="d-line" marker-end="url(#ar-stop)"/>
+    <path d="M170 165 C 200 165, 200 292, 232 292" class="d-line" marker-end="url(#ar-stop)"/>
+  </g>
+  <rect x="236" y="20" width="384" height="40" rx="8" class="d-box-ok"/>
+  <text x="250" y="45" class="d-mono">end_turn</text><text x="372" y="45" class="d-sub">書き終えた → そのまま使う</text>
+  <rect x="236" y="80" width="384" height="40" rx="8" class="d-box-ng"/>
+  <text x="250" y="105" class="d-mono">max_tokens</text><text x="372" y="105" class="d-sub">上限で途中で切れた → 上限を上げる／続きを生成</text>
+  <rect x="236" y="145" width="384" height="40" rx="8" class="d-box-blue"/>
+  <text x="250" y="170" class="d-mono">tool_use</text><text x="372" y="170" class="d-sub">ツールを呼んでほしい → 実行して tool_result を返す</text>
+  <rect x="236" y="210" width="384" height="40" rx="8" class="d-box"/>
+  <text x="250" y="235" class="d-mono">stop_sequence</text><text x="372" y="235" class="d-sub">指定した文字列が出た → 想定どおりの停止</text>
+  <rect x="236" y="272" width="384" height="40" rx="8" class="d-box"/>
+  <text x="250" y="297" class="d-mono">refusal / pause_turn</text><text x="420" y="297" class="d-sub">断った／サーバーツールの一時停止</text>
+</svg>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F：モデル選択と最適化 | Claude 認定資格 学習サイト</title>
+<meta name="description" content="LLM の基本的な性質、SDK と API の関係、モデルの選び方、トークンと費用の管理を扱います。「なぜそう動くのか」が分かると、他の分野の問題も解きやすくなります。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › モデル選択と最適化</p>
+    <h1>モデル選択と最適化 <span class="badge accent">配点 16.8%</span></h1>
+    <p class="lead">LLM の基本的な性質、SDK と API の関係、モデルの選び方、トークンと費用の管理を扱います。「なぜそう動くのか」が分かると、他の分野の問題も解きやすくなります。</p>
+<h2 id="fundamentals">LLM の基本</h2>
+<h3>トークン</h3>
+<p>LLM は文章を<b>トークン</b>という単位で扱います。英語では1単語が1〜数トークン、日本語では1文字が1トークン前後です。料金・速度・コンテキストの上限は、すべてトークン数で決まります。</p>
+<h3>コンテキストウィンドウ</h3>
+<svg viewBox="0 0 640 120" role="img" aria-label="コンテキストウィンドウの中身"><rect x="10" y="20" width="620" height="60" rx="8" class="d-box"/><rect x="14" y="24" width="90" height="52" rx="6" class="d-box-blue"/><text x="59" y="55" text-anchor="middle" class="d-sub">tools</text><rect x="108" y="24" width="120" height="52" rx="6" class="d-box-blue"/><text x="168" y="55" text-anchor="middle" class="d-sub">system</text><rect x="232" y="24" width="220" height="52" rx="6" class="d-box-blue"/><text x="342" y="55" text-anchor="middle" class="d-sub">messages（履歴・資料）</text><rect x="456" y="24" width="170" height="52" rx="6" class="d-box-accent"/><text x="541" y="55" text-anchor="middle" class="d-sub">出力（max_tokens 以内）</text><text x="320" y="108" text-anchor="middle" class="d-sub">入力と出力の合計がコンテキストウィンドウ（例：100万トークン）に収まる必要がある</text></svg>
+<p>大きく入れられても、<b>入れるほど遅く・高くなり、重要な情報が埋もれやすく</b>なります。必要なものを選んで入れるのがコンテキストエンジニアリングです（→ <a href="prompt.html#context">コンテキスト</a>）。</p>
+<h3>次のトークンの予測と非決定性</h3>
+<p>LLM は「次に来るトークン」を確率的に選び続けて文章を作ります。そのため<b>同じ入力でも出力が変わりうる</b>（非決定的）という性質があります。</p>
+<ul>
+<li>品質は1回の結果ではなく、<b>多くのケース × 複数回</b>の評価で判断する。</li>
+<li>出力を機械で使うなら、構造化出力と検証で形を守る。</li>
+<li>API バージョン 2026-10-21 では temperature などのサンプリングの調整項目は廃止されており、プロンプト・構造化出力・effort などで制御する。</li>
+</ul>
+<h3>モデルのオプション</h3>
+<div class="table-wrap"><table>
+<tr><th>オプション</th><th>内容</th></tr>
+<tr><td>adaptive thinking</td><td>考えるかどうか・どれだけ考えるかを Claude が判断（Claude 4.6 以降）</td></tr>
+<tr><td>extended thinking（budget_tokens）</td><td>思考の予算を指定する旧来の方式。Claude 4.7 以降は adaptive＋effort</td></tr>
+<tr><td>effort</td><td>low〜max。思考の量と速さ・費用のバランス</td></tr>
+<tr><td>fast mode</td><td>対応モデルで出力を高速にするモード（料金は異なる）</td></tr>
+</table></div>
+<h3>プロンプトの基本の技法</h3>
+<div class="table-wrap"><table>
+<tr><th>技法</th><th>内容</th><th>向いている場面</th></tr>
+<tr><td>zero-shot</td><td>指示だけ</td><td>単純で、期待が明確な作業</td></tr>
+<tr><td>one-shot／single-shot</td><td>例を1つ示す</td><td>書式を伝えたい</td></tr>
+<tr><td>few-shot／multi-shot</td><td>例を複数示す</td><td>判断基準や書式を安定させたい。例は多様に・バランスよく</td></tr>
+</table></div>
+
+<h2 id="sdk">SDK と API（Technical Fundamentals）</h2>
+<p>このスキルは 6.1% と大きめです。公式の SDK（Python・TypeScript など）は、REST API を包んだ薄い層です。</p>
+<ul>
+<li>型、認証ヘッダーの付与、<b>一時的なエラーの自動再試行（既定2回）</b>、タイムアウト、ストリーミングの処理を提供する。</li>
+<li>SDK の再試行の上に、さらに自前の無制限な再試行を重ねない。回数・タイムアウトを要件に合わせて設定し、最後まで失敗したときの処理を書く。</li>
+<li>ストリーミングは SSE（HTTP の上で、サーバーから順にイベントを送る方式）。双方向の通信が必要なリアルタイムの仕組み（音声など）では WebSocket が使われることもある。</li>
+</ul>
+
+<h2 id="selection">モデルの選び方とトレードオフ</h2>
+<div class="compare">
+<div><h4>Haiku</h4><ul><li>最も速く安い</li><li>大量の分類・抽出・要約</li><li>サブエージェントの単純作業</li></ul></div>
+<div><h4>Sonnet</h4><ul><li>品質と費用のバランス</li><li>多くの本番用途、コーディング</li></ul></div>
+<div><h4>Opus</h4><ul><li>最も高性能</li><li>難しい推論、複雑なエージェント、計画役</li></ul></div>
+</div>
+<ol>
+<li>要件（品質・速度・費用）を数字で決める。</li>
+<li><b>小さいモデルから評価</b>し、要件を満たす最小のものを選ぶ。</li>
+<li>処理ごとに使い分ける（例：一次分類は Haiku、難しい判断は Opus）。</li>
+</ol>
+<h3>モデルの更新による挙動の変化</h3>
+<p>新しいモデルは全体として賢くなっても、<b>指示の解釈、出力の長さや書式、対応するパラメータ</b>が変わることがあります（例：プリフィルや budget_tokens が使えなくなる）。移行ガイドを確認し、評価セットで新旧を比べてから切り替えます。</p>
+
+<h2 id="cost">トークンと費用の管理</h2>
+<h3>費用の計算</h3>
+<pre><code>費用 ＝ 入力トークン × 入力単価 ＋ 出力トークン × 出力単価
+（キャッシュ書き込み：入力単価 × 1.25、読み込み：入力単価 × 0.1 程度）
+（Batches：全体の 50%）</code></pre>
+<p>例：入力 $2・出力 $10（100万トークンあたり）のモデルで、入力 1,500・出力 500 トークンを1日10万件 → 入力 $300＋出力 $500＝<b>$800/日</b>。出力は単価が高いので、<b>出力の長さの管理</b>がよく効きます。</p>
+<h3>費用を下げる手段</h3>
+<div class="table-wrap"><table>
+<tr><th>手段</th><th>効く場面</th></tr>
+<tr><td>モデルの使い分け（ルーティング）</td><td>簡単な処理が多い</td></tr>
+<tr><td>プロンプトキャッシュ</td><td>同じ長い前置きを繰り返し送る</td></tr>
+<tr><td>Message Batches</td><td>急がない大量処理</td></tr>
+<tr><td>出力の長さの指示・max_tokens</td><td>必要以上に長い出力</td></tr>
+<tr><td>コンテキストの整理</td><td>履歴やツール出力が膨らんでいる</td></tr>
+<tr><td>effort の調整</td><td>思考が不要な簡単な処理</td></tr>
+</table></div>
+<h3>使用量の追跡</h3>
+<p>レスポンスの <code>usage</code> を記録して、機能別・利用者別の費用を集計し、異常な増加を検知します。送る前の見積もりには <code>count_tokens</code> エンドポイントが使えます。</p>
+<figure class="diagram" data-src="../../assets/img/prompt-cache.svg"><figcaption>キャッシュの効果を最大にする並べ方</figcaption></figure>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>トークンが料金・速度・上限を決める。出力は単価が高い。</li>
+<li>LLM は非決定的。評価は件数と回数で。</li>
+<li>要件を満たす最小のモデルから評価。処理ごとに使い分ける。</li>
+<li>モデルの更新は評価してから。SDK の再試行を理解して二重にしない。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="app.html">← アプリケーションと統合</a>
+      <a class="btn primary" href="agents.html">エージェントとワークフロー →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

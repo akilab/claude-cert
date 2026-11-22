@@ -1,0 +1,56 @@
+{
+  "ccdv-f": {
+    "code": "CCDV-F",
+    "name": "Claude Certified Developer – Foundations",
+    "nameJa": "Developer – Foundations",
+    "summary": "Claude でアプリ・エージェント・ワークフローを作り、本番に出せるかを問う開発者向けの試験。",
+    "items": 53,
+    "minutes": 120,
+    "fee": "$125",
+    "guide": "v1.0（2026年7月）",
+    "domains": [
+      {"id": "app", "name": "Applications and Integration", "ja": "アプリケーションと統合", "weight": 33.1,
+       "skills": ["Understanding Requirements", "Systems Life Cycle", "Claude API Mechanics", "Software Engineering Foundations", "Claude Application Design", "Configuration Management"]},
+      {"id": "model", "name": "Model Selection and Optimization", "ja": "モデル選択と最適化", "weight": 16.8,
+       "skills": ["LLM Fundamentals", "Technical Fundamentals", "Model Selection and Tradeoffs", "Cost and Token Management"]},
+      {"id": "agents", "name": "Agents and Workflows", "ja": "エージェントとワークフロー", "weight": 14.7,
+       "skills": ["Agent Architecture", "Agent Construction with Claude", "Agent Patterns and Frameworks"]},
+      {"id": "prompt", "name": "Prompt and Context Engineering", "ja": "プロンプトとコンテキスト", "weight": 11.0,
+       "skills": ["Context Engineering", "Prompt Engineering", "Output Handling"]},
+      {"id": "tools", "name": "Tools and MCPs", "ja": "ツールと MCP", "weight": 10.6,
+       "skills": ["Tool Implementation", "MCP Server Development", "Agentic Customization"]},
+      {"id": "sec", "name": "Security and Safety", "ja": "セキュリティと安全", "weight": 8.1,
+       "skills": ["AI Application Security", "Guardrails and Safe Deployment", "Claude Hooks", "Identity, Secrets, and Key Management"]},
+      {"id": "code", "name": "Claude Code", "ja": "Claude Code", "weight": 3.1,
+       "skills": ["Claude Code Operation"]},
+      {"id": "eval", "name": "Eval, Testing, and Debugging", "ja": "評価・テスト・デバッグ", "weight": 2.6,
+       "skills": ["Debugging and Error Handling"]}
+    ]
+  },
+  "ccar-p": {
+    "code": "CCAR-P",
+    "name": "Claude Certified Architect – Professional",
+    "nameJa": "Architect – Professional",
+    "summary": "本番の AI ソリューションを設計し、評価・ガバナンス・関係者との合意まで担えるかを問うアーキテクト向けの試験。",
+    "items": 63,
+    "minutes": 120,
+    "fee": "$175",
+    "guide": "v1.0（2026年7月）",
+    "domains": [
+      {"id": "integ", "name": "Integration", "ja": "統合", "weight": 19,
+       "skills": ["Capability bloat", "AuthN/AuthZ", "Accuracy-latency trade-offs", "Observability", "RAG pipeline", "Retrieval strategy", "Integration protocols", "Progressive discovery"]},
+      {"id": "design", "name": "Solution Design & Architecture", "ja": "ソリューション設計", "weight": 17,
+       "skills": ["Problem translation", "End-to-end architecture", "Architectural patterns", "Multi-agent orchestration", "Decomposition", "Business value alignment"]},
+      {"id": "evalopt", "name": "Evaluation, Testing & Optimization", "ja": "評価・テスト・最適化", "weight": 16,
+       "skills": ["Evaluation metrics", "Eval datasets", "A/B testing", "Diagnosis", "Cost-performance optimization", "Monitoring"]},
+      {"id": "gov", "name": "Governance, Safety & Risk Management", "ja": "ガバナンス・安全・リスク", "weight": 14,
+       "skills": ["Guardrails", "Failure modes", "Human-in-the-loop", "Compliance", "Ethical AI"]},
+      {"id": "stake", "name": "Stakeholder Communication & Lifecycle Management", "ja": "関係者とライフサイクル", "weight": 14,
+       "skills": ["Discovery", "Communicating trade-offs", "Expectation alignment", "Documentation", "Lifecycle support"]},
+      {"id": "models", "name": "Claude Models, Prompting & Context Engineering", "ja": "モデル・プロンプト・コンテキスト", "weight": 13,
+       "skills": ["Model selection", "System prompts and guardrails", "Prompting techniques", "Context optimization", "Prompt reuse"]},
+      {"id": "devprod", "name": "Developer Productivity & Operational Enablement", "ja": "開発生産性と運用支援", "weight": 7,
+       "skills": ["Team tooling", "AI-assisted workflows", "Operational support"]}
+    ]
+  }
+}

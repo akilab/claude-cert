@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 290" role="img" aria-labelledby="t-eval">
+  <title id="t-eval">評価駆動の改善サイクル</title>
+  <defs><marker id="ar-eval" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-accent"/></marker></defs>
+  <rect x="230" y="16" width="180" height="56" rx="10" class="d-box-blue"/><text x="320" y="40" text-anchor="middle" class="d-text">① 成功基準を決める</text><text x="320" y="60" text-anchor="middle" class="d-sub">精度・速度・コスト・安全</text>
+  <rect x="440" y="116" width="180" height="56" rx="10" class="d-box-blue"/><text x="530" y="140" text-anchor="middle" class="d-text">② 評価データを作る</text><text x="530" y="160" text-anchor="middle" class="d-sub">典型例＋境界例＋本番の失敗</text>
+  <rect x="230" y="216" width="180" height="56" rx="10" class="d-box-blue"/><text x="320" y="240" text-anchor="middle" class="d-text">③ 採点する</text><text x="320" y="260" text-anchor="middle" class="d-sub">コード／LLM 採点／人</text>
+  <rect x="20" y="116" width="180" height="56" rx="10" class="d-box-blue"/><text x="110" y="140" text-anchor="middle" class="d-text">④ 1か所だけ変えて比較</text><text x="110" y="160" text-anchor="middle" class="d-sub">プロンプト・モデル・検索</text>
+  <path d="M410 50 C 480 50, 530 70, 530 112" class="d-line-accent" marker-end="url(#ar-eval)"/>
+  <path d="M530 172 C 530 220, 480 244, 414 244" class="d-line-accent" marker-end="url(#ar-eval)"/>
+  <path d="M230 244 C 160 244, 110 220, 110 176" class="d-line-accent" marker-end="url(#ar-eval)"/>
+  <path d="M110 116 C 110 70, 160 50, 226 50" class="d-line-accent" marker-end="url(#ar-eval)"/>
+  <text x="320" y="146" text-anchor="middle" class="d-sub">本番の監視で見つけた失敗を</text>
+  <text x="320" y="164" text-anchor="middle" class="d-sub">評価データに追加して回し続ける</text>
+</svg>

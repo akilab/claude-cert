@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCAR-P 学習コンテンツ | Claude 認定資格 学習サイト</title>
+<meta name="description" content="本番の AI ソリューションを設計し、評価・ガバナンス・関係者との合意まで担えるかを問う試験です。CCDV-F の知識（API・ツール・プロンプト）を前提に、「判断して説明する力」が問われます。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCAR-P 学習</a>
+      <a href="../exercises.html">CCAR-P 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="narrow">
+  <article class="prose" style="max-width:none">
+    <p class="breadcrumb"><a href="../../">トップ</a> › CCAR-P 学習</p>
+    <h1>CCAR-P（Architect – Professional）の学習</h1>
+    <p class="lead">本番の AI ソリューションを設計し、評価・ガバナンス・関係者との合意まで担えるかを問う試験です。CCDV-F の知識（API・ツール・プロンプト）を前提に、「判断して説明する力」が問われます。</p>
+    <p><span class="badge">63問・120分・合格 720/1000・$175</span></p>
+    <div class="callout point">
+      <p><b>おすすめの進め方</b>：① 分野のページを読む → ② <a href="../exercises.html">問題演習</a>で10問ずつ解く → ③ 間違えた問題の解説から、該当する章に戻る → ④「間違えた問題」モードで解き直す。</p>
+    </div>
+    <h2 id="domains">分野ごとの解説</h2>
+    <div class="learn-index">
+      <a href="integration.html"><div class="card"><span class="badge accent">配点 19%</span><h3>統合（Integration）</h3><p>CCAR-P で最も配点が大きい分野です。権限の設計、精度と速度の判断、大規模な監視、RAG、連携方式の選択、コンテキストの読み込み方まで、「既存のシステムにどう安全につなぐか」を問います。</p></div></a>
+      <a href="design.html"><div class="card"><span class="badge accent">配点 17%</span><h3>ソリューション設計</h3><p>ビジネスの課題を Claude のソリューションに落とし込み、エンドツーエンドの構成、パターンの選択、マルチエージェント、分解、ビジネス価値との結びつけまでを扱います。</p></div></a>
+      <a href="evaluation.html"><div class="card"><span class="badge accent">配点 16%</span><h3>評価・テスト・最適化</h3><p>何を測るか、どう測るか、どう比べるか、問題をどう診断するか、本番でどう見守るかを扱います。LLM のシステムの品質は「評価の仕組み」で決まります。</p></div></a>
+      <a href="governance.html"><div class="card"><span class="badge accent">配点 14%</span><h3>ガバナンス・安全・リスク</h3><p>ガードレール、LLM の失敗パターン、人による確認、規制への対応、倫理面の配慮を扱います。アーキテクトとして、リスクを洗い出し、対策を設計に組み込む力が問われます。</p></div></a>
+      <a href="stakeholder.html"><div class="card"><span class="badge accent">配点 14%</span><h3>関係者とのコミュニケーション・ライフサイクル</h3><p>ヒアリング、トレードオフの説明、期待値の調整、文書化、ライフサイクルの支援を扱います。技術の正しさだけでなく、関係者と合意し、引き継ぎ、改善し続ける力が問われます。</p></div></a>
+      <a href="models.html"><div class="card"><span class="badge accent">配点 13%</span><h3>モデル・プロンプト・コンテキスト</h3><p>モデルの選び方、system プロンプトとテンプレートの設計、プロンプトの技法、コンテキストの最適化、プロンプトの再利用を、アーキテクトの視点で扱います。</p></div></a>
+      <a href="devprod.html"><div class="card"><span class="badge accent">配点 7%</span><h3>開発生産性と運用支援</h3><p>チームへの Claude Code の展開、AI を使った開発の流れ、運用上の問題の解決を扱います。CCDV-F の Claude Code の知識を、組織の視点で使う分野です。</p></div></a>
+    </div>
+    <h2 id="api">共通の土台</h2>
+    <div class="learn-index">
+      <a href="../../learn/messages-api/"><div class="card"><span class="badge blue">おすすめ</span><h3>Messages API をしくみから学ぶ</h3><p>リクエストとレスポンス、ツール利用、キャッシュ、エラー、Batches。疑似環境で実際に試せます。</p></div></a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

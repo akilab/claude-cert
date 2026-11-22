@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-labelledby="t-retry">
+  <title id="t-retry">エラーの種類で再試行するかを決める</title>
+  <rect x="20" y="20" width="290" height="240" rx="12" class="d-box-blue"/>
+  <text x="165" y="48" text-anchor="middle" class="d-text" font-weight="700">待って再試行する</text>
+  <text x="40" y="80" class="d-mono">429 rate_limit_error</text><text x="40" y="98" class="d-sub">retry-after の秒数だけ待つ</text>
+  <text x="40" y="128" class="d-mono">500 api_error</text>
+  <text x="40" y="152" class="d-mono">529 overloaded_error</text><text x="40" y="170" class="d-sub">一時的な過負荷</text>
+  <text x="40" y="204" class="d-sub">指数バックオフ＋ゆらぎ（jitter）：</text>
+  <text x="40" y="224" class="d-sub">1秒 → 2秒 → 4秒 → …、回数に上限を付ける</text>
+  <rect x="330" y="20" width="290" height="240" rx="12" class="d-box-ng"/>
+  <text x="475" y="48" text-anchor="middle" class="d-text" font-weight="700">直さないと同じ失敗が続く</text>
+  <text x="350" y="80" class="d-mono">400 invalid_request_error</text><text x="350" y="98" class="d-sub">リクエストの形式・内容の誤り</text>
+  <text x="350" y="128" class="d-mono">401 authentication_error</text><text x="350" y="146" class="d-sub">API キーの誤り</text>
+  <text x="350" y="176" class="d-mono">403 permission_error</text>
+  <text x="350" y="200" class="d-mono">404 not_found_error</text><text x="350" y="218" class="d-sub">モデル名の誤りなど</text>
+  <text x="350" y="244" class="d-sub">→ 再試行せず、原因を直してログに残す</text>
+</svg>

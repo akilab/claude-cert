@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-labelledby="t-mcp">
+  <title id="t-mcp">MCP：1つのサーバーを複数のアプリから使う</title>
+  <defs><marker id="ar-mcp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="20" y="30" width="170" height="54" rx="10" class="d-box-blue"/><text x="105" y="62" text-anchor="middle" class="d-text">Claude Code</text>
+  <rect x="20" y="110" width="170" height="54" rx="10" class="d-box-blue"/><text x="105" y="142" text-anchor="middle" class="d-text">社内チャットボット</text>
+  <rect x="20" y="190" width="170" height="54" rx="10" class="d-box-blue"/><text x="105" y="222" text-anchor="middle" class="d-text">Agent SDK のアプリ</text>
+  <text x="105" y="270" text-anchor="middle" class="d-sub">MCP クライアント</text>
+  <rect x="260" y="80" width="170" height="120" rx="12" class="d-box-accent"/>
+  <text x="345" y="110" text-anchor="middle" class="d-text" font-weight="700">在庫 MCP サーバー</text>
+  <text x="345" y="134" text-anchor="middle" class="d-sub">tools：在庫照会・引当</text>
+  <text x="345" y="154" text-anchor="middle" class="d-sub">resources：商品マスタ</text>
+  <text x="345" y="174" text-anchor="middle" class="d-sub">prompts：定型の指示</text>
+  <rect x="490" y="110" width="130" height="60" rx="10" class="d-box"/><text x="555" y="138" text-anchor="middle" class="d-text">在庫 REST API</text><text x="555" y="158" text-anchor="middle" class="d-sub">（社内）</text>
+  <path d="M190 57 L256 112" class="d-line" marker-end="url(#ar-mcp)"/>
+  <path d="M190 137 H256" class="d-line" marker-end="url(#ar-mcp)"/>
+  <path d="M190 217 L256 168" class="d-line" marker-end="url(#ar-mcp)"/>
+  <path d="M430 140 H486" class="d-line" marker-end="url(#ar-mcp)"/>
+  <text x="345" y="226" text-anchor="middle" class="d-sub">通信：stdio（ローカル）／HTTP（リモート）</text>
+  <text x="345" y="246" text-anchor="middle" class="d-sub">一度作れば、どのアプリからも同じ方法で使える</text>
+</svg>

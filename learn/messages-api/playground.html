@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messages API 疑似環境 | Claude 認定資格 学習サイト</title>
+<meta name="description" content="ブラウザだけで Messages API のリクエストとレスポンスを試せる学習用の疑似環境">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/playground.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./">Messages API 解説</a>
+      <a href="./playground.html" aria-current="page">疑似環境</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="pg">
+  <aside class="pg-side" aria-label="演習の一覧">
+    <p class="side-title">演習</p>
+    <ol id="scenario-list" class="scenario-list"></ol>
+    <div class="side-note small muted">
+      <p>これは本物の API ではなく、ブラウザの中だけで動く<strong>学習用の疑似環境</strong>です。API キーは不要で、入力した内容はどこにも送信されません。</p>
+      <p>エラーの文言やトークン数は、実際と異なる場合があります。</p>
+      <details><summary>使えるモデル</summary><ul id="model-list" class="model-list"></ul></details>
+    </div>
+  </aside>
+
+  <div class="pg-main">
+    <label class="mobile-select">演習を選ぶ
+      <select id="scenario-select"></select>
+    </label>
+
+    <section class="card pg-intro" id="intro" aria-live="polite"></section>
+
+    <div class="pg-work">
+      <section class="card pg-req" aria-label="リクエスト">
+        <div class="pane-title">
+          <h2>リクエスト <span class="xsmall muted">あなたのアプリが送るもの</span></h2>
+        </div>
+        <div class="endpoint">
+          <select id="method" aria-label="メソッド"><option>POST</option><option>GET</option></select>
+          <span class="host">https://api.anthropic.com</span>
+          <input id="path" aria-label="パス" spellcheck="false">
+        </div>
+        <label class="field-label" for="headers">ヘッダー</label>
+        <textarea id="headers" class="editor" rows="3" spellcheck="false"></textarea>
+        <label class="field-label" for="body">ボディ（JSON）</label>
+        <textarea id="body" class="editor body-editor" rows="20" spellcheck="false"></textarea>
+        <p id="json-status" class="json-status" aria-live="polite"></p>
+        <div class="req-actions">
+          <button class="btn primary" id="send" type="button">送信 <kbd>⌘/Ctrl+Enter</kbd></button>
+          <button class="btn" id="format" type="button">整形</button>
+          <button class="btn ghost" id="reset" type="button">最初に戻す</button>
+        </div>
+        <details class="env">
+          <summary>疑似サーバーの設定</summary>
+          <label>サーバーの状態
+            <select id="server-state">
+              <option value="normal">正常</option>
+              <option value="429">429 レート制限</option>
+              <option value="529">529 過負荷</option>
+              <option value="500">500 内部エラー</option>
+            </select>
+          </label>
+          <div class="clock-row"><span id="clock" class="small muted"></span> <button class="btn small" id="advance-clock" type="button">⏩ 時間を5分進める</button></div>
+        </details>
+      </section>
+
+      <section class="card pg-res" aria-label="レスポンス">
+        <div class="pane-title">
+          <h2>レスポンス <span class="xsmall muted">API から返るもの</span></h2>
+        </div>
+        <div id="res-status" class="res-status"></div>
+        <div class="res-tabs" role="tablist">
+          <button class="res-tab" role="tab" data-tab="body" type="button">本文</button>
+          <button class="res-tab" role="tab" data-tab="headers" type="button">ヘッダー</button>
+          <button class="res-tab" role="tab" data-tab="stream" type="button" hidden>ストリーム</button>
+        </div>
+        <div id="res-body" class="res-pane"></div>
+        <div id="res-headers" class="res-pane" hidden></div>
+        <div id="res-stream" class="res-pane" hidden>
+          <div class="stream-ctrl"><button class="btn small" id="stream-replay" type="button">もう一度再生</button><button class="btn small" id="stream-skip" type="button">最後まで表示</button></div>
+          <p class="xsmall muted">組み立てた出力（text_delta などをつなげたもの）</p>
+          <pre id="stream-text" class="stream-text"></pre>
+          <p class="xsmall muted">届いたイベント</p>
+          <ol id="stream-events" class="stream-events"></ol>
+        </div>
+        <div id="helpers" class="helpers"></div>
+        <ul id="notes" class="notes" aria-live="polite"></ul>
+        <div id="meter" class="meter"></div>
+      </section>
+    </div>
+
+    <section class="card pg-timeline-card" aria-label="やり取りの時系列">
+      <div class="pane-title">
+        <h2>やり取りの時系列</h2>
+        <button class="btn small ghost" id="clear-timeline" type="button">消去</button>
+      </div>
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <p class="small"><a href="./">📖 Messages API の解説ページへ戻る</a></p>
+  </div>
+</main>
+
+<footer class="site-footer">学習用の疑似環境です。本物の Claude API には接続しません。仕様の根拠：公式ドキュメント（2026年11月時点）。</footer>
+<script type="module" src="../../assets/js/playground/app.js"></script>
+</body>
+</html>

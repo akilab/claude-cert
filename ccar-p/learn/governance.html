@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCAR-P：ガバナンス・安全・リスク | Claude 認定資格 学習サイト</title>
+<meta name="description" content="ガードレール、LLM の失敗パターン、人による確認、規制への対応、倫理面の配慮を扱います。アーキテクトとして、リスクを洗い出し、対策を設計に組み込む力が問われます。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCAR-P 学習</a>
+      <a href="../exercises.html">CCAR-P 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCAR-P 学習</a> › ガバナンス・安全・リスク</p>
+    <h1>ガバナンス・安全・リスク <span class="badge accent">配点 14%</span></h1>
+    <p class="lead">ガードレール、LLM の失敗パターン、人による確認、規制への対応、倫理面の配慮を扱います。アーキテクトとして、リスクを洗い出し、対策を設計に組み込む力が問われます。</p>
+<h2 id="guardrails">ガードレールと安全のための制御</h2>
+<figure class="diagram" data-src="../../assets/img/least-privilege.svg"><figcaption>対策の強さ</figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>層</th><th>例</th></tr>
+<tr><td>渡さない</td><td>漏らしたくない情報はコンテキストやツールから外す。公開の窓口が触れる情報は公開してよいものだけ</td></tr>
+<tr><td>できなくする</td><td>読み取り専用の権限、不要なツールの削除</td></tr>
+<tr><td>実行前に止める</td><td>SQL やコマンドの検査、許可リスト、フック、上限</td></tr>
+<tr><td>人が確かめる</td><td>影響の大きい操作の承認</td></tr>
+<tr><td>出力を検査する</td><td>個人情報・方針違反の検出</td></tr>
+<tr><td>見つける</td><td>監視・監査ログ・アラート</td></tr>
+</table></div>
+<div class="exam-tip">ジェイルブレイク対策の根本は「モデルが知らない情報は漏らせない」。プロンプトでの防御やブロックリストは補助的な層。</div>
+
+<h2 id="failures">LLM の失敗パターン</h2>
+<div class="table-wrap"><table>
+<tr><th>失敗パターン</th><th>内容</th><th>主な対策</th></tr>
+<tr><td>ハルシネーション</td><td>もっともらしいが誤った内容</td><td>根拠の提示、検索、検証、「分からない」を許す、人の確認</td></tr>
+<tr><td>プロンプトインジェクション</td><td>外部の文書の命令に従う</td><td>入力の分離、最小権限、承認</td></tr>
+<tr><td>非決定性</td><td>同じ入力でも結果が変わる</td><td>評価は件数と回数、構造化出力、検証</td></tr>
+<tr><td>知識の期限</td><td>学習後の出来事を知らない</td><td>検索・ツールで最新情報を補う</td></tr>
+<tr><td>偏り</td><td>学習データや例に由来する偏った判断</td><td>偏りの測定、基準の限定、人の判断</td></tr>
+<tr><td>コンテキストの限界</td><td>長いと重要な情報を見落とす</td><td>コンテキストの整理、分解</td></tr>
+</table></div>
+
+<h2 id="hitl">人による確認（human-in-the-loop）</h2>
+<svg viewBox="0 0 640 150" role="img" aria-label="リスクに応じた確認"><defs><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs><rect x="10" y="45" width="150" height="56" rx="10" class="d-box-accent"/><text x="85" y="69" text-anchor="middle" class="d-text">Claude の判定案</text><text x="85" y="89" text-anchor="middle" class="d-sub">根拠・確信度つき</text><rect x="220" y="45" width="140" height="56" rx="10" class="d-box"/><text x="290" y="69" text-anchor="middle" class="d-text">リスクで振り分け</text><text x="290" y="89" text-anchor="middle" class="d-sub">金額・確信度・例外</text><rect x="430" y="10" width="200" height="50" rx="8" class="d-box-ok"/><text x="530" y="40" text-anchor="middle" class="d-sub">低リスク：自動で確定＋抜き取り監査</text><rect x="430" y="88" width="200" height="50" rx="8" class="d-box-blue"/><text x="530" y="118" text-anchor="middle" class="d-sub">高リスク：人が確認して承認</text><path d="M160 73 H216" class="d-line" marker-end="url(#ar-hl)"/><path d="M360 64 L426 38" class="d-line" marker-end="url(#ar-hl)"/><path d="M360 82 L426 110" class="d-line" marker-end="url(#ar-hl)"/></svg>
+<ul>
+<li>すべてを人が見るのではなく、<b>リスクに応じて確認の範囲</b>を決める。</li>
+<li>人が判断しやすいよう、根拠・確信度・関連する資料を示す。</li>
+<li>承認が形だけにならないよう、件数と負担を設計する（確認疲れ）。</li>
+<li>人の修正を評価データや改善に戻す。</li>
+</ul>
+
+<h2 id="compliance">規制への対応</h2>
+<div class="table-wrap"><table>
+<tr><th>規制の例</th><th>対象</th><th>設計で考えること</th></tr>
+<tr><td>GDPR</td><td>EU の個人データ</td><td>データの最小化、目的の限定、保存場所と期間、本人の権利（削除・開示）、委託先との契約</td></tr>
+<tr><td>HIPAA</td><td>米国の医療情報</td><td>医療情報の保護、提供元との契約（BAA）、アクセス制御、監査</td></tr>
+<tr><td>FedRAMP</td><td>米国政府のクラウド利用</td><td>認可を受けた環境・提供元の選択</td></tr>
+</table></div>
+<p>アーキテクトは法律の専門家ではありませんが、<b>データの流れ（どこに送り、どこに保存し、誰が見られるか）を明らかにし、法務と確認できる形で文書化</b>するのが役割です。</p>
+
+<h2 id="ethics">倫理面の配慮</h2>
+<ul>
+<li><b>バイアス・公平性</b>：属性による結果の偏りを測定する。判断の基準を業務に必要なものに限る。</li>
+<li><b>透明性</b>：AI を使っていること、判断の根拠を説明できるようにする。</li>
+<li><b>人の最終判断</b>：採用・融資・医療など、人の人生に大きく影響する判断では、AI は支援にとどめる。</li>
+</ul>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>ガードレールは「渡さない・できなくする・止める・確かめる・見つける」の層で。</li>
+<li>失敗パターンを洗い出し、対策を対応づける。</li>
+<li>人の確認はリスクに応じて。</li>
+<li>規制はデータの流れの明確化と文書化。公平性は測定と人の判断。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="evaluation.html">← 評価・テスト・最適化</a>
+      <a class="btn primary" href="stakeholder.html">関係者とのコミュニケーション・ライフサイクル →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

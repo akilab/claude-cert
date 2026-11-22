@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-labelledby="t-lp">
+  <title id="t-lp">最小権限：不要な機能は「見張る」より「外す」</title>
+  <text x="20" y="28" class="d-text" font-weight="700">対策の強さ（上ほど根本的）</text>
+  <rect x="20" y="44" width="600" height="46" rx="8" class="d-box-ok"/>
+  <text x="36" y="72" class="d-text" font-weight="700">予防：取り除く</text><text x="200" y="72" class="d-sub">役割に不要なツール・権限を設定から外す（そもそも実行できない）</text>
+  <rect x="20" y="100" width="600" height="46" rx="8" class="d-box-blue"/>
+  <text x="36" y="128" class="d-text" font-weight="700">予防：止める</text><text x="200" y="128" class="d-sub">フック・許可リスト・人の承認で、危険な操作を実行前に止める</text>
+  <rect x="20" y="156" width="600" height="46" rx="8" class="d-box"/>
+  <text x="36" y="184" class="d-text" font-weight="700">検知：見つける</text><text x="200" y="184" class="d-sub">ログ・監査・アラート（起きた後に分かる）</text>
+  <rect x="20" y="212" width="600" height="46" rx="8" class="d-box-ng"/>
+  <text x="36" y="240" class="d-text" font-weight="700">お願い</text><text x="200" y="240" class="d-sub">プロンプトに「使わないで」と書く（強制力がない）</text>
+</svg>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCAR-P：統合（Integration） | Claude 認定資格 学習サイト</title>
+<meta name="description" content="CCAR-P で最も配点が大きい分野です。権限の設計、精度と速度の判断、大規模な監視、RAG、連携方式の選択、コンテキストの読み込み方まで、「既存のシステムにどう安全につなぐか」を問います。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCAR-P 学習</a>
+      <a href="../exercises.html">CCAR-P 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCAR-P 学習</a> › 統合（Integration）</p>
+    <h1>統合（Integration） <span class="badge accent">配点 19%</span></h1>
+    <p class="lead">CCAR-P で最も配点が大きい分野です。権限の設計、精度と速度の判断、大規模な監視、RAG、連携方式の選択、コンテキストの読み込み方まで、「既存のシステムにどう安全につなぐか」を問います。</p>
+<h2 id="bloat">能力の肥大（capability bloat）を防ぐ</h2>
+<p>エージェントに「念のため」と多くのツールや権限を渡すと、誤動作や悪用の被害が大きくなり、ツールの選び間違いも増えます。</p>
+<figure class="diagram" data-src="../../assets/img/least-privilege.svg"><figcaption>不要な機能は「見張る」より「外す」</figcaption></figure>
+<ol>
+<li>役割の業務を洗い出し、必要なツールと権限（読み取りのみ／書き込み）を決める。</li>
+<li>不要なツールは<b>設定から外す</b>（予防：攻撃面の削減）。</li>
+<li>残る危険な操作には、承認・フック・上限を付ける（予防：止める）。</li>
+<li>ログと監査で見守る（検知）。</li>
+</ol>
+<div class="exam-tip">ログや確認ダイアログは「検知・補完」の対策。不要な権限があるなら、まず取り除くのが最小権限の答え。</div>
+
+<h2 id="auth">認証・認可の設計</h2>
+<p>LLM のシステムでよくある穴は、<b>認可をモデルの判断に任せてしまう</b>ことです。</p>
+<div class="compare">
+<div class="bad"><h4>✕ 危険な設計</h4><ul><li>全データを読める共通アカウントで検索</li><li>「権限のない情報は答えないで」とプロンプトで指示</li></ul></div>
+<div class="good"><h4>◯ 安全な設計</h4><ul><li>質問した本人の権限で検索・絞り込み（ID の受け渡し）</li><li>権限のない情報はコンテキストに入れない</li><li>ツールの呼び出しも本人の権限で実行</li></ul></div>
+</div>
+<p>確認すべき観点：誰として（どの ID で）外部システムにアクセスするか、トークンの範囲と期限、エージェントが代理で操作するときの承認、監査ログ。</p>
+
+<h2 id="tradeoffs">精度と速度のトレードオフ</h2>
+<div class="table-wrap"><table>
+<tr><th>上げると</th><th>精度</th><th>速度</th><th>費用</th></tr>
+<tr><td>上位のモデル</td><td>↑</td><td>↓</td><td>↑</td></tr>
+<tr><td>思考の量（effort）</td><td>↑（難しい問題で）</td><td>↓</td><td>↑</td></tr>
+<tr><td>検索で渡す資料の量</td><td>↑ のち ↓（ノイズ）</td><td>↓</td><td>↑</td></tr>
+<tr><td>多段の検証・評価者</td><td>↑</td><td>↓</td><td>↑</td></tr>
+</table></div>
+<p>判断の手順：<b>① 必須の要件（例：2秒以内に出し始める）を満たす構成だけに絞る</b> → <b>② その中で精度が最も高い構成を評価で選ぶ</b>。必須の要件は「満たせば十分」な最低条件で、「速いほどよい」目標ではありません。余った時間は精度に使います。判断の根拠（評価の数字）を説明できるようにします。</p>
+<p>候補の例：中位のモデル／上位モデルで思考を減らす（effort を下げる）／ストリーミングで最初の文字を早く出す。最も速いモデルに飛びつくと、条件は満たしても精度を必要以上に捨てることになります。</p>
+
+<h2 id="observability">大規模な可観測性</h2>
+<ul>
+<li><b>トレース</b>：1件のリクエストの中の、各モデル呼び出し・ツール呼び出しの入出力、時間、トークン、エラー。</li>
+<li><b>メトリクス</b>：遅延の分布（p50・p95）、エラー率、トークンと費用、stop_reason の割合、ツールの失敗率。</li>
+<li><b>品質の監視</b>：出力のサンプリングと自動・人の評価（エラーにならない品質の低下を見つける）。</li>
+<li><b>アラート</b>：閾値を超えたら通知。request-id で個別の調査へ。</li>
+</ul>
+<p>個人情報はトレースでも伏せ字にし、保存期間を決めます。</p>
+
+<h2 id="rag">RAG パイプラインの設計</h2>
+<figure class="diagram" data-src="../../assets/img/rag-pipeline.svg"><figcaption>取り込みと、検索・生成</figcaption></figure>
+<h3>チャンク分割</h3>
+<div class="table-wrap"><table>
+<tr><th>方法</th><th>特徴</th></tr>
+<tr><td>固定長</td><td>簡単だが、意味の途中で切れやすい</td></tr>
+<tr><td>構造に沿う（見出し・段落・手順）</td><td>意味のまとまりを保てる。マニュアルや規程に向く</td></tr>
+<tr><td>重なり（overlap）を持たせる</td><td>境界で情報が切れる問題を和らげる</td></tr>
+<tr><td>文脈を付加する（章タイトル・文書名・要約）</td><td>チャンク単体でも意味が分かり、検索の精度が上がる</td></tr>
+</table></div>
+<h3>インデックスの運用</h3>
+<p>文書の更新時の再インデックス、古いチャンクの削除、埋め込みモデルの一致（取り込みと検索で同じモデル）、メタデータ（日付・権限・版）の付与を設計に含めます。</p>
+
+<h2 id="retrieval">データと問い合わせに合った検索</h2>
+<div class="table-wrap"><table>
+<tr><th>データ・問い合わせ</th><th>向いている方法</th></tr>
+<tr><td>型番・ID・固有名詞（完全一致が重要）</td><td>キーワード検索（BM25 など）</td></tr>
+<tr><td>言い換え・曖昧な質問</td><td>埋め込みによる意味検索</td></tr>
+<tr><td>両方が混ざる</td><td>ハイブリッド検索＋再ランキング</td></tr>
+<tr><td>表・数値（集計が必要）</td><td>SQL などの構造化された問い合わせ（ツールとして提供）</td></tr>
+<tr><td>関係のたどり（誰が誰の上司か等）</td><td>グラフや関係データベース</td></tr>
+<tr><td>権限で見える範囲が違う</td><td>メタデータでの絞り込みを検索時に必ず適用</td></tr>
+</table></div>
+
+<h2 id="protocols">連携方式の選択</h2>
+<div class="table-wrap"><table>
+<tr><th>方式</th><th>向いている場面</th></tr>
+<tr><td>API を直接呼ぶ（カスタムツール）</td><td>1つのアプリの中の単純な連携</td></tr>
+<tr><td>CLI</td><td>開発者の環境で、既存のコマンドを使う（Claude Code など）</td></tr>
+<tr><td>MCP</td><td>複数のアプリで共有、提供側が独立して保守、標準化された接続</td></tr>
+<tr><td>エージェント間連携（agent-to-agent）</td><td>別のチーム・組織のエージェントに仕事を任せる</td></tr>
+</table></div>
+<figure class="diagram" data-src="../../assets/img/mcp-architecture.svg"><figcaption>MCP による共有</figcaption></figure>
+
+<h2 id="discovery">段階的な読み込みか、一括か</h2>
+<div class="compare">
+<div><h4>一括（monolithic context）</h4><ul><li>最初にすべてのツール・資料を渡す</li><li>単純。少数なら有効</li><li>多いと圧迫・取り違え・費用増</li></ul></div>
+<div><h4>段階的（progressive discovery）</h4><ul><li>最初は概要だけ、必要なものを後から読み込む</li><li>ツール検索、Skills、サブエージェント</li><li>多数のツールや大量の知識に向く</li></ul></div>
+</div>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>不要な能力は外す。認可は仕組みで、権限のない情報は渡さない。</li>
+<li>必須要件を固定して、その範囲で精度を最適化。</li>
+<li>トレース・メトリクス・品質の監視。</li>
+<li>RAG：構造に沿ったチャンク、再インデックスの運用、データに合った検索。</li>
+<li>連携：単純なら API、共有なら MCP。ツールが多いなら段階的に読み込む。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="./">← 目次</a>
+      <a class="btn primary" href="design.html">ソリューション設計 →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

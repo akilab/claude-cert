@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-labelledby="t-wa">
+  <title id="t-wa">ワークフローとエージェントの違い</title>
+  <defs><marker id="ar-wa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <text x="20" y="28" class="d-text" font-weight="700">ワークフロー：手順をコードで決める</text>
+  <rect x="20" y="44" width="110" height="44" rx="8" class="d-box-blue"/><text x="75" y="71" text-anchor="middle" class="d-sub">分類（LLM）</text>
+  <rect x="170" y="44" width="110" height="44" rx="8" class="d-box-blue"/><text x="225" y="71" text-anchor="middle" class="d-sub">抽出（LLM）</text>
+  <rect x="320" y="44" width="110" height="44" rx="8" class="d-box"/><text x="375" y="71" text-anchor="middle" class="d-sub">検証（コード）</text>
+  <rect x="470" y="44" width="110" height="44" rx="8" class="d-box-blue"/><text x="525" y="71" text-anchor="middle" class="d-sub">要約（LLM）</text>
+  <path d="M130 66 H166" class="d-line" marker-end="url(#ar-wa)"/><path d="M280 66 H316" class="d-line" marker-end="url(#ar-wa)"/><path d="M430 66 H466" class="d-line" marker-end="url(#ar-wa)"/>
+  <text x="20" y="116" class="d-sub">予測しやすい・テストしやすい・安い。手順が事前に決まっている業務に向く。</text>
+
+  <text x="20" y="160" class="d-text" font-weight="700">エージェント：次の一手を LLM が決める</text>
+  <rect x="40" y="180" width="140" height="70" rx="10" class="d-box-accent"/>
+  <text x="110" y="210" text-anchor="middle" class="d-text">Claude</text>
+  <text x="110" y="230" text-anchor="middle" class="d-sub">考える→ツールを選ぶ</text>
+  <rect x="300" y="180" width="140" height="70" rx="10" class="d-box"/>
+  <text x="370" y="210" text-anchor="middle" class="d-text">ツール群</text>
+  <text x="370" y="230" text-anchor="middle" class="d-sub">検索・実行・編集…</text>
+  <path d="M180 200 H296" class="d-line" marker-end="url(#ar-wa)"/>
+  <path d="M300 232 H184" class="d-line" marker-end="url(#ar-wa)"/>
+  <text x="240" y="194" text-anchor="middle" class="d-sub">行動</text><text x="240" y="248" text-anchor="middle" class="d-sub">結果</text>
+  <text x="460" y="205" class="d-sub">ゴールまで繰り返す</text>
+  <text x="460" y="225" class="d-sub">（停止条件が必要）</text>
+  <text x="20" y="284" class="d-sub">柔軟だが、コスト・時間・結果のばらつきが大きい。手順を事前に決められない課題に向く。</text>
+</svg>

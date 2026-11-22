@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F 学習コンテンツ | Claude 認定資格 学習サイト</title>
+<meta name="description" content="Claude でアプリ・エージェント・ワークフローを作り、本番に出せるかを問う試験です。配点の大きい分野から順に並べています。各ページの最後の「まとめ」で要点を確認し、問題演習で定着させましょう。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="narrow">
+  <article class="prose" style="max-width:none">
+    <p class="breadcrumb"><a href="../../">トップ</a> › CCDV-F 学習</p>
+    <h1>CCDV-F（Developer – Foundations）の学習</h1>
+    <p class="lead">Claude でアプリ・エージェント・ワークフローを作り、本番に出せるかを問う試験です。配点の大きい分野から順に並べています。各ページの最後の「まとめ」で要点を確認し、問題演習で定着させましょう。</p>
+    <p><span class="badge">53問・120分・合格 720/1000・$125</span></p>
+    <div class="callout point">
+      <p><b>おすすめの進め方</b>：① 分野のページを読む → ② <a href="../exercises.html">問題演習</a>で10問ずつ解く → ③ 間違えた問題の解説から、該当する章に戻る → ④「間違えた問題」モードで解き直す。</p>
+    </div>
+    <h2 id="domains">分野ごとの解説</h2>
+    <div class="learn-index">
+      <a href="app.html"><div class="card"><span class="badge accent">配点 33.1%</span><h3>アプリケーションと統合</h3><p>CCDV-F で最も配点が大きい分野です。API の仕組みに加えて、要件の整理、ソフトウェア工学の基本、アプリの設計、構成管理、運用のライフサイクルまで、「本番で動かせるか」が問われます。</p></div></a>
+      <a href="model.html"><div class="card"><span class="badge accent">配点 16.8%</span><h3>モデル選択と最適化</h3><p>LLM の基本的な性質、SDK と API の関係、モデルの選び方、トークンと費用の管理を扱います。「なぜそう動くのか」が分かると、他の分野の問題も解きやすくなります。</p></div></a>
+      <a href="agents.html"><div class="card"><span class="badge accent">配点 14.7%</span><h3>エージェントとワークフロー</h3><p>いつエージェントを使い、いつワークフローにするか。エージェントをどう作り、どう安全に止めるか。代表的なパターンとフレームワークまでを扱います。</p></div></a>
+      <a href="prompt.html"><div class="card"><span class="badge accent">配点 11.0%</span><h3>プロンプトとコンテキスト</h3><p>プロンプトの書き方、コンテキスト（モデルに渡す情報全体）の管理、出力の扱い方を学びます。「何を、どこに、どれだけ渡すか」がテーマです。</p></div></a>
+      <a href="tools.html"><div class="card"><span class="badge accent">配点 10.6%</span><h3>ツールと MCP</h3><p>ツールの実装、MCP サーバーの開発、そして組み込みツール・カスタムツール・Skills・MCP の使い分けを扱います。</p></div></a>
+      <a href="security.html"><div class="card"><span class="badge accent">配点 8.1%</span><h3>セキュリティと安全</h3><p>プロンプトインジェクションへの対策、ガードレール、フックによる制御、シークレットの管理、個人情報の扱いを学びます。キーワードは「モデルの判断に頼らず、仕組みで守る」です。</p></div></a>
+      <a href="code-eval.html"><div class="card"><span class="badge accent">配点 3.1%＋2.6%</span><h3>Claude Code と評価・デバッグ</h3><p>配点は小さい2分野ですが、Claude Code の設定は構成管理やセキュリティの問題にも登場します。デバッグの切り分けは、すべての分野の「原因を問う」問題の基礎です。</p></div></a>
+    </div>
+    <h2 id="api">共通の土台</h2>
+    <div class="learn-index">
+      <a href="../../learn/messages-api/"><div class="card"><span class="badge blue">おすすめ</span><h3>Messages API をしくみから学ぶ</h3><p>リクエストとレスポンス、ツール利用、キャッシュ、エラー、Batches。疑似環境で実際に試せます。</p></div></a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

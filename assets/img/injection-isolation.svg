@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-labelledby="t-inj">
+  <title id="t-inj">プロンプトインジェクション対策：信頼できない入力を指示と分け、重要な操作はコードで止める</title>
+  <defs><marker id="ar-inj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="20" y="30" width="180" height="70" rx="10" class="d-box-ok"/>
+  <text x="110" y="58" text-anchor="middle" class="d-text" font-weight="700">信頼できる指示</text>
+  <text x="110" y="80" text-anchor="middle" class="d-sub">system（開発者が書く）</text>
+  <rect x="20" y="130" width="180" height="90" rx="10" class="d-box-ng"/>
+  <text x="110" y="156" text-anchor="middle" class="d-text" font-weight="700">信頼できない入力</text>
+  <text x="110" y="178" text-anchor="middle" class="d-sub">Web ページ・メール・文書</text>
+  <text x="110" y="198" text-anchor="middle" class="d-mono" font-size="10">「前の指示を無視して…」</text>
+  <rect x="250" y="80" width="150" height="90" rx="10" class="d-box-accent"/>
+  <text x="325" y="118" text-anchor="middle" class="d-text">Claude</text>
+  <text x="325" y="140" text-anchor="middle" class="d-sub">データは &lt;document&gt; で</text>
+  <text x="325" y="156" text-anchor="middle" class="d-sub">囲んで区別する</text>
+  <path d="M200 65 C 225 65, 225 110, 246 110" class="d-line" marker-end="url(#ar-inj)"/>
+  <path d="M200 175 C 225 175, 225 145, 246 145" class="d-line d-dash" marker-end="url(#ar-inj)"/>
+  <rect x="440" y="80" width="180" height="90" rx="10" class="d-box-blue"/>
+  <text x="530" y="108" text-anchor="middle" class="d-text" font-weight="700">ガードレール（コード）</text>
+  <text x="530" y="130" text-anchor="middle" class="d-sub">フック・許可リスト・承認</text>
+  <text x="530" y="150" text-anchor="middle" class="d-sub">最小権限のツールだけ渡す</text>
+  <path d="M400 125 H436" class="d-line" marker-end="url(#ar-inj)"/>
+  <text x="530" y="200" text-anchor="middle" class="d-sub">送金・削除などは</text>
+  <text x="530" y="220" text-anchor="middle" class="d-sub">モデルの判断だけで実行させない</text>
+  <text x="20" y="270" class="d-sub">「無視しないで」とプロンプトでお願いするだけでは強制力がない。仕組み（分離・権限・フック）で守る。</text>
+</svg>

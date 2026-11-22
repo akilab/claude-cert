@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCAR-P：評価・テスト・最適化 | Claude 認定資格 学習サイト</title>
+<meta name="description" content="何を測るか、どう測るか、どう比べるか、問題をどう診断するか、本番でどう見守るかを扱います。LLM のシステムの品質は「評価の仕組み」で決まります。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCAR-P 学習</a>
+      <a href="../exercises.html">CCAR-P 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCAR-P 学習</a> › 評価・テスト・最適化</p>
+    <h1>評価・テスト・最適化 <span class="badge accent">配点 16%</span></h1>
+    <p class="lead">何を測るか、どう測るか、どう比べるか、問題をどう診断するか、本番でどう見守るかを扱います。LLM のシステムの品質は「評価の仕組み」で決まります。</p>
+<h2 id="metrics">評価指標を決める</h2>
+<div class="table-wrap"><table>
+<tr><th>観点</th><th>指標の例</th><th>測り方</th></tr>
+<tr><td>正確さ</td><td>正答率、抽出の一致率、根拠への忠実さ</td><td>正解データとの照合、LLM による採点、人</td></tr>
+<tr><td>速度</td><td>最初のトークンまで、全体の時間（p50・p95）</td><td>計測</td></tr>
+<tr><td>費用</td><td>1件あたりのトークン・金額</td><td>usage の集計</td></tr>
+<tr><td>安全性</td><td>不適切な依頼への対応、方針違反の率</td><td>攻撃的な入力のテストセット</td></tr>
+<tr><td>セキュリティ</td><td>インジェクションへの耐性、情報漏えい</td><td>レッドチームのテスト</td></tr>
+</table></div>
+<p>どれか1つだけを見ると、別の観点が悪化しても気づけません。<b>主要な指標と、副作用を見る指標</b>を組み合わせます。</p>
+
+<h2 id="datasets">評価データとテストの仕組み</h2>
+<figure class="diagram" data-src="../../assets/img/eval-loop.svg"><figcaption>評価駆動の改善サイクル</figcaption></figure>
+<ul>
+<li><b>中身</b>：典型例＋境界例＋本番で失敗したケース。専門家の正解（期待する出力と根拠）つき。</li>
+<li><b>量と多様性</b>：本番の入力の分布を代表するように。生成データで補う場合は人が確認する。</li>
+<li><b>採点の方法を組み合わせる</b>（mixed methods）：
+  <ul><li>コード：形式・完全一致・数値の照合（速く・安く・確実）</li>
+  <li>LLM による採点：要約の質など、柔軟な判断（基準を明確に、人の採点との一致を確認）</li>
+  <li>人：最終的な品質の基準、難しいケース</li></ul></li>
+</ul>
+
+<h2 id="abtest">A/B テストと繰り返しの改善</h2>
+<ol>
+<li>変更は<b>1回に1つ</b>（プロンプト、モデル、検索の設定を同時に変えない）。</li>
+<li>まずオフラインの評価セットで確かめる。</li>
+<li>本番で一部の利用者に新しい版を出し（A/B）、<b>十分な件数</b>で比べる（LLM の出力はばらつくため）。</li>
+<li>主要な指標と、副作用（費用・速度・安全性）の両方を見る。</li>
+<li>結果を記録し、採用・見送りを判断する。</li>
+</ol>
+
+<h2 id="diagnosis">問題の診断</h2>
+<p><b>「何が変わったか・何が変わっていないか」</b>から原因を絞ります。</p>
+<div class="table-wrap"><table>
+<tr><th>症状</th><th>変わったもの</th><th>まず疑う場所</th></tr>
+<tr><td>文書の更新後に、自信満々の誤答</td><td>文書だけ</td><td>取り込み・検索（再インデックス、古いチャンク、埋め込みの不一致）</td></tr>
+<tr><td>モデルの切り替え後に形式が崩れる</td><td>モデル</td><td>挙動の変化（プロンプトの前提、出力の長さ・書式）</td></tr>
+<tr><td>特定の入力だけ失敗</td><td>入力</td><td>データの形・型、プロンプトの想定外のケース</td></tr>
+<tr><td>指示に従わない・ばらつく</td><td>プロンプト</td><td>指示の曖昧さ、例の偏り、コンテキストの肥大化</td></tr>
+<tr><td>根拠のない内容</td><td>—</td><td>資料の不足（検索で取れていない）、「分からない」を許していない</td></tr>
+</table></div>
+<figure class="diagram" data-src="../../assets/img/rag-pipeline.svg"><figcaption>RAG の不具合は、まず検索側から</figcaption></figure>
+<div class="exam-tip">「モデルの重みが勝手に変わった」「temperature のせい」のような、状況と結びつかない原因は誤答の定番。</div>
+
+<h2 id="optimization">トークン・速度・費用の最適化</h2>
+<div class="table-wrap"><table>
+<tr><th>手段</th><th>効果</th><th>注意点</th></tr>
+<tr><td>ルーティング（簡単なものは小さいモデル）</td><td>費用・速度</td><td>振り分けの精度を評価</td></tr>
+<tr><td>プロンプトキャッシュ</td><td>費用・最初のトークンまでの時間</td><td>変わらない部分を先頭に</td></tr>
+<tr><td>Batches</td><td>費用 50%</td><td>即時性がない</td></tr>
+<tr><td>出力の長さの管理</td><td>費用・速度</td><td>必要な情報を削らない</td></tr>
+<tr><td>コンテキストの整理</td><td>費用・速度・精度</td><td>必要な情報を残す</td></tr>
+<tr><td>effort の調整</td><td>速度・費用</td><td>難しい処理の精度</td></tr>
+</table></div>
+
+<h2 id="monitoring">本番の監視</h2>
+<ul>
+<li>エラー率・遅延・費用（システムの健全性）。</li>
+<li><b>出力の品質</b>：一定の割合をサンプリングし、自動採点と人の確認で継続評価。閾値を下回ったら通知。</li>
+<li>利用者のフィードバック（役に立った／立たなかった、修正の内容）。</li>
+<li>入力の傾向の変化（新しい種類の質問、言語、長さ）。</li>
+</ul>
+<p>LLM の品質の低下は HTTP エラーとして現れないことが多いので、<b>出力そのものを測る仕組み</b>が必須です。</p>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>指標は多面的に。主要な指標と副作用の指標。</li>
+<li>評価データは典型＋境界＋本番の失敗。採点はコード・LLM・人の組み合わせ。</li>
+<li>変更は1つずつ、十分な件数で比較。</li>
+<li>診断は「何が変わったか」から。</li>
+<li>本番は出力の品質まで監視する。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="design.html">← ソリューション設計</a>
+      <a class="btn primary" href="governance.html">ガバナンス・安全・リスク →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+/* ===== 学習コンテンツ ===== */
+.learn { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+.toc { position: sticky; top: 72px; align-self: start; max-height: calc(100vh - 90px); overflow-y: auto; padding-top: 24px; font-size: 13px; }
+.toc-title { font-weight: 700; margin: 0 0 6px; }
+.toc ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+.toc a { display: block; padding: 4px 8px; border-radius: 6px; color: var(--ink-2); text-decoration: none; line-height: 1.5; border-left: 2px solid transparent; }
+.toc a:hover { background: var(--surface-2); }
+.toc a[aria-current="true"] { color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); }
+
+.prose { min-width: 0; max-width: 780px; padding-bottom: 32px; }
+.prose h1 { font-size: clamp(24px, 3.4vw, 30px); margin: 16px 0 8px; }
+.prose .lead { font-size: 17px; color: var(--ink-2); margin: 0 0 20px; }
+.prose h2 { font-size: 21px; margin: 44px 0 12px; padding-top: 12px; border-top: 1px solid var(--line); scroll-margin-top: 72px; }
+.prose h3 { font-size: 17px; margin: 26px 0 8px; scroll-margin-top: 72px; }
+.prose p, .prose li { line-height: 1.9; }
+.prose ul, .prose ol { padding-left: 1.4em; }
+.prose table { font-size: 14px; }
+.prose pre { font-size: 13px; }
+.prose .try {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  border: 1px dashed var(--accent); border-radius: 10px; padding: 10px 14px; margin: 16px 0; background: var(--accent-soft);
+}
+.prose .try b { color: var(--accent); }
+.key-points { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; margin: 20px 0; }
+.key-points h3 { margin-top: 0; font-size: 15px; }
+.key-points ul { margin: 0; }
+.exam-tip { border-left: 4px solid var(--ok); background: var(--ok-soft); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 16px 0; }
+.exam-tip::before { content: "試験のポイント"; display: block; font-weight: 800; font-size: 13px; color: var(--ok); margin-bottom: 2px; }
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+.compare > div { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: var(--surface); }
+.compare h4 { margin: 0 0 6px; font-size: 15px; }
+.compare .good { border-color: var(--ok); }
+.compare .bad { border-color: var(--ng); }
+.compare ul { margin: 0; padding-left: 1.2em; font-size: 14px; }
+
+.learn-index { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 16px 0; }
+.learn-index a { display: block; text-decoration: none; color: inherit; }
+.learn-index a:hover .card { border-color: var(--accent); }
+.learn-index .card { height: 100%; }
+.learn-index h3 { margin: 6px 0 4px; font-size: 17px; }
+.learn-index p { margin: 0; font-size: 14px; color: var(--ink-2); }
+.page-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 40px; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .learn { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .toc { position: static; max-height: none; padding-top: 16px; }
+  .toc ol { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}

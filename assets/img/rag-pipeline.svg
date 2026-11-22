@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 310" role="img" aria-labelledby="t-rag">
+  <title id="t-rag">RAG パイプライン：取り込み（事前）と検索・生成（質問のたび）</title>
+  <defs><marker id="ar-rag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <text x="20" y="26" class="d-text" font-weight="700">取り込み（文書が更新されるたび）</text>
+  <rect x="20" y="40" width="110" height="50" rx="8" class="d-box"/><text x="75" y="70" text-anchor="middle" class="d-sub">文書</text>
+  <rect x="165" y="40" width="120" height="50" rx="8" class="d-box-blue"/><text x="225" y="62" text-anchor="middle" class="d-sub">チャンク分割</text><text x="225" y="80" text-anchor="middle" class="d-sub">（大きさ・重なり）</text>
+  <rect x="320" y="40" width="120" height="50" rx="8" class="d-box-blue"/><text x="380" y="62" text-anchor="middle" class="d-sub">埋め込み／</text><text x="380" y="80" text-anchor="middle" class="d-sub">キーワード索引</text>
+  <rect x="475" y="40" width="145" height="50" rx="8" class="d-box-accent"/><text x="547" y="70" text-anchor="middle" class="d-sub">インデックス</text>
+  <path d="M130 65 H161" class="d-line" marker-end="url(#ar-rag)"/><path d="M285 65 H316" class="d-line" marker-end="url(#ar-rag)"/><path d="M440 65 H471" class="d-line" marker-end="url(#ar-rag)"/>
+
+  <text x="20" y="140" class="d-text" font-weight="700">検索と生成（質問のたび）</text>
+  <rect x="20" y="154" width="110" height="50" rx="8" class="d-box"/><text x="75" y="184" text-anchor="middle" class="d-sub">質問</text>
+  <rect x="165" y="154" width="120" height="50" rx="8" class="d-box-blue"/><text x="225" y="176" text-anchor="middle" class="d-sub">検索</text><text x="225" y="194" text-anchor="middle" class="d-sub">（ハイブリッド等）</text>
+  <rect x="320" y="154" width="120" height="50" rx="8" class="d-box-blue"/><text x="380" y="176" text-anchor="middle" class="d-sub">再ランキング・</text><text x="380" y="194" text-anchor="middle" class="d-sub">絞り込み</text>
+  <rect x="475" y="154" width="145" height="50" rx="8" class="d-box-accent"/><text x="547" y="176" text-anchor="middle" class="d-sub">Claude が根拠つきで</text><text x="547" y="194" text-anchor="middle" class="d-sub">回答を生成</text>
+  <path d="M130 179 H161" class="d-line" marker-end="url(#ar-rag)"/><path d="M285 179 H316" class="d-line" marker-end="url(#ar-rag)"/><path d="M440 179 H471" class="d-line" marker-end="url(#ar-rag)"/>
+  <path d="M547 90 V 150" class="d-line d-dash" marker-end="url(#ar-rag)"/>
+  <text x="20" y="240" class="d-sub">文書の更新後に「自信満々の誤答」が増えたら、まず取り込み側（再インデックス漏れ、古いチャンク、</text>
+  <text x="20" y="260" class="d-sub">埋め込みモデルの不一致）を疑う。モデルや速度が変わっていなければ、モデル側が原因の可能性は低い。</text>
+  <text x="20" y="288" class="d-sub">評価は「検索の質（必要なチャンクが取れたか）」と「回答の質（根拠に忠実か）」を分けて測る。</text>
+</svg>

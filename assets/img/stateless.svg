@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-labelledby="t-stateless">
+  <title id="t-stateless">Messages API はステートレス：毎回、会話の履歴をすべて送る</title>
+  <defs><marker id="ar-stateless" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-blue"/></marker></defs>
+  <text x="20" y="26" class="d-text" font-weight="700">1回目のリクエスト</text>
+  <rect x="20" y="38" width="250" height="44" rx="8" class="d-box"/>
+  <text x="34" y="65" class="d-mono">user: 東京の人口は？</text>
+  <path d="M276 60 H360" class="d-line-blue" marker-end="url(#ar-stateless)"/>
+  <rect x="366" y="38" width="254" height="44" rx="8" class="d-box-accent"/>
+  <text x="380" y="65" class="d-mono">assistant: 約1,400万人です</text>
+
+  <text x="20" y="128" class="d-text" font-weight="700">2回目のリクエスト（続きを聞く）</text>
+  <rect x="20" y="140" width="250" height="110" rx="8" class="d-box"/>
+  <text x="34" y="166" class="d-mono">user: 東京の人口は？</text>
+  <text x="34" y="192" class="d-mono">assistant: 約1,400万人です</text>
+  <text x="34" y="218" class="d-mono">user: では大阪は？</text>
+  <text x="34" y="240" class="d-sub">↑ 前のやり取りも全部入れる</text>
+  <path d="M276 195 H360" class="d-line-blue" marker-end="url(#ar-stateless)"/>
+  <rect x="366" y="173" width="254" height="44" rx="8" class="d-box-accent"/>
+  <text x="380" y="200" class="d-mono">assistant: 約880万人です</text>
+  <text x="320" y="284" text-anchor="middle" class="d-sub">API は前回の内容を覚えていない。履歴を持つのはアプリの役目。履歴が長くなるほど入力トークンも増える。</text>
+</svg>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude 認定資格 学習サイト</title>
+<meta name="description" content="Claude 認定資格（CCDV-F／CCAR-P）の問題演習と学習コンテンツ">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="./"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="./" aria-current="page">トップ</a>
+      <a href="learn/messages-api/">Messages API</a>
+      <a href="ccdv-f/learn/">CCDV-F</a>
+      <a href="ccar-p/learn/">CCAR-P</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1>Claude 認定資格の<br class="sp">問題演習と学習コンテンツ</h1>
+    <p class="muted">試験を選んで問題演習を始めるか、学習コンテンツで仕組みから理解しましょう。内容は各試験の現行ガイド（v1.0）にもとづいています。</p>
+  </section>
+
+  <section aria-labelledby="h-exams">
+    <h2 id="h-exams" class="section-title">試験を選んで問題演習を始める</h2>
+    <div class="exam-grid" id="exam-grid">
+      <p class="muted">読み込み中…</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-learn">
+    <h2 id="h-learn" class="section-title">学習コンテンツ</h2>
+
+    <a class="feature card" href="learn/messages-api/">
+      <div class="feature-body">
+        <span class="badge accent">おすすめ</span>
+        <h3>Messages API をしくみから学ぶ</h3>
+        <p class="muted">リクエストとレスポンスの形、stop_reason、ストリーミング、ツール利用のループ、プロンプトキャッシュ、エラーと再試行、Batches まで。<strong>ブラウザだけで動く疑似環境</strong>で、実際にリクエストを書いて動きを確かめられます。</p>
+        <span class="btn primary small">解説と疑似環境を開く →</span>
+      </div>
+      <svg class="feature-art" viewBox="0 0 220 140" aria-hidden="true">
+        <rect x="8" y="20" width="70" height="100" rx="10" class="d-box-blue"/>
+        <text x="43" y="74" text-anchor="middle" class="d-text">アプリ</text>
+        <rect x="142" y="20" width="70" height="100" rx="10" class="d-box-accent"/>
+        <text x="177" y="74" text-anchor="middle" class="d-text">API</text>
+        <path d="M80 52 H136" class="d-line-blue"/><path d="M136 47 L142 52 L136 57 Z" class="d-arrow-blue"/>
+        <text x="110" y="45" text-anchor="middle" class="d-sub">request</text>
+        <path d="M140 92 H84" class="d-line-accent"/><path d="M84 87 L78 92 L84 97 Z" class="d-arrow-accent"/>
+        <text x="110" y="112" text-anchor="middle" class="d-sub">response</text>
+      </svg>
+    </a>
+
+    <div class="learn-grid">
+      <a class="card learn-link" href="ccdv-f/learn/">
+        <span class="badge blue">CCDV-F</span>
+        <h3>Developer – Foundations の学習</h3>
+        <p class="muted small">8分野の要点を、図を使って分野ごとに解説します。</p>
+      </a>
+      <a class="card learn-link" href="ccar-p/learn/">
+        <span class="badge blue">CCAR-P</span>
+        <h3>Architect – Professional の学習</h3>
+        <p class="muted small">設計の判断、RAG、評価、ガバナンスなど7分野を解説します。</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="card about">
+    <h2 class="section-title" style="margin-top:0">このサイトについて</h2>
+    <ul class="small muted">
+      <li>問題はすべてオリジナルです。実際の試験問題ではありません。</li>
+      <li>解答の記録はこのブラウザの中だけに保存されます（他の端末とは共有されません）。</li>
+      <li>12月7日の試験改訂の内容は、まだ反映していません。</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">Claude 認定資格 学習サイト ・ 非公式の学習用コンテンツです（Anthropic とは関係ありません）</footer>
+
+<script type="module" src="assets/js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F：プロンプトとコンテキスト | Claude 認定資格 学習サイト</title>
+<meta name="description" content="プロンプトの書き方、コンテキスト（モデルに渡す情報全体）の管理、出力の扱い方を学びます。「何を、どこに、どれだけ渡すか」がテーマです。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › プロンプトとコンテキスト</p>
+    <h1>プロンプトとコンテキスト <span class="badge accent">配点 11.0%</span></h1>
+    <p class="lead">プロンプトの書き方、コンテキスト（モデルに渡す情報全体）の管理、出力の扱い方を学びます。「何を、どこに、どれだけ渡すか」がテーマです。</p>
+<h2 id="prompting">プロンプトエンジニアリング</h2>
+<h3>基本の原則</h3>
+<div class="table-wrap"><table>
+<tr><th>原則</th><th>具体的には</th></tr>
+<tr><td>明確に・具体的に</td><td>目的、読み手、形式、長さ、制約を書く。「良い感じに」ではなく基準を示す</td></tr>
+<tr><td>例を示す（few-shot）</td><td>典型例と境界例を、偏りなく。例は <code>&lt;example&gt;</code> タグで囲む</td></tr>
+<tr><td>指示とデータを分ける</td><td>資料は <code>&lt;document&gt;</code> などのタグで囲み、データであることを明記</td></tr>
+<tr><td>置き場所</td><td>方針・役割は system、その回の依頼とデータは user。長い資料は先、質問は後ろ</td></tr>
+<tr><td>出力の制約</td><td>形式（JSON・見出し）、長さ、言語を指定。機械が読むなら構造化出力</td></tr>
+<tr><td>考えさせる</td><td>複雑な推論は段階的に考えさせる（思考の機能も活用）</td></tr>
+<tr><td>繰り返し改善</td><td>評価データで効果を測り、1回に1つずつ変える</td></tr>
+</table></div>
+<h3>system と user の使い分け</h3>
+<pre><code>"system": "あなたは社内ヘルプデスクの担当です。丁寧語で、社外秘の情報は答えません。",
+"messages": [{"role": "user", "content": [
+  {"type": "text", "text": "&lt;document&gt;…社内 FAQ…&lt;/document&gt;"},
+  {"type": "text", "text": "VPN に接続できません。どうすればいいですか？"}
+]}]</code></pre>
+<h3>入力のサニタイズ</h3>
+<p>利用者の入力をプロンプトに埋め込む前に、区切りに使うタグと同じ文字列の除去やエスケープ、長さの制限などを行います。悪意がなくても、偶然プロンプトの構造が崩れることがあります。</p>
+<div class="exam-tip">few-shot の例に偏りがあると出力も偏る。「例を増やす」ではなく「多様でバランスよく」。</div>
+
+<h2 id="context">コンテキストエンジニアリング</h2>
+<p>コンテキストとは、1回の呼び出しでモデルに渡す情報の全体（system、ツール定義、履歴、資料、ツールの出力）です。<b>「たくさん入れる」より「必要なものを選ぶ」</b>が原則です。</p>
+<div class="table-wrap"><table>
+<tr><th>問題</th><th>症状</th><th>対策</th></tr>
+<tr><td>肥大化（bloat）</td><td>遅い、高い、重要な情報が埋もれる</td><td>不要なツール出力の削除（pruning）、要約による圧縮（compaction）</td></tr>
+<tr><td>ドリフト（drift）</td><td>長い会話で、最初の指示や目的から外れていく</td><td>重要な指示を system に置く、要約時に目的を引き継ぐ、セッションを分ける</td></tr>
+<tr><td>混線</td><td>無関係な話題や他のタスクが混ざる</td><td>サブエージェントや多段のワークフローでコンテキストを分離</td></tr>
+</table></div>
+<figure class="diagram" data-src="../../assets/img/subagent-context.svg"><figcaption>コンテキストの分離</figcaption></figure>
+
+<h2 id="output">出力の扱い</h2>
+<h3>構造化出力と検証</h3>
+<ol>
+<li>形を決める：構造化出力（<code>output_config.format</code>）や strict なツール。</li>
+<li>検証する：スキーマ、業務上の値の範囲、参照の整合性。</li>
+<li>失敗に備える：理由を添えて再生成、既定の安全な処理、人への引き継ぎ。</li>
+</ol>
+<h3>自信のある出力を疑う</h3>
+<p>LLM は、根拠がなくても<b>自信のある書き方</b>で答えることがあります（ハルシネーション）。</p>
+<ul>
+<li>根拠（資料の引用）を示させる。引用が資料に実在するかをアプリで確認できる。</li>
+<li>「分からない」と答えてよいことを明示する。</li>
+<li>重要な値（金額・日付・条番号）は、元のデータと照合する。</li>
+</ul>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>明確に、例はバランスよく、指示とデータはタグで分ける。</li>
+<li>方針は system、データと依頼は user。入力はサニタイズ。</li>
+<li>コンテキストは選ぶ：pruning・compaction・分離。</li>
+<li>出力は形を決めて検証。自信のある出力ほど根拠を確かめる。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="agents.html">← エージェントとワークフロー</a>
+      <a class="btn primary" href="tools.html">ツールと MCP →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

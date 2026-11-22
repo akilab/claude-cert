@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F：セキュリティと安全 | Claude 認定資格 学習サイト</title>
+<meta name="description" content="プロンプトインジェクションへの対策、ガードレール、フックによる制御、シークレットの管理、個人情報の扱いを学びます。キーワードは「モデルの判断に頼らず、仕組みで守る」です。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › セキュリティと安全</p>
+    <h1>セキュリティと安全 <span class="badge accent">配点 8.1%</span></h1>
+    <p class="lead">プロンプトインジェクションへの対策、ガードレール、フックによる制御、シークレットの管理、個人情報の扱いを学びます。キーワードは「モデルの判断に頼らず、仕組みで守る」です。</p>
+<h2 id="injection">プロンプトインジェクション</h2>
+<p>外部の文書・Web ページ・メールなどに埋め込まれた命令に、モデルが従ってしまう攻撃です。利用者が直接入力する場合（直接）と、Claude が読む資料に仕込まれる場合（間接）があります。</p>
+<figure class="diagram" data-src="../../assets/img/injection-isolation.svg"><figcaption>信頼できない入力を分け、重要な操作は仕組みで止める</figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>対策</th><th>効果</th></tr>
+<tr><td>信頼できない入力を指示と分ける（タグで囲む、データであると明記）</td><td>騙されにくくする（完全ではない）</td></tr>
+<tr><td>最小権限：役割に必要なツール・権限だけを渡す</td><td>騙されても被害が出ない</td></tr>
+<tr><td>重要な操作（送信・送金・削除）は承認やフックで止める</td><td>騙されても実行されない</td></tr>
+<tr><td>出力の検査、監視</td><td>異常を見つける</td></tr>
+</table></div>
+<div class="exam-tip">「system に『従わないで』と書く」「大きなモデルにする」「temperature を変える」は、単独では強制力のない対策。分離＋最小権限＋承認・フックが正解の軸。</div>
+
+<h2 id="guardrails">ガードレールと安全な展開</h2>
+<figure class="diagram" data-src="../../assets/img/least-privilege.svg"><figcaption>対策の強さ</figcaption></figure>
+<p>どの対策も単独では完全ではないので、性質の違う対策を<b>重ねます</b>（多層防御）。</p>
+<ol>
+<li>入力の検査（不適切な依頼、機密情報の要求）</li>
+<li>system での方針（できること・できないこと）</li>
+<li>ツールの最小権限、重要な操作の承認</li>
+<li>出力の検査（個人情報、方針違反）</li>
+<li>監視とアラート</li>
+</ol>
+<p>セキュア・バイ・デザイン：プライバシー、ID とアクセスの管理、最小権限を、後付けではなく最初の設計に組み込みます。</p>
+
+<h2 id="hooks">フックで破壊的な操作を防ぐ</h2>
+<svg viewBox="0 0 640 150" role="img" aria-label="PreToolUse フックの流れ"><defs><marker id="ar-hk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs><rect x="10" y="40" width="150" height="56" rx="10" class="d-box-accent"/><text x="85" y="64" text-anchor="middle" class="d-text">Claude</text><text x="85" y="84" text-anchor="middle" class="d-mono">Bash: rm -rf /</text><rect x="230" y="40" width="170" height="56" rx="10" class="d-box-blue"/><text x="315" y="64" text-anchor="middle" class="d-text">PreToolUse フック</text><text x="315" y="84" text-anchor="middle" class="d-sub">危険なパターンを検査</text><rect x="470" y="10" width="160" height="44" rx="8" class="d-box-ng"/><text x="550" y="37" text-anchor="middle" class="d-sub">一致 → ブロック</text><rect x="470" y="86" width="160" height="44" rx="8" class="d-box-ok"/><text x="550" y="113" text-anchor="middle" class="d-sub">問題なし → 実行</text><path d="M160 68 H226" class="d-line" marker-end="url(#ar-hk)"/><path d="M400 60 L466 34" class="d-line" marker-end="url(#ar-hk)"/><path d="M400 78 L466 106" class="d-line" marker-end="url(#ar-hk)"/></svg>
+<ul>
+<li>フックはモデルの判断に関係なく必ず実行されるので、「確実に防ぐ」用途に向いている。</li>
+<li>Claude Code では、settings.json の権限ルール（許可・拒否）と組み合わせる。</li>
+<li>CLAUDE.md の「やめて」は補助。強制はフックと権限で。</li>
+</ul>
+
+<h2 id="secrets">ID・シークレット・キーの管理</h2>
+<div class="compare">
+<div class="bad"><h4>✕</h4><ul><li>ブラウザの JavaScript にキー</li><li>ソースコード・Git にキー</li><li>開発と本番で同じキー</li><li>チャットでキーを共有</li></ul></div>
+<div class="good"><h4>◯</h4><ul><li>サーバー側でシークレット管理から読む</li><li>環境ごとにキーを分ける</li><li>定期的に入れ替える。漏れたらすぐ無効化</li><li>使用状況を監視する</li></ul></div>
+</div>
+<p>利用者の本人確認・認可（誰が何をできるか）も、モデルではなくアプリの仕組みで行います。</p>
+
+<h2 id="pii">個人情報（PII）の扱い</h2>
+<ul>
+<li><b>必要な範囲だけ</b>をモデルに渡す（データの最小化）。</li>
+<li>ログには伏せ字にしてから書く。アクセス権と保存期間を制限する。</li>
+<li>データの保存場所や保持の規定に合う提供元・設定を選ぶ。</li>
+<li>出力にも個人情報が含まれうるので、出力側でも検査する。</li>
+</ul>
+<div class="key-points"><h3>この分野のまとめ</h3><ul>
+<li>インジェクション：分離＋最小権限＋承認・フック。お願いだけに頼らない。</li>
+<li>ガードレールは多層に。セキュア・バイ・デザイン。</li>
+<li>確実に止める → フック＋権限ルール。</li>
+<li>キーはサーバー側・環境別・定期交換・監視。PII は最小化と伏せ字。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="tools.html">← ツールと MCP</a>
+      <a class="btn primary" href="code-eval.html">Claude Code と評価・デバッグ →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>
