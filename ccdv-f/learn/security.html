@@ -30,6 +30,7 @@
     <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › セキュリティと安全</p>
     <h1>セキュリティと安全 <span class="badge accent">配点 8.1%</span></h1>
     <p class="lead">プロンプトインジェクションへの対策、ガードレール、フックによる制御、シークレットの管理、個人情報の扱いを学びます。キーワードは「モデルの判断に頼らず、仕組みで守る」です。</p>
+<div class="callout point"><p><b>この章の前提</b>：<a href="basics.html">はじめに（前提知識）</a>の <a href="basics.html#apikey">API キー</a>・<a href="basics.html#authz">認証と認可</a>・<a href="basics.html#tool-use">ツール利用の流れ</a></p></div>
 <h2 id="injection">プロンプトインジェクション</h2>
 <p>外部の文書・Web ページ・メールなどに埋め込まれた命令に、モデルが従ってしまう攻撃です。利用者が直接入力する場合（直接）と、Claude が読む資料に仕込まれる場合（間接）があります。</p>
 <figure class="diagram" data-src="../../assets/img/injection-isolation.svg"><figcaption>信頼できない入力を分け、重要な操作は仕組みで止める</figcaption></figure>

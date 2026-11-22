@@ -23,6 +23,15 @@ function pointHtml(point) {
   return richText(point);
 }
 
+// 狙い：この問題で確認すること／学んでほしいこと（解説の最初に出す）
+function aimHtml(q) {
+  if (!q.aim) return '';
+  return `<div class="callout aim">
+    <p><b>この問題で確認すること</b><br>${richText(q.aim.check)}</p>
+    <p><b>学んでほしいこと</b><br>${richText(q.aim.lesson)}</p>
+  </div>`;
+}
+
 function optionTags(q, o, chosen) {
   if (!isSelectAll(q)) {
     return `${o.correct ? '<b class="tag ok">正解</b>' : '<b class="tag ng">誤り</b>'}${chosen ? '<span class="tag mine">あなたの解答</span>' : ''}`;
@@ -247,6 +256,7 @@ function renderQuestion() {
         <div class="q-stem">${richText(q.stem)}</div>
         ${selectAll ? askBanner(q) : `<p class="q-instruction">${n > 1 ? `<b>${n}つ</b>選んでください。` : '1つ選んでください。'}</p>`}
 
+        <div id="verdict"></div>
         <ol class="options" id="options">
           ${order.map((oi, pos) => `
             <li class="opt ${selectAll ? 'sa' : ''}" data-oi="${oi}">
@@ -444,8 +454,12 @@ function showFeedback(q, state, isCorrect) {
   const isLast = session.index === session.list.length - 1;
   const fb = document.getElementById('feedback');
   const partial = isSelectAll(q) ? `<small>${q.options.length}つ中 ${judgedCount(q, [...state.selected])}つの判断が正しい</small>` : '';
+  const banner = `<div class="result-banner ${isCorrect ? 'ok' : 'ng'}">${isCorrect ? (isSelectAll(q) ? '◯ 完全正解' : '◯ 正解') : '✕ 不正解'}${partial}</div>`;
+  // 狙いがある問題は、結果と狙いを選択肢の上に出し、解説を「狙い → 各選択肢 → ポイント」の順に読めるようにする
+  const verdict = document.getElementById('verdict');
+  if (q.aim) verdict.innerHTML = banner + aimHtml(q);
   fb.innerHTML = `
-    <div class="result-banner ${isCorrect ? 'ok' : 'ng'}">${isCorrect ? (isSelectAll(q) ? '◯ 完全正解' : '◯ 正解') : '✕ 不正解'}${partial}</div>
+    ${q.aim ? '' : banner}
     <div class="callout point"><b>ポイント</b>${Array.isArray(q.point) ? '' : '<br>'}${pointHtml(q.point)}</div>
     ${q.diagram ? '<figure class="diagram" id="diagram"></figure>' : ''}
     ${q.learn ? `<p class="small"><a href="${siteUrl(q.learn)}" target="_blank" rel="noopener">📖 関連する学習コンテンツを開く（新しいタブ）</a></p>` : ''}
@@ -461,7 +475,8 @@ function showFeedback(q, state, isCorrect) {
     else { session.index += 1; renderQuestion(); }
   });
   document.querySelector('.q-progress .bar i').style.width = `${((session.index + 1) / session.list.length) * 100}%`;
-  fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (q.aim) verdict.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  else fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // ---------- 結果 ----------
@@ -512,6 +527,7 @@ function renderResults() {
               <summary><span class="mark">${r.correct ? '◯' : '✕'}</span> <span class="badge">${escapeHtml(domainName(r.q.domain))}</span> ${escapeHtml(r.q.stem.split('\n')[0].slice(0, 80))}${r.q.stem.length > 80 ? '…' : ''}</summary>
               <div class="review-body">
                 <div class="q-stem">${richText(r.q.stem)}</div>
+                ${aimHtml(r.q)}
                 <ul class="review-opts">
                   ${r.order.map((oi, pos) => {
                     const o = r.q.options[oi];

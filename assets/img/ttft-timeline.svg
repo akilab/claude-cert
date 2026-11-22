@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 230" role="img" aria-labelledby="t-ttft">
+  <title id="t-ttft">最初のトークンまでの時間（TTFT）と全体の時間</title>
+  <defs><marker id="ar-ttft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <line x1="40" y1="110" x2="650" y2="110" class="d-line" marker-end="url(#ar-ttft)"/>
+  <text x="652" y="132" text-anchor="end" class="d-sub">時間</text>
+  <circle cx="60" cy="110" r="6" class="d-box-blue"/>
+  <text x="60" y="88" text-anchor="middle" class="d-text">送信</text>
+  <rect x="70" y="96" width="170" height="28" rx="6" class="d-box"/>
+  <text x="155" y="114" text-anchor="middle" class="d-sub">入力の処理・思考</text>
+  <circle cx="250" cy="110" r="6" class="d-box-accent"/>
+  <text x="250" y="88" text-anchor="middle" class="d-text">最初の文字</text>
+  <rect x="260" y="96" width="330" height="28" rx="6" class="d-box-ok"/>
+  <text x="425" y="114" text-anchor="middle" class="d-sub">文字が順に届く（ストリーミング）</text>
+  <circle cx="600" cy="110" r="6" class="d-box-ng"/>
+  <text x="600" y="88" text-anchor="middle" class="d-text">最後の文字</text>
+  <path d="M60 148 L60 158 L250 158 L250 148" class="d-line-accent" fill="none"/>
+  <text x="155" y="178" text-anchor="middle" class="d-text">TTFT（最初のトークンまで）</text>
+  <text x="155" y="196" text-anchor="middle" class="d-sub">キャッシュで短く／思考が多いと長く</text>
+  <path d="M60 30 L60 20 L600 20 L600 30" class="d-line-blue" fill="none"/>
+  <text x="330" y="46" text-anchor="middle" class="d-sub">全体の時間（出力が長いほど長い。ストリーミングでも変わらない）</text>
+  <text x="425" y="178" text-anchor="middle" class="d-sub">利用者はこの間、読み始められる</text>
+</svg>

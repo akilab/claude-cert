@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F：はじめに（前提知識） | Claude 認定資格 学習サイト</title>
+<meta name="description" content="Web アプリを作ったことがない人のための準備の章です。Claude を API で使うとはどういうことか、Web のしくみ、JSON と JSON Schema、API キーと認証・認可、LLM とツール利用の基本、プログラム・ターミナル・Git の読み方を、実物に近いサンプルで説明します。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › はじめに（前提知識）</p>
+    <h1>はじめに：前提知識 <span class="badge blue">第0章</span></h1>
+    <p class="lead">CCDV-F は「Claude を使ってアプリを作る開発者」のための試験です。この章は、Web アプリを作ったことがない人が、ほかの章を読めるようになるための準備です。試験の配点はありませんが、すべての章の土台になります。</p>
+
+<h2 id="goal">この章のゴール</h2>
+<p>読み終えたとき、次のことを自分の言葉で説明できれば十分です。すでに知っている節は読み飛ばしてかまいません。</p>
+<ol>
+<li>claude.ai で Claude と話すことと、API で Claude を使うことの違い</li>
+<li>Web の通信は「リクエスト」と「レスポンス」の1往復であること。GET と POST、ステータスコード、ストリーミング</li>
+<li>JSON と JSON Schema の読み方</li>
+<li>API キーの扱い方と、認証・認可の違い</li>
+<li>Claude の API に何を送ると、何が返ってくるか</li>
+<li>トークン、コンテキスト、ツール利用の流れ</li>
+<li>Python のコード、ターミナルのコマンド、Git のリポジトリを読めること</li>
+</ol>
+<h3 id="map">この章の知識を使う場所</h3>
+<div class="table-wrap"><table>
+<tr><th>前提知識</th><th>主に使う章</th></tr>
+<tr><td><a href="#web">Web のしくみ</a>（HTTP・ステータス・ストリーミング・クラウド）</td><td><a href="app.html">アプリケーションと統合</a>、<a href="model.html">モデル選択と最適化</a>（SDK と API）</td></tr>
+<tr><td><a href="#json">JSON</a>・<a href="#schema">JSON Schema</a></td><td><a href="tools.html">ツールと MCP</a>、<a href="prompt.html">プロンプトとコンテキスト</a>（構造化出力）</td></tr>
+<tr><td><a href="#apikey">API キー</a>・<a href="#authz">認証と認可</a></td><td><a href="security.html">セキュリティと安全</a>、<a href="app.html#config">構成管理</a></td></tr>
+<tr><td><a href="#llm">トークン・コンテキスト・ツール利用</a></td><td><a href="model.html">モデル選択と最適化</a>、<a href="prompt.html">プロンプトとコンテキスト</a>、<a href="agents.html">エージェントとワークフロー</a></td></tr>
+<tr><td><a href="#program">プログラムの読み方</a></td><td><a href="agents.html">エージェントとワークフロー</a>（ループ）、<a href="app.html#se">ソフトウェア工学の基本</a>（並行処理）</td></tr>
+<tr><td><a href="#terminal">ターミナル</a>・<a href="#git">Git</a></td><td><a href="code-eval.html">Claude Code と評価・デバッグ</a>、<a href="tools.html">ツールと MCP</a>（stdio）、<a href="app.html#config">構成管理</a></td></tr>
+</table></div>
+
+<h2 id="claude">Claude の2つの使い方</h2>
+<p>Claude は、Anthropic という会社が作った AI（大規模言語モデル）です。使い方は大きく2つあります。</p>
+<figure class="diagram" data-src="../../assets/img/claude-api-place.svg"><figcaption>A は人が画面で使う。B はプログラムが Claude を呼び、その結果を自分のアプリで使う</figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th></th><th>A. 画面から使う</th><th>B. API で組み込む</th></tr>
+<tr><td>例</td><td>claude.ai のチャット、デスクトップアプリ</td><td>社内ヘルプデスクのボット、メールの自動分類、問い合わせの返信の下書き</td></tr>
+<tr><td>使う人</td><td>あなた自身</td><td>あなたが作ったアプリの利用者</td></tr>
+<tr><td>何を送るか</td><td>あなたが入力した文章</td><td>アプリ（プログラム）が組み立てた文章とデータ</td></tr>
+<tr><td>返事をどう使うか</td><td>あなたが読む</td><td>アプリが画面に出す・データベースに保存する・次の処理に渡す</td></tr>
+</table></div>
+<p>CCDV-F が問うのは、主に <b>B の使い方</b>です。「アプリが Claude に何を送り、返ってきたものをどう扱うか」を設計し、作り、運用できるかが試されます。</p>
+<div class="terms"><dl>
+<dt>LLM</dt><dd>Large Language Model（大規模言語モデル）。大量の文章から学習し、文章を読んで続きの文章を作る AI。Claude は LLM の1つです。</dd>
+<dt>API</dt><dd>Application Programming Interface。プログラムから、別のサービスの機能を呼び出すための窓口です。人が画面を操作する代わりに、プログラムが決まった形式でお願いを送ります。</dd>
+<dt>アプリ（アプリケーション）</dt><dd>利用者が使うプログラム。この試験では、Claude を組み込んだ自社のサービスや社内ツールを指します。</dd>
+</dl></div>
+<p>API をレストランにたとえると、次のようになります。</p>
+<div class="sample">
+<p class="sample-title">たとえ：API はレストランの「注文票」</p>
+<ul>
+<li>お客さん（アプリ）は、厨房（Claude）に直接入れません。</li>
+<li>決まった書式の注文票（API のリクエスト）に「何を・どれだけ」を書いて渡します。</li>
+<li>厨房は料理（レスポンス）を返します。書式が間違っていれば「この注文は受けられません」（エラー）と返ってきます。</li>
+<li>注文票の書式は店が決めています。API の書式は Anthropic が決め、<a href="https://platform.claude.com/docs" target="_blank" rel="noopener">公式ドキュメント</a>で公開しています。</li>
+</ul>
+</div>
+
+<h2 id="web">Web のしくみ：リクエストとレスポンス</h2>
+<p>Web の通信は、いつも<b>「お願い」と「返事」の1往復</b>です。ブラウザで Web ページを開くときも、アプリが Claude を呼ぶときも同じです。</p>
+<figure class="diagram" data-src="../../assets/img/web-request.svg"><figcaption>クライアントがリクエストを送り、サーバーがレスポンスを返す</figcaption></figure>
+<div class="terms"><dl>
+<dt>クライアント</dt><dd>お願いを送る側。ブラウザや、あなたが作るアプリ。</dd>
+<dt>サーバー</dt><dd>お願いに応える側。Claude の場合は Anthropic のコンピューター。</dd>
+<dt>HTTP</dt><dd>クライアントとサーバーがやり取りするときの決まり（プロトコル）。暗号化したものを HTTPS といいます。</dd>
+<dt>リクエスト</dt><dd>クライアントからサーバーへのお願い。</dd>
+<dt>レスポンス</dt><dd>サーバーからクライアントへの返事。</dd>
+<dt>URL</dt><dd>お願いの宛先。例：<code>https://api.anthropic.com/v1/messages</code>（Anthropic の API の、メッセージを作る窓口）。</dd>
+</dl></div>
+<p>リクエストとレスポンスは、どちらも次の部品でできています。</p>
+<div class="table-wrap"><table>
+<tr><th>部品</th><th>リクエストでは</th><th>レスポンスでは</th></tr>
+<tr><td>1行目</td><td><b>メソッド</b>と URL（何を・どこに）</td><td><b>ステータスコード</b>（成功か失敗か）</td></tr>
+<tr><td>ヘッダー</td><td>付帯情報。API キー、データの形式など</td><td>付帯情報。リクエストの ID、制限の残りなど</td></tr>
+<tr><td>ボディ</td><td>送るデータの中身（JSON など）</td><td>返事の中身（JSON など）</td></tr>
+</table></div>
+<p>手紙にたとえると、1行目とヘッダーが「封筒の表書き」、ボディが「便せんの中身」です。実際に流れている文字は、次のような形をしています。</p>
+<div class="sample">
+<p class="sample-title">実物の形：Claude に質問するリクエスト（アプリ → Anthropic）</p>
+<pre><code>POST /v1/messages HTTP/1.1                    ← 1行目：メソッドと宛先
+Host: api.anthropic.com                       ← ヘッダー（ここから空行まで）
+x-api-key: sk-ant-api03-DUMMYk3Jd9...
+anthropic-version: 2026-10-21
+content-type: application/json
+                                              ← 空行で区切る
+{                                             ← ボディ（送るデータ）
+  "model": "claude-sonnet-5-5",
+  "max_tokens": 300,
+  "messages": [{"role": "user", "content": "日本の首都はどこですか？"}]
+}</code></pre>
+</div>
+<div class="sample">
+<p class="sample-title">実物の形：返ってくるレスポンス（Anthropic → アプリ）</p>
+<pre><code>HTTP/1.1 200 OK                               ← 1行目：ステータス
+content-type: application/json                ← ヘッダー
+request-id: req_011DUMMY...
+
+{                                             ← ボディ（返事の中身）
+  "role": "assistant",
+  "content": [{"type": "text", "text": "日本の首都は東京です。"}],
+  "stop_reason": "end_turn",
+  ...
+}</code></pre>
+<p>ふだんは SDK やライブラリがこの文字の組み立てと読み取りをしてくれるので、開発者が直接書くことはほとんどありません。ただ、エラーの調査では「どのヘッダーに何が入っていたか」「ステータスはいくつか」を読む力が必要になります。</p>
+</div>
+
+<h3 id="methods">メソッド：GET と POST</h3>
+<p><b>メソッド</b>は、サーバーに「何をしてほしいか」の種類です。よく使うのは次の2つです。</p>
+<div class="table-wrap"><table>
+<tr><th>メソッド</th><th>意味</th><th>身近な例</th><th>Claude の API での例</th></tr>
+<tr><td><b>GET</b></td><td>情報を<b>取得</b>する。ボディは送らない</td><td>ブラウザで Web ページを開く</td><td>預けた一括処理（バッチ）の進み具合を確認する：<code>GET /v1/messages/batches/{ID}</code></td></tr>
+<tr><td><b>POST</b></td><td>データを<b>送って</b>処理してもらう。ボディに中身を入れる</td><td>フォームに入力して送信する</td><td>Claude に文章を送って返事をもらう：<code>POST /v1/messages</code></td></tr>
+</table></div>
+<p>Claude に返事を書いてもらうときは、質問の文章（データ）を送る必要があるので <b>POST</b> を使います。ほかに PUT（置き換え）、DELETE（削除）などもありますが、この試験で意識するのは主に GET と POST です。</p>
+
+<h3 id="status">ステータスコード：結果を表す3桁の数字</h3>
+<div class="table-wrap"><table>
+<tr><th>コード</th><th>意味</th><th>たとえ</th><th>どうするか</th></tr>
+<tr><td>200</td><td>成功</td><td>注文どおりの料理が来た</td><td>結果を使う</td></tr>
+<tr><td>400</td><td>リクエストの書き方の誤り</td><td>注文票の書き方が間違っている</td><td>直してから送り直す</td></tr>
+<tr><td>401</td><td>認証の失敗（API キーの誤り）</td><td>会員証が無効</td><td>API キーを確認する</td></tr>
+<tr><td>429</td><td>送りすぎ（回数や量の上限を超えた）</td><td>注文が多すぎて受付停止中</td><td>少し待ってから送り直す</td></tr>
+<tr><td>500 台</td><td>サーバー側の問題・混雑</td><td>厨房のトラブル</td><td>少し待ってから送り直す</td></tr>
+</table></div>
+<p>覚え方：<b>2 で始まれば成功、4 で始まればこちらの誤り、5 で始まれば相手側の問題</b>。429 だけは例外的に「待てば通る」4 台です。</p>
+
+<h3 id="streaming">返事を少しずつ受け取る：ストリーミング</h3>
+<p>ふつうの HTTP は「リクエスト1つに、レスポンス1つ」です。Claude の返事が長いと、全部できあがるまで何秒も待つことになります。そこで、リクエストに <code>"stream": true</code> を付けると、返事を<b>できた部分から少しずつ</b>受け取れます。これを<b>ストリーミング</b>といいます。</p>
+<div class="sample">
+<p class="sample-title">実物の形：ストリーミングで届くデータ（SSE。一部を省略）</p>
+<pre><code>event: message_start
+data: {"type":"message_start","message":{"role":"assistant","content":[], ...}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"日本の"}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"首都は東京です。"}}
+
+event: message_delta
+data: {"type":"message_delta","delta":{"stop_reason":"end_turn"},"usage":{"output_tokens":12}}
+
+event: message_stop
+data: {"type":"message_stop"}</code></pre>
+<ul>
+<li>1つのレスポンスの中で、<code>event:</code>（出来事の名前）と <code>data:</code>（中身の JSON）の組が、次々に届きます。この形式を <b>SSE</b>（Server-Sent Events：サーバーから順に送られるイベント）といいます。</li>
+<li><code>content_block_delta</code> の <code>text</code> をつなげると、返事の全文になります（「日本の」＋「首都は東京です。」）。チャット画面で文字が流れるように表示されるのは、このためです。</li>
+<li>返事が終わった理由（<code>stop_reason</code>）は、最後のほうの <code>message_delta</code> で届きます。</li>
+</ul>
+<p>なお、音声の会話のように「双方が同時に送り合う」通信には <b>WebSocket</b> という別の方式が使われることもあります。SSE はサーバーから一方向に送る方式です。</p>
+</div>
+
+<h3 id="servers">サーバーはどこにある？：ローカル・クラウド・ホスト</h3>
+<p>後の章では「セルフホスト」「リモート」「クラウド経由」といった言葉が出てきます。どれも「プログラムがどこで動いているか」を表す言葉です。</p>
+<div class="table-wrap"><table>
+<tr><th>言葉</th><th>意味</th><th>例</th></tr>
+<tr><td>ローカル</td><td>自分のパソコンの中</td><td>開発中に自分のパソコンでアプリを動かす</td></tr>
+<tr><td>リモート</td><td>ネットワークの向こうにある別のコンピューター</td><td>Anthropic の API、社内のサーバー</td></tr>
+<tr><td>クラウド</td><td>インターネット越しに借りて使うコンピューターやサービス</td><td>AWS（Amazon）、Google Cloud、Microsoft Azure</td></tr>
+<tr><td>ホスト（する）</td><td>プログラムを動かし、運用すること。またはその場所</td><td>「Anthropic がホストする」＝ Anthropic のコンピューターで動かしてもらう</td></tr>
+<tr><td>セルフホスト</td><td>自社が用意した環境で動かすこと</td><td>自社のクラウドの中でエージェントを動かす</td></tr>
+<tr><td>エンドポイント</td><td>API の宛先の URL</td><td><code>https://api.anthropic.com/v1/messages</code></td></tr>
+</table></div>
+<p>Claude は Anthropic の API のほか、<b>Amazon Bedrock</b>（AWS）や <b>Vertex AI</b>（Google Cloud）など、クラウドの会社のサービスからも呼べます。同じ Claude でも、エンドポイントと認証の方法が変わります。</p>
+
+<h2 id="json">JSON の読み方</h2>
+<p>Claude の API では、送るデータも返ってくるデータも <b>JSON</b>（ジェイソン）という書き方を使います。人にも読めて、プログラムでも扱いやすい形式です。</p>
+<div class="sample">
+<p class="sample-title">サンプル：社員の情報を JSON で書く</p>
+<pre><code>{
+  "name": "山田 花子",
+  "age": 29,
+  "remote": true,
+  "skills": ["Python", "SQL"],
+  "manager": {"name": "佐藤 一郎", "id": "E0012"},
+  "phone": null
+}</code></pre>
+</div>
+<div class="table-wrap"><table>
+<tr><th>書き方</th><th>呼び方</th><th>意味</th><th>サンプルの例</th></tr>
+<tr><td><code>{ }</code></td><td>オブジェクト</td><td>「名前: 値」の組をまとめたもの</td><td>全体、<code>manager</code></td></tr>
+<tr><td><code>"name": …</code></td><td>キーと値</td><td>左が項目の名前（キー）、右がその値</td><td><code>"age": 29</code></td></tr>
+<tr><td><code>"…"</code></td><td>文字列</td><td>文字。必ず <code>"</code> で囲む</td><td><code>"山田 花子"</code></td></tr>
+<tr><td><code>29</code></td><td>数値</td><td>数。<code>"</code> で囲まない</td><td><code>29</code></td></tr>
+<tr><td><code>true</code>／<code>false</code></td><td>真偽値</td><td>はい／いいえ</td><td><code>true</code></td></tr>
+<tr><td><code>[ ]</code></td><td>配列</td><td>値を順番に並べたもの</td><td><code>["Python", "SQL"]</code></td></tr>
+<tr><td><code>null</code></td><td>null</td><td>値がない</td><td><code>"phone": null</code></td></tr>
+</table></div>
+<p>オブジェクトの中にオブジェクトや配列を入れられます（入れ子）。<code>manager</code> の <code>name</code> は「佐藤 一郎」、<code>skills</code> の1つめは「Python」と読みます。</p>
+<div class="sample">
+<p class="sample-title">プログラムで JSON から値を取り出す（Python）</p>
+<pre><code>import json
+
+text = '{"name": "山田 花子", "skills": ["Python", "SQL"], "manager": {"name": "佐藤 一郎"}}'
+data = json.loads(text)          # JSON の文字列を、プログラムで扱える形に変換
+
+print(data["name"])              # → 山田 花子
+print(data["skills"][0])         # → Python   （配列の番号は 0 から数える）
+print(data["manager"]["name"])   # → 佐藤 一郎 （入れ子は [ ] を続けて書く）
+print(len(data["skills"]))       # → 2        （配列の要素の数）</code></pre>
+<p>Claude の返事を取り出す <code>message.content[0].text</code> も、同じ考え方です。「<code>content</code> 配列の 0 番目の <code>text</code>」と読みます。</p>
+</div>
+<div class="sample">
+<p class="sample-title">よくある書き間違い（エラーになる JSON）</p>
+<pre><code>{'name': '山田'}            ✕ 文字列は " で囲む（' は使えない）
+{"name": "山田",}          ✕ 最後の要素の後ろに , を付けない
+{"age": "29"}              △ エラーにはならないが、数値ではなく文字列になる
+{"name": "山田"}           ◯</code></pre>
+</div>
+<div class="sample">
+<p class="sample-title">練習：次の JSON から「1つめのメッセージの役割」と「その文章」を読み取ってください</p>
+<pre><code>{
+  "model": "claude-sonnet-5-5",
+  "messages": [
+    {"role": "user", "content": "こんにちは"}
+  ]
+}</code></pre>
+<p>答え：<code>messages</code> は配列で、その1つめ（<code>messages[0]</code>）の <code>role</code> は <code>"user"</code>（利用者）、<code>content</code> は <code>"こんにちは"</code> です。これが、Claude に送るリクエストの中心部分です。</p>
+</div>
+
+<h3 id="schema">JSON Schema：データの形の設計図</h3>
+<p>JSON は自由に書けるので、「どんな項目が、どんな型で入るか」を別に決めておかないと、受け取る側のプログラムが困ります。その<b>形の決まり</b>を書くための書き方が <b>JSON Schema</b>（ジェイソン・スキーマ）です。Claude に道具（ツール）を渡すときや、返事の形を決めるとき（構造化出力）に使います。</p>
+<div class="sample">
+<p class="sample-title">サンプル：「注文番号を1つ受け取る」という形の決まり</p>
+<pre><code>{
+  "type": "object",                         ← 全体はオブジェクト { }
+  "properties": {                           ← 中に入る項目の一覧
+    "order_id": {
+      "type": "string",                     ← 文字列（"A-00123" のように先頭の 0 も残る）
+      "description": "注文番号。例：A-00123"
+    },
+    "include_items": {"type": "boolean"}    ← true / false
+  },
+  "required": ["order_id"],                 ← order_id は必ず入れる
+  "additionalProperties": false             ← 決めた項目以外は入れない
+}</code></pre>
+<p>この決まりに合うデータの例：<code>{"order_id": "A-00123", "include_items": true}</code>。<br>
+合わないデータの例：<code>{"include_items": true}</code>（必須の <code>order_id</code> がない）、<code>{"order_id": 123}</code>（文字列ではなく数値）。</p>
+</div>
+<div class="table-wrap"><table>
+<tr><th>よく使う指定</th><th>意味</th></tr>
+<tr><td><code>type</code></td><td>型。<code>object</code>・<code>string</code>・<code>number</code>・<code>integer</code>・<code>boolean</code>・<code>array</code></td></tr>
+<tr><td><code>properties</code></td><td>オブジェクトに入る項目と、それぞれの形</td></tr>
+<tr><td><code>required</code></td><td>必ず入れる項目</td></tr>
+<tr><td><code>enum</code></td><td>決まった候補の中からしか選べない。例：<code>{"type": "string", "enum": ["請求", "配送", "返品"]}</code></td></tr>
+<tr><td><code>items</code></td><td>配列の1つ1つの要素の形</td></tr>
+<tr><td><code>description</code></td><td>その項目の説明。Claude はこれを読んで、何を入れるかを判断する</td></tr>
+</table></div>
+
+<h2 id="apikey">API キー：アプリの「合鍵」</h2>
+<p><b>API キー</b>は、「このリクエストは誰（どの会社のアカウント）からのものか」を Anthropic に示すための、長い文字列です。まずは実物のイメージを見てください。</p>
+<div class="sample">
+<p class="sample-title">API キーの見た目（ダミー。実際には使えません）</p>
+<pre><code>sk-ant-api03-DUMMYk3Jd9xQ2mVb7Lr0Tz5WcY8hN1pE4sA6uG...（実際は 100 文字ほど続く）</code></pre>
+<ul>
+<li>Anthropic の API キーは <code>sk-ant-</code> で始まる、ランダムな英数字の長い文字列です。</li>
+<li>Anthropic の<b>コンソール</b>（開発者向けの管理画面）で発行します。発行した直後に一度だけ全体が表示されるので、その場で安全な場所に保存します。</li>
+<li>このキーを持っている人は、誰でもあなたの会社のアカウントで Claude を使えます。料金も会社に請求されます。<b>パスワードと同じ扱い</b>です。</li>
+</ul>
+</div>
+
+<h3>キーはリクエストのどこに入るか</h3>
+<p>キーは、リクエストの<b>ヘッダー</b>の <code>x-api-key</code> に入れて送ります。ボディ（質問の中身）とは別の場所です。</p>
+<div class="sample">
+<p class="sample-title">リクエストの中のキーの位置</p>
+<pre><code>POST /v1/messages HTTP/1.1
+Host: api.anthropic.com
+x-api-key: sk-ant-api03-DUMMYk3Jd9xQ2mVb7Lr0Tz5WcY8hN1pE4sA6uG...   ← ここ
+anthropic-version: 2026-10-21
+content-type: application/json
+
+{"model": "claude-sonnet-5-5", "max_tokens": 300, "messages": [...]}</code></pre>
+<p>キーが間違っている・無効になっている場合は、ステータス <b>401</b>（認証の失敗）が返ってきます。</p>
+</div>
+
+<h3>やってはいけない置き方</h3>
+<div class="sample">
+<p class="sample-title">✕ 悪い例：コードにキーを直接書く（app.py）</p>
+<pre><code>from anthropic import Anthropic
+
+client = Anthropic(api_key="sk-ant-api03-DUMMYk3Jd9xQ2mVb7Lr0Tz5WcY8hN1pE4sA6uG...")  # ✕</code></pre>
+<p>このファイルを Git で共有すると、リポジトリを見られる全員がキーを手に入れます。公開リポジトリなら世界中から見えます。後でキーの行を消しても、<b>Git の履歴には残り続けます</b>。</p>
+</div>
+<div class="sample">
+<p class="sample-title">✕ 悪い例：ブラウザで動く JavaScript にキーを入れる</p>
+<pre><code>// Web ページの中の script（利用者のブラウザで動く）
+fetch("https://api.anthropic.com/v1/messages", {
+  method: "POST",
+  headers: { "x-api-key": "sk-ant-api03-DUMMYk3Jd9..." },   // ✕ 誰でも見られる
+  body: JSON.stringify({ /* ... */ })
+});</code></pre>
+<p>ブラウザで動くプログラムは、利用者が開発者ツールで中身を自由に見られます。スマートフォンのアプリに埋め込んだ場合も、アプリを解析すれば取り出せます。</p>
+</div>
+
+<h3>正しい置き方：環境変数から読む</h3>
+<p><b>環境変数</b>とは、プログラムの外（OS やサーバーの設定）からプログラムに渡す値のことです。コードにはキーそのものを書かず、「<code>ANTHROPIC_API_KEY</code> という名前の値を読む」とだけ書きます。</p>
+<div class="sample">
+<p class="sample-title">◯ 手順1：自分のパソコンで試すとき（ターミナル）</p>
+<pre><code># ターミナルで、環境変数にキーを入れる（このウィンドウを閉じると消える）
+export ANTHROPIC_API_KEY="sk-ant-api03-DUMMYk3Jd9xQ2mVb7Lr0Tz5WcY8hN1pE4sA6uG..."
+
+# 入ったか確認する（先頭だけ表示して、全体は画面に出さない）
+echo ${ANTHROPIC_API_KEY:0:10}
+# → sk-ant-api</code></pre>
+</div>
+<div class="sample">
+<p class="sample-title">◯ 手順2：コードはキーを知らないまま書く（app.py）</p>
+<pre><code>import os
+from anthropic import Anthropic
+
+# 書き方A：SDK は環境変数 ANTHROPIC_API_KEY を自動で読む
+client = Anthropic()
+
+# 書き方B：自分で読む場合も、値そのものはコードに書かない
+client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])</code></pre>
+<p>このコードは Git で共有しても安全です。キーはどこにも書かれていません。</p>
+</div>
+<div class="sample">
+<p class="sample-title">◯ 手順3：設定ファイルにまとめる場合は、Git の対象から外す</p>
+<pre><code># .env（キーを書いたファイル。自分のパソコンにだけ置く）
+ANTHROPIC_API_KEY=sk-ant-api03-DUMMYk3Jd9xQ2mVb7Lr0Tz5WcY8hN1pE4sA6uG...
+
+# .gitignore（Git に含めないファイルの一覧）
+.env</code></pre>
+<p><code>.env</code> のような設定ファイルを使うときは、必ず <code>.gitignore</code> に書いて、Git で共有されないようにします。本番のサーバーでは、クラウドの<b>シークレット管理の仕組み</b>（AWS Secrets Manager など）にキーを保管し、そこから環境変数として渡すのが一般的です。</p>
+</div>
+
+<h3>キーを守るつなぎ方</h3>
+<p>キーを利用者に渡さないために、Claude を呼ぶのは<b>自社のサーバー</b>のプログラムにします。</p>
+<div class="sample">
+<p class="sample-title">利用者 → 自社のサーバー → Claude の順につなぐ</p>
+<pre><code>[利用者のブラウザ]                [自社のサーバー]                     [Claude の API]
+  POST /api/ask           →      キーを環境変数から読み、       →    POST /v1/messages
+  {"question": "…"}               Claude へのリクエストを作る          x-api-key: sk-ant-…
+                         ←      返事の文章だけを返す           ←    {"content": [...]}
+  （キーは一度も通らない）</code></pre>
+<p>ブラウザは自社のサーバーとしか話しません。キーはサーバーの中だけにあり、利用者の目には触れません（<a href="#claude">最初の図</a>の B の形です）。</p>
+</div>
+<div class="callout point"><p><b>漏れてしまったら</b>：すぐにコンソールでそのキーを無効にし、新しいキーを発行して差し替えます。消しただけでは不十分です（Git の履歴や、誰かの手元に残っている可能性があるため）。キーは用途や環境（開発用・本番用）ごとに分けて発行しておくと、無効にしたときの影響を小さくできます。</p></div>
+
+<h3 id="authz">認証と認可：「誰か」と「何をしてよいか」</h3>
+<p>セキュリティの章でよく出てくる2つの言葉です。似ていますが、確かめることが違います。</p>
+<div class="table-wrap"><table>
+<tr><th>言葉</th><th>確かめること</th><th>身近な例</th><th>Claude のアプリでの例</th></tr>
+<tr><td><b>認証</b>（authentication）</td><td>相手が<b>誰か</b></td><td>社員証で本人だと確かめる</td><td>API キーで「どの会社のアプリか」を確かめる。利用者のログイン</td></tr>
+<tr><td><b>認可</b>（authorization）</td><td>その人が<b>何をしてよいか</b></td><td>社員証で入れる部屋が決まっている</td><td>ログインした利用者が、自分の注文だけを見られる</td></tr>
+</table></div>
+<div class="sample">
+<p class="sample-title">例：注文の問い合わせボットで、何をどこで確かめるか</p>
+<pre><code>利用者がログイン            → 認証（アプリ）：この人は山田さん
+「私の注文はいつ届く？」    → 認可（アプリ）：山田さんが見てよいのは山田さんの注文だけ
+                              → 山田さんの注文だけをデータベースから取り出す
+アプリが Claude を呼ぶ      → 認証（Anthropic）：API キーで、この会社のアプリだと確かめる
+Claude が返事を書く         → 渡されたのは山田さんの注文だけなので、他人の注文は答えようがない</code></pre>
+</div>
+<p>大切なのは、<b>認可を Claude の判断に任せない</b>ことです。「他人の注文は答えないで」とプロンプトに書いても、強制力はありません。見てよいデータだけをアプリが選んで渡します。必要な権限だけを与えることを<b>最小権限</b>（least privilege）といいます。</p>
+
+<h2 id="first-call">Claude の API を呼んでみる</h2>
+<p>ここまでの部品を組み合わせると、Claude の API の呼び出しが読めるようになります。</p>
+<div class="sample">
+<p class="sample-title">サンプル1：コマンド（curl）で呼ぶ</p>
+<pre><code>curl https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2026-10-21" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-sonnet-5-5",
+    "max_tokens": 300,
+    "messages": [
+      {"role": "user", "content": "日本の首都はどこですか？"}
+    ]
+  }'</code></pre>
+<ul>
+<li><code>curl</code>：コマンドから HTTP のリクエストを送る道具。<code>-d</code> でボディを付けると、POST で送られます。</li>
+<li><code>-H</code>：ヘッダー。API キー、API の版（<code>anthropic-version</code>）、データの形式（JSON）を伝えます。</li>
+<li><code>$ANTHROPIC_API_KEY</code>：環境変数に入れた API キー。コマンドに直接書きません。</li>
+<li>ボディの <code>model</code>（どのモデルか）・<code>max_tokens</code>（返事の長さの上限）・<code>messages</code>（会話）の3つは必須です。</li>
+</ul>
+</div>
+<div class="sample">
+<p class="sample-title">サンプル2：返ってくるレスポンス（ステータス 200）</p>
+<pre><code>{
+  "id": "msg_01...",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-5-5",
+  "content": [
+    {"type": "text", "text": "日本の首都は東京です。"}
+  ],
+  "stop_reason": "end_turn",
+  "usage": {"input_tokens": 18, "output_tokens": 12}
+}</code></pre>
+<ul>
+<li><code>role: "assistant"</code>：Claude からの返事であること。</li>
+<li><code>content</code>：返事の本文。配列になっていて、文章は <code>content[0].text</code> に入っています。</li>
+<li><code>stop_reason</code>：返事が終わった理由。<code>end_turn</code> は「書き終えた」。<code>max_tokens</code> なら上限で途中で切れています。</li>
+<li><code>usage</code>：使ったトークンの数。料金の計算に使います。</li>
+</ul>
+</div>
+<div class="sample">
+<p class="sample-title">サンプル3：同じことを Python の SDK で書く</p>
+<pre><code>from anthropic import Anthropic
+
+client = Anthropic()   # API キーは環境変数 ANTHROPIC_API_KEY から自動で読む
+
+message = client.messages.create(
+    model="claude-sonnet-5-5",
+    max_tokens=300,
+    messages=[{"role": "user", "content": "日本の首都はどこですか？"}],
+)
+print(message.content[0].text)   # → 日本の首都は東京です。</code></pre>
+<p><b>SDK</b>（Software Development Kit）は、API を各言語から呼びやすくした部品集です。中では同じ POST のリクエストを送っていますが、ヘッダーの付け方やエラー時の再試行を代わりにやってくれます。実際の開発では SDK を使うのが普通です。</p>
+</div>
+<div class="try"><b>試してみる</b> 本物の API キーがなくても、<a href="../../learn/messages-api/playground.html">Messages API 疑似環境</a>で、リクエストを書き換えてレスポンスやエラーの変化を確かめられます。</div>
+
+<h2 id="llm">LLM の基本：トークン・コンテキスト・ツール</h2>
+<h3>トークン</h3>
+<p>Claude は文章を<b>トークン</b>という小さな単位に区切って読み書きします。おおよそ単語や文字のかたまりで、日本語は英語より多くのトークンになりやすい傾向があります。</p>
+<ul>
+<li><b>料金</b>は「読んだトークン数（入力）」と「書いたトークン数（出力）」で決まります。出力の方が単価が高めです。</li>
+<li><b>上限</b>もトークンで決まります。<code>max_tokens</code> は返事の長さの上限、<b>コンテキストウィンドウ</b>は1回に扱える量（入力と出力の合計）の上限です。</li>
+</ul>
+<h3>Claude は前の会話を覚えていない</h3>
+<p>API は、1回1回のリクエストを独立したものとして扱います（<b>ステートレス</b>）。会話を続けるには、<b>それまでのやり取りを毎回すべて送り直します</b>。</p>
+<div class="sample">
+<p class="sample-title">サンプル：2回目のリクエスト（1回目のやり取りも含めて送る）</p>
+<pre><code>"messages": [
+  {"role": "user",      "content": "日本の首都はどこですか？"},
+  {"role": "assistant", "content": "日本の首都は東京です。"},
+  {"role": "user",      "content": "その人口は？"}
+]</code></pre>
+<p>「その」が東京を指すと分かるのは、1回目の質問と返事も一緒に送っているからです。3行目だけを送ると、Claude には何の人口か分かりません。会話が長くなるほど送るトークンが増え、料金も時間も増えます。</p>
+</div>
+<div class="terms"><dl>
+<dt>role（役割）</dt><dd><code>user</code> は利用者（アプリ）からの発言、<code>assistant</code> は Claude の発言。</dd>
+<dt>プロンプト</dt><dd>Claude に渡す指示や質問の文章のこと。</dd>
+<dt>system プロンプト</dt><dd>会話全体に効く前提や役割の指示。messages とは別の <code>system</code> 項目に書きます。</dd>
+</dl></div>
+<h3>返事は毎回少し変わる</h3>
+<p>LLM は、次に来そうな言葉を確率にもとづいて選びながら文章を作ります。そのため、同じ質問でも返事の言い回しが毎回少し変わることがあります。プログラムで扱うときは、出力の形を決める（構造化出力）、出力を検証する、といった工夫をします。これは後の章で詳しく学びます。</p>
+
+<p>また LLM は、もっともらしいが事実と違う内容を、自信ありげに書いてしまうことがあります。これを<b>ハルシネーション</b>（hallucination）といいます。重要な内容は、根拠を示させたり、元のデータと照合したりして確かめます。</p>
+
+<h3 id="context">コンテキスト：1回に渡す情報のすべて</h3>
+<p><b>コンテキスト</b>とは、1回の呼び出しで Claude が読む情報の全体のことです。後の章で「コンテキストが膨らむ」「コンテキストを分ける」と出てきたら、この箱の中身の話です。</p>
+<div class="sample">
+<p class="sample-title">1回のリクエストのコンテキストに入るもの</p>
+<pre><code>コンテキスト（上限＝コンテキストウィンドウ）
+├─ system     役割や方針の指示
+├─ tools      使ってよい道具の一覧と説明
+├─ messages   これまでの会話（質問・返事・道具の結果）と、渡した資料
+│    …ここまでが入力…
+└─ 出力       Claude の返事</code></pre>
+<p>入れるほど料金が上がり、遅くなり、大事な情報が埋もれやすくなります。「何でも入れる」ではなく「必要なものを選んで入れる」のが基本です。</p>
+</div>
+
+<h3 id="tool-use">ツール利用とエージェントの考え方</h3>
+<p>Claude は文章を書くことしかできません。データベースを調べたり、メールを送ったりはできません。そこで、アプリが<b>ツール</b>（Claude に使わせる道具。中身はアプリの関数）を用意します。流れは次のとおりです。<b>ツールを実行するのは Claude ではなくアプリ</b>である点が大切です。</p>
+<div class="sample">
+<p class="sample-title">サンプル：「注文 A-00123 はいつ届く？」に答えるまで</p>
+<pre><code>① アプリ → Claude：質問と、ツールの一覧を送る
+   "tools": [{"name": "get_order_status", "description": "注文の配送状況を返す",
+              "input_schema": {"type": "object", "properties": {"order_id": {"type": "string"}},
+                               "required": ["order_id"]}}]
+
+② Claude → アプリ：「このツールをこの入力で使いたい」と返す（stop_reason: "tool_use"）
+   {"type": "tool_use", "id": "toolu_01...", "name": "get_order_status",
+    "input": {"order_id": "A-00123"}}
+
+③ アプリ：自分の関数 get_order_status("A-00123") を実行する
+   → {"status": "配送中", "eta": "11月25日"}
+
+④ アプリ → Claude：①②の会話に、ツールの結果（tool_result）を足して送り直す
+   {"type": "tool_result", "tool_use_id": "toolu_01...", "content": "{\"status\": \"配送中\", ...}"}
+
+⑤ Claude → アプリ：「ご注文 A-00123 は配送中で、11月25日に届く予定です。」（stop_reason: "end_turn"）</code></pre>
+</div>
+<p>②〜④を、Claude がツールを使わなくなるまで繰り返すプログラムを<b>エージェント</b>と呼びます。次に何をするかを Claude が決めるので柔軟ですが、回数や費用が読みにくくなります。一方、手順をあらかじめプログラムで決めて順に呼び出す形を<b>ワークフロー</b>と呼びます。どちらを選ぶかは「エージェントとワークフロー」の章で学びます。</p>
+
+<h2 id="program">プログラムの読み方</h2>
+<p>後の章には、Python のコードや、コードに近い書き方（疑似コード）が出てきます。プログラムを書けなくても、<b>何をしているかを読める</b>と理解が進みます。よく出てくる形はこれだけです。</p>
+<div class="sample">
+<p class="sample-title">サンプル：よく出てくる形（Python）</p>
+<pre><code># 「#」から後ろはコメント（説明のメモ）。プログラムとしては無視される
+
+# 変数：値に名前を付けて入れておく箱
+city = "東京"
+count = 0
+
+# 関数：入力（引数）を受け取り、結果を返す「部品」
+def get_order_status(order_id):
+    # if：条件によって処理を分ける
+    if order_id == "":
+        return {"error": "注文番号がありません"}
+    return {"order_id": order_id, "status": "配送中"}
+
+# リスト（JSON の配列と同じ）と、for：1つずつ繰り返す
+orders = ["A-001", "A-002"]
+for order in orders:
+    result = get_order_status(order)   # 関数を呼び出し、結果を変数に入れる
+    print(result["status"])            # → 配送中（2回表示される）
+
+# while：条件が成り立つ間、繰り返す
+while count &lt; 3:
+    count = count + 1                  # 3 になったら止まる
+
+# try / except：失敗（例外）が起きたときの処理
+try:
+    number = int("abc")                # 文字を数値に変換しようとして失敗する
+except ValueError:
+    print("数値に変換できませんでした")</code></pre>
+</div>
+<div class="table-wrap"><table>
+<tr><th>形</th><th>意味</th><th>後の章での使われ方</th></tr>
+<tr><td>関数（<code>def</code>）</td><td>入力を受け取り、結果を返す部品</td><td>Claude に渡す「ツール」の中身は関数。Claude が使いたいと言った関数を、アプリが実行する</td></tr>
+<tr><td><code>if</code></td><td>条件で分ける</td><td>「<code>stop_reason</code> が <code>tool_use</code> ならツールを実行する」</td></tr>
+<tr><td><code>for</code>／<code>while</code></td><td>繰り返す</td><td>エージェントのループ（ツールを使い終わるまで繰り返す）。必ず上限を付ける</td></tr>
+<tr><td><code>try</code>／<code>except</code></td><td>失敗に備える</td><td>API のエラーやツールの失敗を受け止めて、再試行や報告をする</td></tr>
+<tr><td>辞書 <code>{ }</code></td><td>「名前: 値」の組（JSON のオブジェクトと同じ形）</td><td>リクエストやレスポンスを組み立てる・読む</td></tr>
+</table></div>
+<p>Python では、行の先頭の字下げ（インデント）で「どこまでが if の中か」「どこまでが関数の中か」を表します。字下げがそろった部分が、ひとまとまりです。</p>
+
+<h2 id="terminal">ターミナルとコマンド</h2>
+<p><b>ターミナル</b>は、文字でコンピューターに命令（コマンド）を出す画面です。Mac では「ターミナル」、Windows では「PowerShell」などが使えます。Claude Code もターミナルで動きます。</p>
+<div class="sample">
+<p class="sample-title">コマンドの読み方</p>
+<pre><code>$ claude -p "この差分を要約して" --output-format json</code></pre>
+<div class="table-wrap"><table>
+<tr><th>部分</th><th>呼び方</th><th>意味</th></tr>
+<tr><td><code>$</code></td><td>プロンプト</td><td>「ここからコマンドを入力する」という印。入力はしない</td></tr>
+<tr><td><code>claude</code></td><td>コマンド</td><td>実行するプログラムの名前（Claude Code）</td></tr>
+<tr><td><code>-p</code></td><td>オプション</td><td>動き方の指定。ここでは「対話せずに1回だけ実行して、結果を出す」</td></tr>
+<tr><td><code>"この差分を要約して"</code></td><td>引数</td><td>コマンドに渡す値。ここでは Claude への指示。空白を含むので <code>"</code> で囲む</td></tr>
+<tr><td><code>--output-format json</code></td><td>オプションとその値</td><td>結果を JSON の形で出す</td></tr>
+</table></div>
+<p><code>-</code> や <code>--</code> で始まるものがオプションです。<code>-p</code> のように1文字の短い形と、<code>--output-format</code> のように長い名前の形があります。</p>
+</div>
+<div class="table-wrap"><table>
+<tr><th>よく使うコマンド</th><th>意味</th></tr>
+<tr><td><code>pwd</code></td><td>今いるフォルダ（ディレクトリ）を表示する</td></tr>
+<tr><td><code>ls</code></td><td>フォルダの中身を一覧する（<code>ls -a</code> で <code>.</code> で始まる隠しファイルも表示）</td></tr>
+<tr><td><code>cd フォルダ名</code></td><td>フォルダを移動する</td></tr>
+<tr><td><code>cat ファイル名</code></td><td>ファイルの中身を表示する</td></tr>
+<tr><td><code>export 名前=値</code></td><td>環境変数を設定する（Mac・Linux）</td></tr>
+<tr><td><code>claude</code></td><td>Claude Code を起動する</td></tr>
+</table></div>
+
+<h3 id="paths">ファイルの場所（パス）の書き方</h3>
+<p>Claude Code の設定ファイルの説明では、<code>~/.claude/settings.json</code> や <code>./CLAUDE.md</code> のような書き方が出てきます。これを<b>パス</b>といい、ファイルの場所を表します。</p>
+<div class="table-wrap"><table>
+<tr><th>書き方</th><th>意味</th><th>例</th></tr>
+<tr><td><code>~</code></td><td>自分のホームフォルダ（例：<code>/Users/yamada</code>）</td><td><code>~/.claude/settings.json</code> ＝ 自分専用の Claude Code の設定</td></tr>
+<tr><td><code>./</code></td><td>今いるフォルダ（多くはプロジェクトのフォルダ）</td><td><code>./CLAUDE.md</code> ＝ プロジェクトの直下の CLAUDE.md</td></tr>
+<tr><td><code>/</code> で区切る</td><td>フォルダの中のフォルダ</td><td><code>.claude/skills/release/SKILL.md</code></td></tr>
+<tr><td><code>.</code> で始まる名前</td><td>隠しファイル・隠しフォルダ（ふだんは表示されない）</td><td><code>.claude/</code>、<code>.env</code>、<code>.gitignore</code></td></tr>
+</table></div>
+
+<h3 id="stdio">標準入力・標準出力とパイプ</h3>
+<p>コマンドは、文字を受け取り（<b>標準入力</b>）、文字を出します（<b>標準出力</b>）。<code>|</code>（<b>パイプ</b>）でつなぐと、前のコマンドの出力を、次のコマンドの入力として渡せます。</p>
+<div class="sample">
+<p class="sample-title">サンプル：ファイルの中身を Claude Code に渡して要約させる</p>
+<pre><code>$ cat meeting-notes.txt | claude -p "3行で要約して"
+（cat の出力 ＝ 議事録の文章が、claude の入力になる）</code></pre>
+<p>この「標準入出力でやり取りする」しくみは、MCP の章の <b>stdio</b> という通信方式と同じ考え方です。アプリが MCP サーバーを自分のパソコンの中で<b>プロセス</b>（動いているプログラム）として起動し、標準入出力で JSON をやり取りします。</p>
+</div>
+
+<h2 id="git">Git とリポジトリ</h2>
+<p><b>Git</b> は、ファイルの変更の履歴を記録する道具です。「いつ・誰が・何を・なぜ変えたか」が残り、問題が起きたら前の状態に戻せます。プログラムだけでなく、プロンプトや設定ファイルも Git で管理するのが基本です。</p>
+<div class="terms"><dl>
+<dt>リポジトリ</dt><dd>Git で管理しているフォルダ（プロジェクト一式）。</dd>
+<dt>コミット</dt><dd>変更を、説明つきで履歴に記録すること。1つ1つの記録もコミットと呼びます。</dd>
+<dt>GitHub</dt><dd>リポジトリをインターネット上で共有するサービス。チームで同じリポジトリを使えます。</dd>
+<dt>ブランチ</dt><dd>本流に影響を与えずに作業するための枝分かれ。</dd>
+<dt>プルリクエスト（PR）</dt><dd>「このブランチの変更を本流に入れてください」という依頼。ここでコードレビューを行います。</dd>
+<dt>CI</dt><dd>Continuous Integration。変更を送るたびに、テストなどを自動で実行するしくみ（GitHub Actions など）。</dd>
+</dl></div>
+<div class="sample">
+<p class="sample-title">サンプル：Claude を使うプロジェクトのリポジトリの中身</p>
+<pre><code>my-app/                        ← リポジトリ
+├── CLAUDE.md                  ← Claude Code への決まり（チームで共有する）
+├── .claude/
+│   ├── settings.json          ← チームで共有する Claude Code の設定
+│   ├── settings.local.json    ← 自分だけの設定（Git に入れない）
+│   └── skills/release/SKILL.md ← チームの作業手順（スキル）
+├── prompts/support_v3.md      ← プロンプトもファイルにして履歴を残す
+├── src/app.py                 ← アプリのプログラム
+├── tests/test_app.py          ← テスト
+├── .gitignore                 ← Git に入れないファイルの一覧（.env など）
+└── .env                       ← API キー（Git に入れない）</code></pre>
+</div>
+<div class="sample">
+<p class="sample-title">サンプル：よく使う Git のコマンド</p>
+<pre><code>$ git status                         # 変更したファイルを確認する
+$ git diff                           # 何をどう変えたか（差分）を見る
+$ git add prompts/support_v3.md      # 記録する対象に加える
+$ git commit -m "返品の案内を追加"    # 説明をつけて履歴に記録する
+$ git log --oneline                  # 履歴の一覧を見る
+$ git push                           # GitHub に送って共有する</code></pre>
+</div>
+<div class="sample">
+<p class="sample-title">サンプル：CI の設定（プルリクエストのたびにテストを自動で実行する）</p>
+<pre><code># .github/workflows/test.yml
+on: pull_request                     # いつ動かすか：プルリクエストが作られたとき
+jobs:
+  test:
+    runs-on: ubuntu-latest           # どこで動かすか：GitHub が用意するコンピューター
+    steps:
+      - uses: actions/checkout@v4    # リポジトリの中身を取ってくる
+      - run: pip install -r requirements.txt
+      - run: pytest                  # テストを実行する</code></pre>
+<p>この書き方は <b>YAML</b>（ヤムル）という設定ファイルの形式で、字下げで入れ子を表します。後の章で出てくる「CI で Claude Code を動かす」は、この <code>run:</code> の行で <code>claude -p …</code> を実行するイメージです。</p>
+</div>
+
+<div class="key-points"><h3>この章のまとめ</h3><ul>
+<li>CCDV-F の中心は、API で Claude を自分のアプリに組み込む使い方。</li>
+<li>Web の通信はリクエストとレスポンスの1往復。Claude への質問は POST。結果はステータスコードで分かる（2 成功、4 こちらの誤り、5 相手側）。ストリーミングは返事を少しずつ受け取る。</li>
+<li>データは JSON。形の決まりは JSON Schema（type・properties・required・enum）。</li>
+<li>API キーはパスワードと同じ。コードやブラウザに置かず、サーバー側で環境変数などから使う。認可はアプリの仕組みで行い、Claude の判断に任せない。</li>
+<li>必須は model・max_tokens・messages。返事は <code>content[0].text</code>、終わった理由は <code>stop_reason</code>。</li>
+<li>料金と上限はトークンで決まる。API は会話を覚えていない。コンテキストは必要なものを選んで入れる。</li>
+<li>ツールを実行するのはアプリ。ツールを使い終わるまで繰り返すのがエージェント。</li>
+<li>関数・if・ループ・try、コマンドとオプション、パス（<code>~</code>・<code>./</code>）、Git のコミットと CI が読めれば、後の章のサンプルを追える。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="./">← 目次</a>
+      <a class="btn primary" href="app.html">アプリケーションと統合 →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" role="img" aria-labelledby="t-webreq">
+  <title id="t-webreq">HTTP のリクエストとレスポンス</title>
+  <defs>
+    <marker id="ar-webreq-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-accent"/></marker>
+    <marker id="ar-webreq-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-blue"/></marker>
+  </defs>
+  <rect x="20" y="90" width="130" height="110" rx="12" class="d-box-blue"/>
+  <text x="85" y="138" text-anchor="middle" class="d-text" font-weight="700">クライアント</text>
+  <text x="85" y="158" text-anchor="middle" class="d-sub">ブラウザ・アプリ</text>
+  <text x="85" y="174" text-anchor="middle" class="d-sub">（お願いする側）</text>
+  <rect x="530" y="90" width="130" height="110" rx="12" class="d-box-ok"/>
+  <text x="595" y="138" text-anchor="middle" class="d-text" font-weight="700">サーバー</text>
+  <text x="595" y="158" text-anchor="middle" class="d-sub">Claude の API など</text>
+  <text x="595" y="174" text-anchor="middle" class="d-sub">（応える側）</text>
+  <path d="M152 112 L526 112" class="d-line-accent" marker-end="url(#ar-webreq-a)"/>
+  <rect x="190" y="20" width="300" height="80" rx="8" class="d-box-accent"/>
+  <text x="340" y="40" text-anchor="middle" class="d-text" font-weight="700">① リクエスト</text>
+  <text x="204" y="60" class="d-mono">POST /v1/messages   ← メソッドと URL</text>
+  <text x="204" y="76" class="d-mono">x-api-key: …        ← ヘッダー</text>
+  <text x="204" y="92" class="d-mono">{"model": …}        ← ボディ</text>
+  <path d="M526 178 L152 178" class="d-line-blue" marker-end="url(#ar-webreq-b)"/>
+  <rect x="190" y="190" width="300" height="80" rx="8" class="d-box-blue"/>
+  <text x="340" y="210" text-anchor="middle" class="d-text" font-weight="700">② レスポンス</text>
+  <text x="204" y="230" class="d-mono">200 OK              ← ステータス</text>
+  <text x="204" y="246" class="d-mono">request-id: …       ← ヘッダー</text>
+  <text x="204" y="262" class="d-mono">{"content": …}      ← ボディ</text>
+  <text x="340" y="292" text-anchor="middle" class="d-sub">1回のやり取りは「お願い（リクエスト）」と「返事（レスポンス）」の1往復</text>
+</svg>

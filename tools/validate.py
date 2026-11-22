@@ -134,6 +134,10 @@ def check_challenge(exam_id, exam, errors):
             errors.append(f"{where}: 選ぶべき選択肢は2個以上・全部未満にしてください（{pick}個）")
         if not isinstance(q.get("point"), list):
             errors.append(f"{where}: point は重要事項の配列にしてください")
+        aim = q.get("aim")
+        if aim is not None or exam_id == "ccar-p":
+            if not isinstance(aim, dict) or not aim.get("check") or not aim.get("lesson"):
+                errors.append(f"{where}: aim（check と lesson）がありません")
         if q.get("learn"):
             path_part, _, anchor = q["learn"].partition("#")
             target = ROOT / path_part

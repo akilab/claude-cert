@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 310" role="img" aria-labelledby="t-pct">
+  <title id="t-pct">応答時間の分布と、平均・p50・p95 の位置</title>
+  <line x1="52" y1="262" x2="620" y2="262" class="d-line"/>
+  <text x="46" y="266" text-anchor="end" class="d-sub">0秒</text>
+  <text x="46" y="222" text-anchor="end" class="d-sub">2秒</text>
+  <line x1="52" y1="218" x2="620" y2="218" class="d-line d-dash"/>
+  <text x="46" y="178" text-anchor="end" class="d-sub">4秒</text>
+  <line x1="52" y1="174" x2="620" y2="174" class="d-line d-dash"/>
+  <text x="46" y="134" text-anchor="end" class="d-sub">6秒</text>
+  <line x1="52" y1="130" x2="620" y2="130" class="d-line d-dash"/>
+  <text x="46" y="90" text-anchor="end" class="d-sub">8秒</text>
+  <line x1="52" y1="86" x2="620" y2="86" class="d-line d-dash"/>
+  <rect x="60" y="242.2" width="24" height="19.8" rx="3" class="d-box"/>
+  <text x="72.0" y="278" text-anchor="middle" class="d-sub">1</text>
+  <rect x="88" y="240.0" width="24" height="22.0" rx="3" class="d-box"/>
+  <text x="100.0" y="278" text-anchor="middle" class="d-sub">2</text>
+  <rect x="116" y="240.0" width="24" height="22.0" rx="3" class="d-box"/>
+  <text x="128.0" y="278" text-anchor="middle" class="d-sub">3</text>
+  <rect x="144" y="237.8" width="24" height="24.2" rx="3" class="d-box"/>
+  <text x="156.0" y="278" text-anchor="middle" class="d-sub">4</text>
+  <rect x="172" y="237.8" width="24" height="24.2" rx="3" class="d-box"/>
+  <text x="184.0" y="278" text-anchor="middle" class="d-sub">5</text>
+  <rect x="200" y="235.6" width="24" height="26.4" rx="3" class="d-box"/>
+  <text x="212.0" y="278" text-anchor="middle" class="d-sub">6</text>
+  <rect x="228" y="235.6" width="24" height="26.4" rx="3" class="d-box"/>
+  <text x="240.0" y="278" text-anchor="middle" class="d-sub">7</text>
+  <rect x="256" y="235.6" width="24" height="26.4" rx="3" class="d-box"/>
+  <text x="268.0" y="278" text-anchor="middle" class="d-sub">8</text>
+  <rect x="284" y="233.4" width="24" height="28.6" rx="3" class="d-box"/>
+  <text x="296.0" y="278" text-anchor="middle" class="d-sub">9</text>
+  <rect x="312" y="233.4" width="24" height="28.6" rx="3" class="d-box-blue"/>
+  <text x="324.0" y="278" text-anchor="middle" class="d-sub">10</text>
+  <rect x="340" y="231.2" width="24" height="30.8" rx="3" class="d-box"/>
+  <text x="352.0" y="278" text-anchor="middle" class="d-sub">11</text>
+  <rect x="368" y="231.2" width="24" height="30.8" rx="3" class="d-box"/>
+  <text x="380.0" y="278" text-anchor="middle" class="d-sub">12</text>
+  <rect x="396" y="229.0" width="24" height="33.0" rx="3" class="d-box"/>
+  <text x="408.0" y="278" text-anchor="middle" class="d-sub">13</text>
+  <rect x="424" y="229.0" width="24" height="33.0" rx="3" class="d-box"/>
+  <text x="436.0" y="278" text-anchor="middle" class="d-sub">14</text>
+  <rect x="452" y="226.8" width="24" height="35.2" rx="3" class="d-box"/>
+  <text x="464.0" y="278" text-anchor="middle" class="d-sub">15</text>
+  <rect x="480" y="224.6" width="24" height="37.4" rx="3" class="d-box"/>
+  <text x="492.0" y="278" text-anchor="middle" class="d-sub">16</text>
+  <rect x="508" y="222.4" width="24" height="39.6" rx="3" class="d-box"/>
+  <text x="520.0" y="278" text-anchor="middle" class="d-sub">17</text>
+  <rect x="536" y="218.0" width="24" height="44.0" rx="3" class="d-box"/>
+  <text x="548.0" y="278" text-anchor="middle" class="d-sub">18</text>
+  <rect x="564" y="209.2" width="24" height="52.8" rx="3" class="d-box-accent"/>
+  <text x="576.0" y="278" text-anchor="middle" class="d-sub">19</text>
+  <rect x="592" y="64.0" width="24" height="198.0" rx="3" class="d-box-ng"/>
+  <text x="604.0" y="278" text-anchor="middle" class="d-sub">20</text>
+  <line x1="52" y1="222.8" x2="620" y2="222.8" class="d-line-accent d-dash"/>
+  <text x="626" y="226.8" class="d-sub">平均 1.78秒</text>
+  <line x1="324.0" y1="229.4" x2="324.0" y2="170" class="d-line"/>
+  <text x="324.0" y="146" text-anchor="middle" class="d-text">p50 = 1.3秒</text>
+  <text x="324.0" y="162" text-anchor="middle" class="d-sub">10番目（真ん中）</text>
+  <path d="M576.0 205.2 L576.0 146 L562.0 146" class="d-line"/>
+  <text x="558.0" y="142" text-anchor="end" class="d-text">p95 = 2.4秒</text>
+  <text x="558.0" y="158" text-anchor="end" class="d-sub">19番目（下から95%）</text>
+  <text x="604.0" y="56.0" text-anchor="middle" class="d-sub">20番目 9.0秒</text>
+  <text x="340" y="300" text-anchor="middle" class="d-sub">20件のリクエストを、応答時間の短い順に並べたもの</text>
+</svg>

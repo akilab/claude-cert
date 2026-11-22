@@ -41,6 +41,11 @@ kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4p
 .bookmark.on { color: #d49b00; }
 
 .q-stem { font-size: 17px; margin: 14px 0 6px; line-height: 1.85; }
+.table-wrap { overflow-x: auto; margin: 8px 0; }
+.rich-table { border-collapse: collapse; font-size: 14px; line-height: 1.5; min-width: 100%; }
+.rich-table th, .rich-table td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+.rich-table th { white-space: nowrap; }
+.rich-table th { background: var(--surface-2); font-weight: 700; }
 .q-instruction { font-size: 14px; color: var(--ink-2); margin: 0 0 12px; }
 
 .options { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
@@ -130,6 +135,11 @@ kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4p
 .review-opts li.judge-ok { border-color: var(--ok); }
 .review-opts li.judge-miss { border-color: var(--ng); background: var(--ng-soft); }
 .result-banner small { font-size: 14px; font-weight: 600; margin-left: 12px; color: var(--ink-2); }
+#verdict { scroll-margin-top: 76px; }
+.callout.aim { border-color: var(--blue); background: var(--blue-soft); margin: 12px 0 14px; }
+.callout.aim p { margin: 0; line-height: 1.75; }
+.callout.aim p + p { margin-top: 8px; }
+.callout.aim b { color: var(--blue); }
 .point-list { margin: 6px 0 0; padding-left: 1.2em; }
 .point-list li { margin: 2px 0; }
 

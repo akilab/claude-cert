@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 270" role="img" aria-labelledby="t-place">
+  <title id="t-place">claude.ai で使う場合と、API で自分のアプリに組み込む場合</title>
+  <defs><marker id="ar-place" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <text x="20" y="28" class="d-text" font-weight="700">A. 画面から使う（claude.ai・アプリ版）</text>
+  <rect x="20" y="42" width="120" height="50" rx="10" class="d-box-blue"/><text x="80" y="72" text-anchor="middle" class="d-text">人</text>
+  <path d="M142 67 L248 67" class="d-line" marker-end="url(#ar-place)"/><text x="195" y="60" text-anchor="middle" class="d-sub">入力して読む</text>
+  <rect x="250" y="42" width="170" height="50" rx="10" class="d-box"/><text x="335" y="64" text-anchor="middle" class="d-text">claude.ai</text><text x="335" y="82" text-anchor="middle" class="d-sub">Anthropic が作った画面</text>
+  <path d="M422 67 L518 67" class="d-line" marker-end="url(#ar-place)"/>
+  <rect x="520" y="42" width="140" height="50" rx="10" class="d-box-ok"/><text x="590" y="72" text-anchor="middle" class="d-text">Claude</text>
+  <text x="20" y="140" class="d-text" font-weight="700">B. API で自分のアプリに組み込む（この試験の中心）</text>
+  <rect x="20" y="154" width="120" height="50" rx="10" class="d-box-blue"/><text x="80" y="184" text-anchor="middle" class="d-text">利用者</text>
+  <path d="M142 179 L248 179" class="d-line" marker-end="url(#ar-place)"/><text x="195" y="172" text-anchor="middle" class="d-sub">画面を操作</text>
+  <rect x="250" y="154" width="170" height="50" rx="10" class="d-box-accent"/><text x="335" y="176" text-anchor="middle" class="d-text">自社のアプリ</text><text x="335" y="194" text-anchor="middle" class="d-sub">あなたが作るプログラム</text>
+  <path d="M422 179 L518 179" class="d-line" marker-end="url(#ar-place)"/><text x="470" y="172" text-anchor="middle" class="d-sub">HTTP で依頼</text>
+  <rect x="520" y="154" width="140" height="50" rx="10" class="d-box-ok"/><text x="590" y="176" text-anchor="middle" class="d-text">Claude</text><text x="590" y="194" text-anchor="middle" class="d-sub">（API）</text>
+  <text x="340" y="240" text-anchor="middle" class="d-sub">B では、何を送り、返事をどう使うかを、すべてアプリ（＝開発者）が決める</text>
+</svg>

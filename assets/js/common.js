@@ -48,11 +48,26 @@ export function escapeHtml(s) {
 }
 
 // 問題文や解説で使う簡易記法：`code` と **強調** と改行
+const inlineText = (s) => escapeHtml(s)
+  .replace(/`([^`]+)`/g, '<code>$1</code>')
+  .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+// 「| a | b |」で始まる連続した行は表にする（2行目の |---| は見出しの区切り）
 export function richText(s) {
-  return escapeHtml(s)
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n/g, '<br>');
+  const lines = String(s ?? '').split('\n');
+  const parts = [];
+  for (let i = 0; i < lines.length; i += 1) {
+    if (!/^\|.*\|$/.test(lines[i].trim())) { parts.push({ table: false, html: inlineText(lines[i]) }); continue; }
+    const rows = [];
+    while (i < lines.length && /^\|.*\|$/.test(lines[i].trim())) { rows.push(lines[i].trim()); i += 1; }
+    i -= 1;
+    const cells = (row) => row.slice(1, -1).split('|').map((c) => inlineText(c.trim()));
+    const hasHead = rows.length > 1 && /^\|[\s:|-]+\|$/.test(rows[1]);
+    const head = hasHead ? `<thead><tr>${cells(rows[0]).map((c) => `<th>${c}</th>`).join('')}</tr></thead>` : '';
+    const body = (hasHead ? rows.slice(2) : rows).map((r) => `<tr>${cells(r).map((c) => `<td>${c}</td>`).join('')}</tr>`).join('');
+    parts.push({ table: true, html: `<div class="table-wrap"><table class="rich-table">${head}<tbody>${body}</tbody></table></div>` });
+  }
+  return parts.map((p, i) => (i > 0 && !p.table && !parts[i - 1].table ? '<br>' : '') + p.html).join('');
 }
 
 // 確認ダイアログ（confirm）はブラウザによって表示されないことがあるため、

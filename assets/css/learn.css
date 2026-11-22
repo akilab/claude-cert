@@ -46,3 +46,19 @@
   .toc { position: static; max-height: none; padding-top: 16px; }
   .toc ol { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }
+
+/* 用語の説明（初出の用語をまとめて説明する） */
+.terms { border: 1px solid var(--line); border-left: 4px solid var(--blue); background: var(--blue-soft); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 14px 0; font-size: 14px; }
+.terms::before { content: "用語"; display: block; font-weight: 800; font-size: 13px; color: var(--blue); margin-bottom: 4px; }
+.terms dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 14px; }
+.terms dt { font-weight: 700; }
+.terms dd { margin: 0; line-height: 1.75; }
+@media (max-width: 640px) { .terms dl { grid-template-columns: minmax(0, 1fr); } .terms dd { margin-bottom: 6px; } }
+
+/* サンプル（具体例のコード・プロンプト・JSON） */
+.sample { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 16px 0; overflow: hidden; }
+.sample-title { margin: 0; padding: 8px 14px; font-size: 13px; font-weight: 700; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.sample pre { margin: 0; border: 0; border-radius: 0; }
+.sample > p, .sample > ul { margin: 10px 14px; font-size: 14px; }
+.compare pre { font-size: 12px; margin: 8px 0 0; white-space: pre-wrap; }
+.sample > .table-wrap { margin: 10px 14px; }
