@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 330" role="img" aria-labelledby="t-route">
+  <title id="t-route">ルーティング：入力の種類を判定し、合った担当に1つだけ振り分ける</title>
+  <defs><marker id="ar-route" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker><marker id="ar-route-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-blue"/></marker></defs>
+  <rect x="16" y="6" width="14" height="14" rx="3" class="d-box-blue"/><text x="36" y="18" class="d-sub">LLM の呼び出し</text><rect x="140" y="6" width="14" height="14" rx="3" class="d-box-accent"/><text x="160" y="18" class="d-sub">コード（プログラム）</text><rect x="300" y="6" width="14" height="14" rx="3" class="d-box"/><text x="320" y="18" class="d-sub">入力・出力など</text>
+  <rect x="16" y="136" width="96" height="56" rx="8" class="d-box"/><text x="64" y="160" text-anchor="middle" class="d-text">入力</text><text x="64" y="178" text-anchor="middle" class="d-sub">問い合わせ</text>
+  <path d="M112 164 H128" class="d-line" marker-end="url(#ar-route)"/>
+  <rect x="132" y="128" width="148" height="72" rx="10" class="d-box-blue"/><text x="206" y="158" text-anchor="middle" class="d-text">振り分け役</text><text x="206" y="178" text-anchor="middle" class="d-sub">種類を判定する</text>
+  <text x="206" y="226" text-anchor="middle" class="d-sub">LLM でもルールでもよい</text>
+  <path d="M280 164 L326 62" class="d-line d-dash" marker-end="url(#ar-route)"/>
+  <path d="M280 164 L326 130" class="d-line-blue" marker-end="url(#ar-route-b)"/>
+  <path d="M280 164 L326 198" class="d-line d-dash" marker-end="url(#ar-route)"/>
+  <path d="M280 164 L326 266" class="d-line d-dash" marker-end="url(#ar-route)"/>
+  <rect x="330" y="36" width="210" height="52" rx="8" class="d-box-blue"/><text x="435" y="58" text-anchor="middle" class="d-text">返品・交換</text><text x="435" y="77" text-anchor="middle" class="d-sub">返品規程つきのプロンプト</text>
+  <rect x="330" y="104" width="210" height="52" rx="8" class="d-box-blue" style="stroke-width:3"/><text x="435" y="126" text-anchor="middle" class="d-text">技術的な質問</text><text x="435" y="145" text-anchor="middle" class="d-sub">マニュアル検索＋Sonnet</text>
+  <rect x="330" y="172" width="210" height="52" rx="8" class="d-box-blue"/><text x="435" y="194" text-anchor="middle" class="d-text">よくある質問</text><text x="435" y="213" text-anchor="middle" class="d-sub">安くて速い Haiku で即答</text>
+  <rect x="330" y="240" width="210" height="52" rx="8" class="d-box"/><text x="435" y="262" text-anchor="middle" class="d-text">判定できない</text><text x="435" y="281" text-anchor="middle" class="d-sub">人の担当者に回す</text>
+  <path d="M540 130 H586" class="d-line-blue" marker-end="url(#ar-route-b)"/>
+  <rect x="590" y="104" width="114" height="52" rx="8" class="d-box"/><text x="647" y="135" text-anchor="middle" class="d-text">回答</text>
+  <text x="560" y="210" class="d-sub">実線：この入力で</text><text x="560" y="228" class="d-sub">選ばれた道</text>
+  <text x="560" y="254" class="d-sub">点線：使われない道</text>
+  <text x="16" y="318" class="d-sub">実行されるのは選ばれた1つの道だけ。担当ごとにプロンプト・ツール・モデルを専用にできる。</text>
+</svg>

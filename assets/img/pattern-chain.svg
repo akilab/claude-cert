@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 272" role="img" aria-labelledby="t-chain">
+  <title id="t-chain">プロンプトチェーン：決まった順に LLM を呼び、途中のゲートで確かめる</title>
+  <defs><marker id="ar-chain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker><marker id="ar-chain-ng" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="16" y="6" width="14" height="14" rx="3" class="d-box-blue"/><text x="36" y="18" class="d-sub">LLM の呼び出し</text><rect x="140" y="6" width="14" height="14" rx="3" class="d-box-accent"/><text x="160" y="18" class="d-sub">コード（プログラム）</text><rect x="300" y="6" width="14" height="14" rx="3" class="d-box"/><text x="320" y="18" class="d-sub">入力・出力など</text>
+  <rect x="16" y="60" width="84" height="56" rx="8" class="d-box"/><text x="58" y="84" text-anchor="middle" class="d-text">入力</text><text x="58" y="102" text-anchor="middle" class="d-sub">商品データ</text>
+  <path d="M100 88 H120" class="d-line" marker-end="url(#ar-chain)"/>
+  <rect x="124" y="60" width="118" height="56" rx="8" class="d-box-blue"/><text x="183" y="84" text-anchor="middle" class="d-text">① 抽出</text><text x="183" y="102" text-anchor="middle" class="d-sub">特徴を3つ抜き出す</text>
+  <path d="M242 88 H258" class="d-line" marker-end="url(#ar-chain)"/>
+  <text x="300" y="48" text-anchor="middle" class="d-sub">ゲート</text>
+  <path d="M300 58 L338 88 L300 118 L262 88 Z" class="d-box-accent"/><text x="300" y="93" text-anchor="middle" class="d-sub">チェック</text>
+  <path d="M338 88 H358" class="d-line" marker-end="url(#ar-chain)"/><text x="349" y="80" text-anchor="middle" class="d-sub">OK</text>
+  <rect x="362" y="60" width="118" height="56" rx="8" class="d-box-blue"/><text x="421" y="84" text-anchor="middle" class="d-text">② 執筆</text><text x="421" y="102" text-anchor="middle" class="d-sub">説明文を書く</text>
+  <path d="M480 88 H496" class="d-line" marker-end="url(#ar-chain)"/>
+  <rect x="500" y="60" width="118" height="56" rx="8" class="d-box-blue"/><text x="559" y="84" text-anchor="middle" class="d-text">③ 翻訳</text><text x="559" y="102" text-anchor="middle" class="d-sub">英語版を作る</text>
+  <path d="M618 88 H632" class="d-line" marker-end="url(#ar-chain)"/>
+  <rect x="636" y="60" width="72" height="56" rx="8" class="d-box"/><text x="672" y="93" text-anchor="middle" class="d-text">出力</text>
+  <path d="M300 118 V164" class="d-line" marker-end="url(#ar-chain-ng)"/><text x="310" y="146" class="d-sub">NG</text>
+  <rect x="226" y="168" width="148" height="38" rx="8" class="d-box-ng"/><text x="300" y="192" text-anchor="middle" class="d-sub">止める・やり直す</text>
+  <text x="16" y="240" class="d-sub">道は1本で、順番はコードで決まっている。</text><text x="16" y="260" class="d-sub">1回の呼び出しには1つの仕事だけをさせ、途中のゲートで失敗を早く止める。</text>
+</svg>

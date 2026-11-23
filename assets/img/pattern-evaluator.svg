@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 286" role="img" aria-labelledby="t-eval">
+  <title id="t-eval">評価者／改善者：生成役が作り、評価役が基準で採点し、不合格なら指摘を返して直させる</title>
+  <defs><marker id="ar-ev" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker><marker id="ar-ev-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-accent"/></marker></defs>
+  <rect x="16" y="6" width="14" height="14" rx="3" class="d-box-blue"/><text x="36" y="18" class="d-sub">LLM の呼び出し</text><rect x="140" y="6" width="14" height="14" rx="3" class="d-box-accent"/><text x="160" y="18" class="d-sub">コード（プログラム）</text><rect x="300" y="6" width="14" height="14" rx="3" class="d-box"/><text x="320" y="18" class="d-sub">入力・出力など</text>
+  <rect x="16" y="96" width="84" height="52" rx="8" class="d-box"/><text x="58" y="127" text-anchor="middle" class="d-text">依頼</text>
+  <path d="M100 122 H136" class="d-line" marker-end="url(#ar-ev)"/>
+  <rect x="140" y="88" width="150" height="68" rx="10" class="d-box-blue"/><text x="215" y="116" text-anchor="middle" class="d-text">生成役</text><text x="215" y="137" text-anchor="middle" class="d-sub">下書きを作る・直す</text>
+  <path d="M290 122 H366" class="d-line" marker-end="url(#ar-ev)"/><text x="328" y="114" text-anchor="middle" class="d-sub">下書き</text>
+  <rect x="370" y="88" width="150" height="68" rx="10" class="d-box-blue"/><text x="445" y="116" text-anchor="middle" class="d-text">評価役</text><text x="445" y="137" text-anchor="middle" class="d-sub">基準に照らして採点</text>
+  <path d="M520 122 H536" class="d-line" marker-end="url(#ar-ev)"/>
+  <path d="M580 92 L620 122 L580 152 L540 122 Z" class="d-box-accent"/><text x="580" y="127" text-anchor="middle" class="d-sub">合格？</text>
+  <path d="M620 122 H636" class="d-line" marker-end="url(#ar-ev)"/><text x="634" y="108" text-anchor="middle" class="d-sub">はい</text>
+  <rect x="640" y="102" width="68" height="40" rx="8" class="d-box"/><text x="674" y="127" text-anchor="middle" class="d-text">出力</text>
+  <path d="M580 152 V212 H215 V160" class="d-line-accent" marker-end="url(#ar-ev-a)"/>
+  <text x="590" y="186" class="d-sub">いいえ</text>
+  <text x="398" y="236" text-anchor="middle" class="d-sub">直すべき点（フィードバック）を返して、もう一度作らせる</text>
+  <text x="398" y="256" text-anchor="middle" class="d-sub">回数の上限（例：3回）に達したら止めて、人に回す</text>
+</svg>

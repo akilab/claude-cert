@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 356" role="img" aria-labelledby="t-orch">
+  <title id="t-orch">オーケストレーター／ワーカー：LLM が課題を見て仕事を分け、ワーカーの結果を統合する</title>
+  <defs><marker id="ar-orch" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker><marker id="ar-orch-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-accent"/></marker></defs>
+  <rect x="16" y="6" width="14" height="14" rx="3" class="d-box-blue"/><text x="36" y="18" class="d-sub">LLM の呼び出し</text><rect x="140" y="6" width="14" height="14" rx="3" class="d-box-accent"/><text x="160" y="18" class="d-sub">コード（プログラム）</text><rect x="300" y="6" width="14" height="14" rx="3" class="d-box"/><text x="320" y="18" class="d-sub">入力・出力など</text>
+  <rect x="16" y="140" width="92" height="48" rx="8" class="d-box"/><text x="62" y="169" text-anchor="middle" class="d-text">課題</text>
+  <path d="M108 164 H132" class="d-line" marker-end="url(#ar-orch)"/>
+  <rect x="136" y="124" width="164" height="80" rx="10" class="d-box-blue"/><text x="218" y="156" text-anchor="middle" class="d-text">オーケストレーター</text><text x="218" y="178" text-anchor="middle" class="d-sub">課題を見て仕事を分ける</text>
+  <rect x="336" y="30" width="200" height="270" rx="12" class="d-box d-dash"/>
+  <text x="436" y="52" text-anchor="middle" class="d-sub">ワーカー（数は実行時に決まる）</text>
+  <path d="M300 164 L352 88" class="d-line" marker-end="url(#ar-orch)"/><path d="M300 164 L352 144" class="d-line" marker-end="url(#ar-orch)"/><path d="M300 164 L352 200" class="d-line" marker-end="url(#ar-orch)"/><path d="M300 164 L352 256" class="d-line d-dash" marker-end="url(#ar-orch)"/>
+  <rect x="356" y="66" width="160" height="44" rx="8" class="d-box-blue"/><text x="436" y="93" text-anchor="middle" class="d-sub">画面の部品を直す</text>
+  <rect x="356" y="122" width="160" height="44" rx="8" class="d-box-blue"/><text x="436" y="149" text-anchor="middle" class="d-sub">API の処理を直す</text>
+  <rect x="356" y="178" width="160" height="44" rx="8" class="d-box-blue"/><text x="436" y="205" text-anchor="middle" class="d-sub">テストを追加する</text>
+  <rect x="356" y="234" width="160" height="44" rx="8" class="d-box d-dash"/><text x="436" y="261" text-anchor="middle" class="d-sub">…必要なら追加</text>
+  <path d="M516 88 L568 158" class="d-line-accent" marker-end="url(#ar-orch-a)"/><path d="M516 144 L568 162" class="d-line-accent" marker-end="url(#ar-orch-a)"/><path d="M516 200 L568 170" class="d-line-accent" marker-end="url(#ar-orch-a)"/>
+  <text x="560" y="118" class="d-sub">結果の要約</text>
+  <rect x="572" y="136" width="132" height="56" rx="8" class="d-box-blue"/><text x="638" y="160" text-anchor="middle" class="d-text">統合</text><text x="638" y="179" text-anchor="middle" class="d-sub">結果をまとめる</text>
+  <path d="M638 192 V246" class="d-line" marker-end="url(#ar-orch)"/>
+  <rect x="592" y="250" width="92" height="40" rx="8" class="d-box"/><text x="638" y="275" text-anchor="middle" class="d-text">成果物</text>
+  <text x="16" y="326" class="d-sub">並列化との違い：分け方をコードで決めておくのではなく、LLM が課題を見て決める。</text><text x="16" y="346" class="d-sub">統合は、オーケストレーター自身が行うことも多い。</text>
+</svg>
