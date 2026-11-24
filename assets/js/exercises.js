@@ -2,6 +2,7 @@
 // data-set="challenge" を付けると最難関演習（「すべて選べ」形式、別の問題データと記録）になる。
 import { loadData, escapeHtml, richText, siteUrl, confirmClick } from './common.js';
 import { getHistory, recordAnswer, needsReview, getBookmarks, toggleBookmark, resetExam, load, save } from './store.js';
+import { startAutoSync } from './sync.js';
 
 const app = document.getElementById('app');
 const examId = app.dataset.exam;
@@ -175,7 +176,7 @@ function renderSetup() {
           <li>キーボード：<kbd>1</kbd>〜<kbd>7</kbd> で選択、<kbd>Enter</kbd> で解答・次へ、<kbd>B</kbd> でブックマーク。</li>
           ${isChallenge ? '<li>各選択肢の右の <b>◯ 正しい</b>／<b>✗ 誤り</b> で記述の正誤を判定します。「正しいものを選べ」なら ◯、「誤っているものを選べ」なら ✗ を付けたものが解答です。もう一度押すと判定を取り消せます。</li><li>すべての選択肢の判断が合って初めて正解です。あわせて「6つ中4つの判断が正しい」のような部分点も表示します。</li>' : ''}
           <li>解答すると、すべての選択肢について「なぜ正しいか・なぜ違うか」が表示されます。</li>
-          <li>記録はこのブラウザに保存されます。</li>
+          <li>記録はこのブラウザに保存されます。<a href="../#sync">記録の同期</a>を設定すると、ほかの端末と共有できます。</li>
         </ul>
         <button type="button" class="btn small" id="reset">${exam.code} の記録をすべて消す</button>
       </details>
@@ -570,6 +571,8 @@ async function main() {
       if (isSelectAll(q)) q.options.forEach((o) => { o.correct = (q.ask === 'correct') === (o.fact === true); });
     });
     renderSetup();
+    // ほかの端末の記録が入ったら、開始画面の件数を描き直す（解いている途中なら何もしない）
+    startAutoSync(() => { if (document.getElementById('setup-form')) renderSetup(); });
   } catch (e) {
     app.innerHTML = `<div class="callout warn">問題を読み込めませんでした。${escapeHtml(e.message)}</div>`;
   }
