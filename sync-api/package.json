@@ -1,0 +1,6 @@
+{
+  "name": "claude-cert-sync",
+  "private": true,
+  "description": "学習サイトの解答記録を、合言葉で端末間に同期する API（Vercel Functions）",
+  "engines": { "node": ">=20" }
+}
