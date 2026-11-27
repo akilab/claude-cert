@@ -8,6 +8,7 @@
     "minutes": 120,
     "fee": "$125",
     "guide": "v1.0（2026年7月）",
+    "plus": true,
     "domains": [
       {"id": "app", "name": "Applications and Integration", "ja": "アプリケーションと統合", "weight": 33.1,
        "skills": ["Understanding Requirements", "Systems Life Cycle", "Claude API Mechanics", "Software Engineering Foundations", "Claude Application Design", "Configuration Management"]},

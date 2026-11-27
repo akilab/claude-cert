@@ -62,3 +62,10 @@
 .sample > p, .sample > ul { margin: 10px 14px; font-size: 14px; }
 .compare pre { font-size: 12px; margin: 8px 0 0; white-space: pre-wrap; }
 .sample > .table-wrap { margin: 10px 14px; }
+
+/* 用語集（ccdv-f/learn/terms.html）：1用語ずつのまとまり。問題の解説から #t-… で直接開く */
+.term { padding: 2px 0 6px; border-bottom: 1px dashed var(--line); scroll-margin-top: 72px; }
+.term h3 { margin-top: 18px; }
+.term h3 small { font-size: 13px; font-weight: 400; color: var(--ink-3); margin-left: 6px; }
+.term .diff { font-size: 14px; background: var(--surface-2); border-radius: 8px; padding: 6px 12px; }
+.term:target { background: var(--accent-soft); border-radius: 10px; padding-left: 12px; padding-right: 12px; }

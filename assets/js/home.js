@@ -41,6 +41,8 @@ async function main() {
       try { total = (await loadData(`${id}.json`)).length; } catch { /* 問題データがまだない */ }
       let challenge = 0;
       try { challenge = (await loadData(`${id}-challenge.json`)).length; } catch { /* 最難関はまだない */ }
+      let plus = 0;
+      if (ex.plus) { try { plus = (await loadData(`${id}-plus.json`)).length; } catch { /* まだない */ } }
       return `<article class="card exam-card">
         <header>
           <span class="code">${ex.code}</span>
@@ -59,6 +61,7 @@ async function main() {
           <a class="btn primary" href="${id}/exercises.html">問題演習を始める</a>
           <a class="btn" href="${id}/learn/">学習コンテンツ</a>
           ${challenge ? `<a class="btn challenge" href="${id}/challenge.html">最難関演習（${challenge}問）</a>` : ''}
+          ${plus ? `<a class="btn" href="${id}/plus.html">プラスONEチェック（${plus}問）</a>` : ''}
         </div>
       </article>`;
     }));

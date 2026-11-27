@@ -16,22 +16,25 @@ LONG_RATIO = 1.2       # 正解が誤答の最長の何倍を超えたらエラ�
 LONGEST_SHARE = 0.35   # 正解が一番長い問題の割合の上限（4択の偶然は約25%）
 
 
-def check_exam(exam_id, exam, errors):
-    path = DATA / f"{exam_id}.json"
+def check_exam(exam_id, exam, errors, plus=False):
+    """通常の問題データを確認する。plus=True はプラスONEチェック（難易度なし、用語集へのリンクが必須）。"""
+    name = f"{exam_id}-plus" if plus else exam_id
+    path = DATA / f"{name}.json"
     if not path.exists():
-        errors.append(f"{exam_id}: {path.name} がありません")
+        if not plus:
+            errors.append(f"{exam_id}: {path.name} がありません")
         return None
     try:
         questions = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
-        errors.append(f"{exam_id}: JSON の形式が正しくありません: {e}")
+        errors.append(f"{name}: JSON の形式が正しくありません: {e}")
         return None
 
     domains = {d["id"]: d for d in exam["domains"]}
     seen = set()
     for i, q in enumerate(questions):
-        where = f"{exam_id}[{i}] {q.get('id', '?')}"
-        for key in REQUIRED:
+        where = f"{name}[{i}] {q.get('id', '?')}"
+        for key in REQUIRED + (["learn"] if plus else []):
             if key not in q or q[key] in ("", None, []):
                 errors.append(f"{where}: {key} がありません")
         qid = q.get("id")
@@ -47,6 +50,8 @@ def check_exam(exam_id, exam, errors):
         opts = q.get("options") or []
         if not 3 <= len(opts) <= 6:
             errors.append(f"{where}: 選択肢は 3〜6 個にしてください（{len(opts)}個）")
+        if plus and (q.get("type") != "single" or len(opts) != 4):
+            errors.append(f"{where}: プラスONEチェックは四肢択一（single・選択肢4個）にしてください")
         for j, o in enumerate(opts):
             for key in ("text", "correct", "why"):
                 if key not in o or o[key] in ("", None):
@@ -74,6 +79,14 @@ def check_exam(exam_id, exam, errors):
                 elif anchor and f'id="{anchor}"' not in target.read_text(encoding="utf-8"):
                     errors.append(f"{where}: {path_part} に見出し #{anchor} がありません")
     return questions
+
+
+def is_longest(q):
+    """正解の選択肢が、どの誤答よりも長いか。"""
+    lens = [(len(o["text"].replace("`", "")), o.get("correct") is True) for o in q.get("options", [])]
+    cor = [n for n, c in lens if c]
+    wrong = [n for n, c in lens if not c]
+    return bool(cor and wrong) and min(cor) > max(wrong)
 
 
 ABSOLUTE_WORDS = ["すべて", "必ず", "絶対", "だけ", "常に", "一切", "何でも", "決して"]
@@ -169,6 +182,12 @@ def main():
     errors = []
     for exam_id, exam in exams.items():
         check_challenge(exam_id, exam, errors)
+        plus = check_exam(exam_id, exam, errors, plus=True)
+        if plus is not None:
+            by_domain = Counter(q.get("domain") for q in plus)
+            print(f"{exam['code']} プラスONEチェック: {len(plus)}問　" + " / ".join(f"{d['ja']} {by_domain[d['id']]}" for d in exam["domains"]))
+            if plus and sum(is_longest(q) for q in plus) / len(plus) > LONGEST_SHARE:
+                errors.append(f"{exam_id}-plus: 正解が一番長い問題が多すぎます（長さで正解を推測できてしまいます）")
         qs = check_exam(exam_id, exam, errors)
         if qs is None:
             continue
@@ -180,11 +199,6 @@ def main():
             share = by_domain[d["id"]] / len(qs) * 100 if qs else 0
             print(f"  {d['ja']:<20} {by_domain[d['id']]:>3}問 ({share:4.1f}%)  配点 {d['weight']}%")
         print(f"  難易度: 基礎 {by_level[1]} / 標準 {by_level[2]} / 応用 {by_level[3]}　形式: 単一 {by_type['single']} / 複数 {by_type['multi']}")
-        def is_longest(q):
-            lens = [(len(o["text"].replace("`", "")), o.get("correct") is True) for o in q.get("options", [])]
-            cor = [n for n, c in lens if c]
-            wrong = [n for n, c in lens if not c]
-            return bool(cor and wrong) and min(cor) > max(wrong)
         share = sum(is_longest(q) for q in qs) / len(qs) if qs else 0
         print(f"  正解が一番長い問題: {share:.0%}（上限 {LONGEST_SHARE:.0%}）")
         if share > LONGEST_SHARE:

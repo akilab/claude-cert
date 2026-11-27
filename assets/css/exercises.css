@@ -172,3 +172,7 @@ kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4p
   .opt-why { padding-left: 14px; }
   .opt-cut { width: 42px; }
 }
+
+/* プラスONEチェック：選んだらすぐ結果。結果と「次へ」を選択肢の上に並べる */
+.instant-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 12px; }
+.instant-bar .result-banner { margin: 0; flex: 1; }
