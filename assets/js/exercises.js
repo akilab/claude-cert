@@ -5,7 +5,7 @@
 // プラスONEチェックでは、1問ずつ答え合わせするか、続けて解いて最後に振り返るかを選べる（flow: each／batch）。
 // プラスONEチェックでは制限時間（5・10・20分）も選べる。時間内に何問正解できるかを競い、時間ごとの自己ベストを残す。
 import { loadData, escapeHtml, richText, siteUrl, confirmClick } from './common.js';
-import { getHistory, recordAnswer, needsReview, getBookmarks, toggleBookmark, resetExam, load, save } from './store.js';
+import { getHistory, recordAnswer, needsReview, getBookmarks, toggleBookmark, resetExam, load, save, recordDaily, getDaily, recordChallenge, getChallenges, dayKey } from './store.js';
 import { startAutoSync } from './sync.js';
 
 const app = document.getElementById('app');
@@ -77,6 +77,66 @@ const TIMES = [[0, 'なし（問題数で解く）'], [300, '5分'], [600, '10�
 const timeLabel = (sec) => (TIMES.find(([t]) => t === sec) || [0, `${sec}秒`])[1];
 const fmtLeft = (ms) => { const s = Math.ceil(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
 function stopTimer() { clearInterval(timer); timer = null; }
+// 制限時間ごとの自己ベスト。同期されるチャレンジの記録と、以前この端末だけに残していた値（best:）の大きいほう
+function bestOf(sec) {
+  const legacy = (load(`best:${storeId}`, {}) || {})[sec] || 0;
+  return Math.max(legacy, ...getChallenges(storeId).filter((c) => c.sec === sec).map((c) => c.ok));
+}
+const shortDate = (t) => { const d = new Date(t); return `${d.getMonth() + 1}/${d.getDate()}`; };
+
+// プラスONEチェックの開始画面：チャレンジの結果と、直近14日の解いた数
+function plusStatsHtml() {
+  const daily = getDaily(storeId);
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const e = daily[dayKey(d)] || { n: 0, ok: 0 };
+    days.push({ d, n: e.n, ok: e.ok });
+  }
+  const total = days.reduce((a, x) => a + x.n, 0);
+  const today = days[13].n;
+  let streak = 0; // 今日（今日がまだなら昨日）から続けて解いた日数
+  for (let i = today ? 13 : 12; i >= 0 && days[i].n; i--) streak += 1;
+  const challenges = getChallenges(storeId);
+
+  const cards = TIMES.filter(([t]) => t).map(([sec, label]) => {
+    const mine = challenges.filter((c) => c.sec === sec);
+    const last = mine[mine.length - 1];
+    const best = bestOf(sec);
+    return `<div class="stat-card">
+      <div class="stat-label">${label}チャレンジ</div>
+      <div class="stat-best">${best ? `<b>${best}</b>問` : '<span class="muted">—</span>'}<small>自己ベスト</small></div>
+      <div class="stat-last small muted">${last ? `前回 ${last.ok}問（${shortDate(last.t)}）・${mine.length}回` : 'まだ挑戦していません'}</div>
+    </div>`;
+  }).join('');
+
+  const max = Math.max(5, ...days.map((x) => x.n));
+  const H = 100;
+  const bars = days.map((x, i) => {
+    const x0 = i * 30 + 5;
+    const hOk = (x.ok / max) * H;
+    const hNg = ((x.n - x.ok) / max) * H;
+    const label = i === 13 ? '今日' : i % 2 === 1 ? '' : `${x.d.getMonth() + 1}/${x.d.getDate()}`;
+    return `<rect x="${x0}" y="${20 + H - hOk}" width="20" height="${hOk}" rx="2" style="fill:var(--ok)"/>
+      <rect x="${x0}" y="${20 + H - hOk - hNg}" width="20" height="${hNg}" rx="2" style="fill:var(--ng);opacity:.75"/>
+      ${x.n ? `<text x="${x0 + 10}" y="${20 + H - hOk - hNg - 4}" text-anchor="middle" style="font-size:11px;fill:var(--ink-2)">${x.n}</text>` : ''}
+      <text x="${x0 + 10}" y="${20 + H + 16}" text-anchor="middle" style="font-size:11px;fill:var(--ink-2)">${label}</text>`;
+  }).join('');
+
+  return `<section class="card plus-stats" aria-label="記録">
+      <div class="stat-cards">${cards}</div>
+      <div class="daily-head">
+        <h2>直近14日の解いた数</h2>
+        <p class="small">今日 <b>${today}</b>問 ・ 14日で <b>${total}</b>問 ・ ${streak ? `<b>${streak}</b>日連続` : 'きょうから始めよう'}</p>
+      </div>
+      <svg class="daily-chart" viewBox="0 0 420 140" role="img" aria-label="直近14日の解いた数。今日 ${today}問、14日で ${total}問">
+        <line x1="0" y1="${20 + H}" x2="420" y2="${20 + H}" style="stroke:var(--line)"/>
+        ${bars}
+      </svg>
+      <p class="xsmall muted"><span class="dot ok"></span>正解　<span class="dot ng"></span>不正解　記録は<a href="../#sync">同期</a>を設定すると、ほかの端末と合わせて数えます。</p>
+    </section>`;
+}
 
 // ---------- ユーティリティ ----------
 function shuffle(arr) {
@@ -135,7 +195,8 @@ function renderSetup() {
         ? `<p class="muted">本番より難しい「正しいもの（誤っているもの）をすべて選べ」形式の問題です。選ぶ数は示されません。選択肢の1つ1つが重要事項の確認になっています。全 ${questions.length}問。1回 5問程度がおすすめです。</p>`
         : isPlus
         ? `<p class="muted">試験の問題文に出てくる<b>用語と考え方</b>を、短い問題で確認します。紛らわしい用語どうしを見分けられるかがポイントです。全 ${questions.length}問。1回 10〜20問がおすすめです。</p>
-           <p class="callout small">用語の意味とサンプルは <a href="./learn/terms.html">試験に出る用語集</a> にまとめています。解答後の解説から、該当する用語や学習ページの説明に直接飛べます。</p>`
+           <p class="callout small">用語の意味とサンプルは <a href="./learn/terms.html">試験に出る用語集</a> にまとめています。解答後の解説から、該当する用語や学習ページの説明に直接飛べます。</p>
+           ${plusStatsHtml()}`
         : `<p class="muted">条件を選んで始めます。1回 10問程度がおすすめです。全 ${questions.length}問。</p>
            ${hasChallenge ? `<p class="callout small">本番より難しい「すべて選べ」形式の問題は <a href="./challenge.html">最難関演習</a> で解けます（通常の問題とは混ざりません）。</p>` : ''}
            ${hasPlus ? `<p class="callout small">用語と考え方の確認は <a href="./plus.html">プラスONEチェック</a> で（通常の問題とは混ざりません）。</p>` : ''}`}
@@ -472,6 +533,7 @@ function renderQuestion() {
     const correctSet = new Set(q.options.map((o, i) => (shouldSelect(q, o) ? i : -1)).filter((i) => i >= 0));
     const isCorrect = state.selected.size === correctSet.size && [...state.selected].every((i) => correctSet.has(i));
     recordAnswer(storeId, q.id, isCorrect);
+    if (isPlus) recordDaily(storeId, isCorrect);
     const chosen = [...state.selected];
     session.results.push({ q, chosen, correct: isCorrect, order, judged: judgedCount(q, chosen) });
     if (session.flow === 'batch') { // 最後にまとめて振り返る：正誤を出さずに次の問題へ
@@ -572,14 +634,12 @@ function renderResults() {
   const optTotal = res.reduce((a, r) => a + r.q.options.length, 0);
   const optOk = res.reduce((a, r) => a + r.judged, 0);
 
-  // 制限時間ありの回：時間ごとの自己ベスト（正解数）を更新する
+  // 制限時間ありの回：記録を残し、時間ごとの自己ベスト（正解数）と比べる
   let bestHtml = '';
   if (session.time) {
-    const best = load(`best:${storeId}`, {}) || {};
-    const prev = best[session.time] || 0;
+    const prev = bestOf(session.time);
+    if (res.length) recordChallenge(storeId, { sec: session.time, ok, n: res.length });
     if (ok > prev) {
-      best[session.time] = ok;
-      save(`best:${storeId}`, best);
       bestHtml = `<p class="best-line new">🎉 自己ベスト更新！${prev ? `（これまで ${prev}問）` : ''}</p>`;
     } else {
       bestHtml = `<p class="best-line">自己ベスト：${prev}問</p>`;

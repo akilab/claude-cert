@@ -178,3 +178,23 @@ kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4p
 .instant-bar .result-banner { margin: 0; flex: 1; }
 .best-line { margin: 6px 0 0; font-weight: 600; color: var(--ink-2); }
 .best-line.new { color: var(--ok); }
+.plus-stats { margin: 0 0 18px; }
+.plus-stats .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.plus-stats .stat-card { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.plus-stats .stat-label { font-size: 13px; color: var(--ink-2); }
+.plus-stats .stat-best { font-size: 14px; margin: 2px 0; }
+.plus-stats .stat-best b { font-size: 26px; margin-right: 2px; }
+.plus-stats .stat-best small { margin-left: 6px; color: var(--ink-2); }
+.plus-stats .daily-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-top: 16px; }
+.plus-stats .daily-head h2 { font-size: 15px; margin: 0; }
+.plus-stats .daily-head p { margin: 0; }
+.plus-stats .daily-chart { display: block; width: 100%; height: auto; margin: 6px 0 2px; }
+.plus-stats .dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin: 0 4px 0 0; vertical-align: -1px; }
+.plus-stats .dot.ok { background: var(--ok); }
+.plus-stats .dot.ng { background: var(--ng); opacity: .75; }
+@media (max-width: 560px) {
+  .plus-stats .stat-cards { gap: 6px; }
+  .plus-stats .stat-card { padding: 8px; }
+  .plus-stats .stat-best b { font-size: 22px; }
+  .plus-stats .stat-best small { display: block; margin: 0; }
+}

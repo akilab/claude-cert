@@ -6,7 +6,7 @@ import { load, save, remove } from './store.js';
 export const SYNC_URL = 'https://claude-cert-sync-api.vercel.app/api/sync';
 
 const PREFIX = 'claude-cert:';
-const KEY = /^claude-cert:(history|bookmarks|bookmark-log|reset):(.+)$/;
+const KEY = /^claude-cert:(history|bookmarks|bookmark-log|reset|daily|challenges):(.+)$/;
 const ALPHABET = 'abcdefghijkmnpqrstuvwxyz23456789'; // 見間違えやすい l・o・0・1 を除いた32文字
 
 // ---------- 合言葉 ----------
@@ -41,7 +41,33 @@ function mergeExam(a = {}, b = {}) {
       if (!bookmarks[qid] || m.t > bookmarks[qid].t) bookmarks[qid] = m;
     }
   }
-  return { resetAt, history, bookmarks };
+  return { resetAt, history, bookmarks, daily: mergeDaily(a.daily, b.daily, resetAt), challenges: mergeChallenges(a.challenges, b.challenges, resetAt) };
+}
+
+// 毎日の数は端末ごと・日ごとに、多いほう（同じなら新しいほう）を残す
+function mergeDaily(a = {}, b = {}, resetAt = 0) {
+  const out = {};
+  for (const src of [a || {}, b || {}]) {
+    for (const [dev, days] of Object.entries(src)) {
+      for (const [k, v] of Object.entries(days || {})) {
+        if ((v.t || 0) <= resetAt) continue;
+        const o = (out[dev] ||= {});
+        const cur = o[k];
+        if (!cur || v.n > cur.n || (v.n === cur.n && v.t > cur.t)) o[k] = v;
+      }
+    }
+  }
+  return out;
+}
+
+// チャレンジは終えた時刻と制限時間で同じものを見分けて合わせ、古い順に最大60件
+function mergeChallenges(a = [], b = [], resetAt = 0) {
+  const seen = new Map();
+  for (const x of [...(a || []), ...(b || [])]) {
+    if ((x.t || 0) <= resetAt) continue;
+    seen.set(`${x.t}-${x.sec}`, x);
+  }
+  return [...seen.values()].sort((p, q) => p.t - q.t).slice(-60);
 }
 
 function examIds() {
@@ -64,7 +90,10 @@ function localData() {
     for (const [qid, m] of Object.entries(log)) if (!m.on && !list.includes(qid)) bookmarks[qid] = m;
     // 同期の前から付いていたブックマークは時刻がないので 0 とする
     for (const qid of list) bookmarks[qid] = { on: true, t: log[qid] && log[qid].on ? log[qid].t : 0 };
-    exams[id] = { resetAt: load(`reset:${id}`, 0), history: load(`history:${id}`, {}), bookmarks };
+    exams[id] = {
+      resetAt: load(`reset:${id}`, 0), history: load(`history:${id}`, {}), bookmarks,
+      daily: load(`daily:${id}`, {}), challenges: load(`challenges:${id}`, []),
+    };
   }
   return { v: 1, exams };
 }
@@ -82,6 +111,9 @@ function applyRemote(remote) {
     const on = Object.keys(m.bookmarks).filter((q) => m.bookmarks[q].on);
     const list = [...oldList.filter((q) => on.includes(q)), ...on.filter((q) => !oldList.includes(q))];
     if (JSON.stringify(oldHistory) !== JSON.stringify(m.history) || JSON.stringify(oldList) !== JSON.stringify(list)) changed = true;
+    // 毎日の数とチャレンジ（古い同期 API は送り返さないので、そのときはこの端末の記録がそのまま残る）
+    if (JSON.stringify(load(`daily:${id}`, {})) !== JSON.stringify(m.daily)) { changed = true; write(`daily:${id}`, m.daily); }
+    if (JSON.stringify(load(`challenges:${id}`, [])) !== JSON.stringify(m.challenges)) { changed = true; write(`challenges:${id}`, m.challenges); }
     write(`history:${id}`, m.history);
     write(`bookmarks:${id}`, list);
     write(`bookmark-log:${id}`, m.bookmarks);
