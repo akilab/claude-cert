@@ -85,3 +85,23 @@
   - Bash のコマンドだけで変えたファイルは追跡されず戻らない。サブエージェントの編集も基本的に戻らない。Git の代わりにはならない。
 - MCP：`claude mcp add --transport http <名前> <URL>`、`claude mcp add [options] <名前> -- <コマンド> [引数]`（stdio）。transport は http（推奨）・stdio・sse（非推奨）。
   - スコープ：local（既定）・project（プロジェクト直下の `.mcp.json`、チームで共有）・user。`/mcp` で状態の確認・認証。`claude mcp list`／`get`／`remove`。
+
+## 11. rules・設定ファイル・権限の詳細（確認日：2026-11-28）
+出典：code.claude.com/docs/en/memory、/settings、/permissions
+- **rules**：`.claude/rules/*.md`（プロジェクト）、`~/.claude/rules/`（ユーザー）。サブフォルダも再帰的に読む。1ファイル1テーマ。
+  - フロントマターで読むのは `paths` だけ（例：`paths:` に `- "src/api/**/*.ts"`）。`paths` 付きは、一致するファイルを Read・Write・Edit したとき（`cat` などで読んだときも）に読み込まれる。
+  - `paths` なしは起動時に読み込まれ、`.claude/CLAUDE.md` と同じ優先度。ユーザーのルールが先に読まれ、どちらも上書きしない。
+  - 使い分け：毎回必要な事実 → CLAUDE.md、ファイルの種類やフォルダごとの決まり → rules、特定の作業の手順 → スキル。
+- **CLAUDE.md**：組織の管理用は macOS `/Library/Application Support/ClaudeCode/CLAUDE.md`、Linux `/etc/claude-code/CLAUDE.md`。`@path` の取り込みは最大4段。200行未満が目安。文脈であって強制ではない（強制は deny ルールや PreToolUse フック）。AGENTS.md は CLAUDE.md 類がないときだけ読む。
+- **設定の優先順位**（強い順）：組織の管理設定（managed-settings.json など）＞ コマンドライン（`--settings` など）＞ `.claude/settings.local.json` ＞ `.claude/settings.json` ＞ `~/.claude/settings.json`。`~/.claude.json` は状態や MCP の設定で、設定の層ではない。
+  - 配列（allow・ask・deny など）は**合算**。配列でない値は強いほうが勝つ。
+  - プロジェクトの共有設定の allow・additionalDirectories・env は、フォルダを信頼した後に効く。deny と ask はすぐ効く。
+- **権限**：判定は deny → ask → allow、最初に一致したもので決まる（具体的かどうかは関係ない）。どこかのスコープで deny されたものは、ほかでは許可できない。フックの allow は deny を上書きしない。終了コード 2 のフックは、権限のルールより前に止める。
+  - Bash：`Bash(npm run *)`（末尾の * の前の空白も含む）、`Bash(ls:*)` は `Bash(ls *)` と同じ。`&&`・`;`・`|` などでつないだコマンドは分けて判定し、すべて許可が必要。
+  - **Bash の引数を絞るルールはもろい**：`Bash(curl *)` は `/usr/bin/curl` や `sh -c 'curl …'` を止められない。代わりに WebFetch(domain:…)、PreToolUse フック、サンドボックスを使う。
+  - Read・Edit：gitignore と同じ書き方。`//path` はルートからの絶対パス、`~/path` はホーム、`/path` は設定ファイルの場所から、`./path` や `path` は今のフォルダから。`.env` だけならどの深さにも一致。
+  - `WebFetch(domain:example.com)`、`mcp__github__*`、`Agent(Explore)`。
+  - `defaultMode` の `auto` と `bypassPermissions` は、プロジェクトやローカルの設定では効かない（ユーザー・組織の設定か `--permission-mode`）。
+  - 組織で止める：`permissions.disableBypassPermissionsMode`、`permissions.disableAutoMode`（値は `"disable"`）。`allowManagedPermissionRulesOnly`。
+  - `sandbox.enabled`：OS のレベルで、シェルのコマンドのファイルとネットワークへのアクセスを制限する。
+  - `/permissions`：すべてのルールと、それがどの settings.json から来たかを一覧し、追加・削除できる。確認の画面で「Yes, and don't ask again」を選ぶと、`.claude/settings.local.json` に allow ルールが保存される。

@@ -32,6 +32,7 @@
     <p class="lead">配点は小さい2分野ですが、Claude Code の設定は構成管理やセキュリティの問題にも登場します。デバッグの切り分けは、すべての分野の「原因を問う」問題の基礎です。</p>
 <div class="callout point"><p><b>この章の前提</b>：<a href="basics.html">はじめに（前提知識）</a>の <a href="basics.html#terminal">ターミナルとコマンド</a>・<a href="basics.html#paths">パスの書き方</a>・<a href="basics.html#git">Git とリポジトリ</a>・<a href="basics.html#status">ステータスコード</a></p></div>
 <h2 id="claude-md">CLAUDE.md の階層</h2>
+<p class="callout small">CLAUDE.md・rules・settings.json の関係と、権限のルールの書き方は <a href="claude-config.html">Claude Code の設定と権限</a> で、図を使ってまとめて整理しています。</p>
 <svg viewBox="0 0 640 200" role="img" aria-label="CLAUDE.md の階層"><rect x="10" y="10" width="620" height="180" rx="12" class="d-box"/><text x="26" y="36" class="d-text" font-weight="700">個人用：~/.claude/CLAUDE.md</text><text x="300" y="36" class="d-sub">自分の好み。すべてのプロジェクトに効く</text><rect x="26" y="52" width="588" height="126" rx="10" class="d-box-blue"/><text x="42" y="78" class="d-text" font-weight="700">プロジェクト用：リポジトリの CLAUDE.md</text><text x="380" y="78" class="d-sub">チームの決まり。Git で共有</text><rect x="42" y="94" width="556" height="70" rx="8" class="d-box-accent"/><text x="58" y="122" class="d-text" font-weight="700">サブディレクトリの CLAUDE.md</text><text x="58" y="146" class="d-sub">そのディレクトリで作業するときに追加で読み込まれる（例：frontend/ の決まり）</text></svg>
 <ul>
 <li>チームの決まり（テストのコマンド、コーディング規約、ブランチの運用など）は、<b>リポジトリの CLAUDE.md</b> に書いて共有する。</li>

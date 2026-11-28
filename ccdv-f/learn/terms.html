@@ -402,7 +402,7 @@ print(f"正解率 {ok}/{len(cases)}")</code></pre>
 
 <div class="term" id="t-prompt-injection">
 <h3>プロンプトインジェクション（直接・間接） <small>prompt injection</small></h3>
-<p>入力の中に指示を紛れ込ませて、モデルに本来の指示と違う動きをさせる攻撃。利用者が直接書き込むのが<b>直接</b>、Web ページ・メール・文書などモデルに読ませる外部の内容に仕込むのが<b>間接</b>。→ <a href="security.html#injection">プロンプトインジェクション</a></p>
+<p>入力の中に指示を紛れ込ませて、モデルに本来の指示と違う動きをさせる攻撃。利用者が直接書き込むのが<b>直接</b>、Web ページ・メール・文書などモデルに読ませる外部の内容に仕込むのが<b>間接</b>。→ <a href="security.html#injection">プロンプトインジェクション</a>／<a href="injection.html">文書やメールに仕込まれた命令（図解）</a></p>
 <p class="diff"><b>違い</b>：<a href="#t-jailbreak">ジェイルブレイク</a>はモデルの安全のための制限そのものを外させようとする攻撃。インジェクションは、アプリの開発者が決めた指示を乗っ取る攻撃。</p>
 </div>
 
@@ -413,7 +413,7 @@ print(f"正解率 {ok}/{len(cases)}")</code></pre>
 
 <div class="term" id="t-least-privilege">
 <h3>最小権限 <small>least privilege</small></h3>
-<p>エージェントやツールには、<b>その仕事に必要な権限だけ</b>を与える考え方。読むだけでよい仕事なら書き込みの権限は渡さない。使わないツールは渡さない。</p>
+<p>エージェントやツールには、<b>その仕事に必要な権限だけ</b>を与える考え方。読むだけでよい仕事なら書き込みの権限は渡さない。使わないツールは渡さない。→ <a href="privilege.html">最小権限（図と例で詳しく）</a></p>
 </div>
 
 <div class="term" id="t-sanitize">
@@ -508,7 +508,7 @@ print(f"正解率 {ok}/{len(cases)}")</code></pre>
 </div>
 
 <h2 id="code">Claude Code の用語</h2>
-<p>Claude Code は、ターミナルで動く開発用のエージェントです。試験の配点は小さいですが、設定やフックは構成管理やセキュリティの問題にも出てきます。ふだんの開発でもそのまま使える知識です。章の解説は <a href="code-eval.html">Claude Code と評価・デバッグ</a> にあります。</p>
+<p>Claude Code は、ターミナルで動く開発用のエージェントです。試験の配点は小さいですが、設定やフックは構成管理やセキュリティの問題にも出てきます。ふだんの開発でもそのまま使える知識です。章の解説は <a href="code-eval.html">Claude Code と評価・デバッグ</a>、設定ファイルと権限の関係は <a href="claude-config.html">Claude Code の設定と権限</a> にあります。</p>
 
 <div class="term" id="t-cc-memory">
 <h3>CLAUDE.md の階層 <small>memory</small></h3>

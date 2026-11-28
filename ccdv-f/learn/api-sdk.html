@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F：Messages API と SDK（違いとつまずきやすい点） | Claude 認定資格 学習サイト</title>
+<meta name="description" content="Messages API（生の HTTP）、クライアント SDK、Claude Agent SDK、Claude Code の違いを図で整理します。会話の送り直し、応答の content を丸ごと戻す、tool_result の置き場所など、Messages API でつまずきやすい点もまとめます。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../plus.html">プラスONEチェック</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › Messages API と SDK</p>
+    <h1>Messages API と SDK（違いとつまずきやすい点） <span class="badge blue">全分野</span></h1>
+    <p class="lead">Claude を自分のプログラムから使う方法には、Messages API、クライアント SDK、Claude Agent SDK などがあり、名前が似ていて混乱しやすいところです。この章では、<b>それぞれが何で、どう重なっているのか</b>を図で整理し、そのあとで Messages API を使うときに<b>つまずきやすい点</b>をまとめます。</p>
+<div class="callout point"><p><b>試験との関係</b>：「アプリケーションと統合」（Claude API の仕組み）、「モデル選択と最適化」（SDK と API）、「エージェントとワークフロー」（Claude でエージェントを作る）にまたがります。「この場面では何を使うか」「このリクエストのどこが誤りか」を問う問題の土台です。根拠は Anthropic の公式ドキュメントです。</p></div>
+
+<h2 id="map">全体の地図：最後はすべて Messages API</h2>
+<p>まず押さえたいのは、どの方法を使っても、<b>最後は同じ Messages API（<code>POST /v1/messages</code>）を通って Claude に届く</b>ということです。違いは、「その手前で、どこまでを用意してくれるか」です。</p>
+<svg class="fig-wide" viewBox="0 0 720 360" role="img" aria-labelledby="f-map-w">
+  <title id="f-map-w">4つの使い方を横の流れで比べた図。自分のアプリから生の HTTP、自分のアプリからクライアント SDK、どちらも Messages API へ。自分のアプリから Claude Agent SDK、開発者からターミナルの画面、どちらも同じ Claude Code のエンジンを通って Messages API へ。最後は Claude に届く</title>
+  <defs><marker id="ar-mw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <text x="66" y="28" text-anchor="middle" class="d-sub">使う人</text>
+  <text x="268" y="28" text-anchor="middle" class="d-sub">手前の層（ここが違う）</text>
+  <text x="488" y="28" text-anchor="middle" class="d-sub">窓口（共通）</text>
+  <text x="652" y="28" text-anchor="middle" class="d-sub">モデル</text>
+  <rect x="10" y="44" width="112" height="58" rx="10" class="d-box"/><text x="66" y="78" text-anchor="middle" class="d-text">自分のアプリ</text>
+  <path d="M122 73 L146 73" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="150" y="44" width="236" height="58" rx="10" class="d-box"/><text x="268" y="69" text-anchor="middle" class="d-text" font-weight="700">生の HTTP</text><text x="268" y="89" text-anchor="middle" class="d-sub">curl・fetch で、自分で組み立てる</text>
+  <path d="M386 73 L414 73" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="10" y="118" width="112" height="58" rx="10" class="d-box"/><text x="66" y="152" text-anchor="middle" class="d-text">自分のアプリ</text>
+  <path d="M122 147 L146 147" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="150" y="118" width="236" height="58" rx="10" class="d-box-blue"/><text x="268" y="143" text-anchor="middle" class="d-text" font-weight="700">クライアント SDK</text><text x="268" y="163" text-anchor="middle" class="d-sub">Python・TypeScript・Java など</text>
+  <path d="M386 147 L414 147" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="10" y="192" width="112" height="58" rx="10" class="d-box"/><text x="66" y="226" text-anchor="middle" class="d-text">自分のアプリ</text>
+  <path d="M122 221 L146 221" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="150" y="192" width="120" height="58" rx="10" class="d-box-ok"/><text x="210" y="217" text-anchor="middle" class="d-text" font-weight="700">Agent SDK</text><text x="210" y="237" text-anchor="middle" class="d-sub">プログラムから使う</text>
+  <path d="M270 221 L286 221" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="10" y="266" width="112" height="58" rx="10" class="d-box"/><text x="66" y="300" text-anchor="middle" class="d-text">開発者</text>
+  <path d="M122 295 L146 295" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="150" y="266" width="120" height="58" rx="10" class="d-box-ok"/><text x="210" y="291" text-anchor="middle" class="d-text" font-weight="700">ターミナル</text><text x="210" y="311" text-anchor="middle" class="d-sub">人が画面で使う</text>
+  <path d="M270 295 L286 295" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="290" y="192" width="96" height="132" rx="10" class="d-box-ok"/>
+  <text x="338" y="246" text-anchor="middle" class="d-text" font-weight="700">Claude Code</text>
+  <text x="338" y="268" text-anchor="middle" class="d-sub">のエンジン</text>
+  <path d="M386 258 L414 258" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="418" y="44" width="140" height="280" rx="12" class="d-box-accent"/>
+  <text x="488" y="178" text-anchor="middle" class="d-text" font-weight="700">Messages API</text>
+  <text x="488" y="200" text-anchor="middle" class="d-sub">POST /v1/messages</text>
+  <path d="M558 184 L590 184" class="d-line" marker-end="url(#ar-mw)"/>
+  <rect x="594" y="44" width="116" height="280" rx="12" class="d-box"/>
+  <text x="652" y="178" text-anchor="middle" class="d-text" font-weight="700">Claude</text>
+  <text x="652" y="200" text-anchor="middle" class="d-sub">モデル</text>
+  <text x="360" y="350" text-anchor="middle" class="d-sub">Agent SDK は Claude Code を部品（ライブラリ）にしたもの。中では同じ Claude Code のエンジンが動く</text>
+</svg>
+<svg class="fig-narrow fig-mobile" viewBox="0 0 360 350" role="img" aria-labelledby="f-map">
+  <title id="f-map">4つの使い方を横の流れで比べた図。自分のアプリから生の HTTP、自分のアプリからクライアント SDK、どちらも Messages API へ。自分のアプリから Agent SDK、開発者からターミナル、どちらも同じ Claude Code のエンジンを通って Messages API へ。最後は Claude に届く</title>
+  <defs><marker id="ar-mp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <text x="28" y="26" text-anchor="middle" class="d-sub">使う人</text>
+  <text x="132" y="26" text-anchor="middle" class="d-sub">手前の層</text>
+  <text x="249" y="26" text-anchor="middle" class="d-sub">窓口</text>
+  <text x="327" y="26" text-anchor="middle" class="d-sub">モデル</text>
+  <rect x="4" y="40" width="48" height="56" rx="8" class="d-box"/><text x="28" y="65" text-anchor="middle" class="d-sub">自分の</text><text x="28" y="81" text-anchor="middle" class="d-sub">アプリ</text>
+  <path d="M52 68 L60 68" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="62" y="40" width="140" height="56" rx="8" class="d-box"/><text x="132" y="65" text-anchor="middle" class="d-text" font-weight="700">生の HTTP</text><text x="132" y="83" text-anchor="middle" class="d-sub">curl・fetch など</text>
+  <path d="M202 68 L210 68" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="4" y="110" width="48" height="56" rx="8" class="d-box"/><text x="28" y="135" text-anchor="middle" class="d-sub">自分の</text><text x="28" y="151" text-anchor="middle" class="d-sub">アプリ</text>
+  <path d="M52 138 L60 138" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="62" y="110" width="140" height="56" rx="8" class="d-box-blue"/><text x="132" y="135" text-anchor="middle" class="d-text" font-weight="700">クライアント SDK</text><text x="132" y="153" text-anchor="middle" class="d-sub">Python・TS など</text>
+  <path d="M202 138 L210 138" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="4" y="180" width="48" height="56" rx="8" class="d-box"/><text x="28" y="205" text-anchor="middle" class="d-sub">自分の</text><text x="28" y="221" text-anchor="middle" class="d-sub">アプリ</text>
+  <path d="M52 208 L60 208" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="62" y="180" width="62" height="56" rx="8" class="d-box-ok"/><text x="93" y="205" text-anchor="middle" class="d-sub" font-weight="700">Agent</text><text x="93" y="221" text-anchor="middle" class="d-sub" font-weight="700">SDK</text>
+  <path d="M124 208 L132 208" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="4" y="250" width="48" height="56" rx="8" class="d-box"/><text x="28" y="283" text-anchor="middle" class="d-sub">開発者</text>
+  <path d="M52 278 L60 278" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="62" y="250" width="62" height="56" rx="8" class="d-box-ok"/><text x="93" y="275" text-anchor="middle" class="d-sub" font-weight="700">画面</text><text x="93" y="291" text-anchor="middle" class="d-sub" font-weight="700">CLI・IDE</text>
+  <path d="M124 278 L132 278" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="134" y="180" width="68" height="126" rx="8" class="d-box-ok"/>
+  <text x="168" y="226" text-anchor="middle" class="d-text" font-weight="700">Claude</text>
+  <text x="168" y="246" text-anchor="middle" class="d-text" font-weight="700">Code</text>
+  <text x="168" y="266" text-anchor="middle" class="d-sub">のエンジン</text>
+  <path d="M202 243 L210 243" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="212" y="40" width="74" height="266" rx="10" class="d-box-accent"/>
+  <text x="249" y="166" text-anchor="middle" class="d-text" font-weight="700">Messages</text>
+  <text x="249" y="186" text-anchor="middle" class="d-text" font-weight="700">API</text>
+  <path d="M286 173 L296 173" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="298" y="40" width="58" height="266" rx="10" class="d-box"/>
+  <text x="327" y="166" text-anchor="middle" class="d-text" font-weight="700">Claude</text>
+  <text x="327" y="186" text-anchor="middle" class="d-sub">モデル</text>
+  <text x="4" y="328" class="d-sub">Agent SDK は Claude Code を部品にしたもの。</text>
+  <text x="4" y="346" class="d-sub">中では同じ Claude Code のエンジンが動く</text>
+</svg>
+<div class="table-wrap"><table>
+<tr><th>方法</th><th>ひとことで（向いている場面）</th></tr>
+<tr><td style="white-space:nowrap"><b>Messages<br>API</b><br><small>生の HTTP</small></td><td>Claude と話すための<b>窓口そのもの</b>。HTTP で JSON を送り、JSON を受け取る<br><small>→ SDK のない言語やシェルから呼ぶ。仕組みを理解する</small></td></tr>
+<tr><td style="white-space:nowrap"><b>クライアント<br>SDK</b></td><td>Messages API を、<b>プログラミング言語から使いやすくした部品</b><br><small>→ アプリに分類・要約・抽出などを組み込む。自分でツールのループを書く</small></td></tr>
+<tr><td style="white-space:nowrap"><b>Claude<br>Agent SDK</b></td><td><b>Claude Code を部品（ライブラリ）にしたもの</b>。自分のプログラムから Claude Code のエンジンを動かす<br><small>→ ファイルの読み書きやコマンドの実行をする、自律的なエージェントを自分の環境で作る</small></td></tr>
+<tr><td style="white-space:nowrap"><b>Claude<br>Code</b></td><td>Claude Code のエンジンに画面を付けた、<b>すぐ使える開発用のアプリ</b><br><small>→ 開発者が手元のリポジトリで、コードを書く・直す・調べる</small></td></tr>
+</table></div>
+
+<h2 id="who-does">どこまで用意してくれるか</h2>
+<p>4つの違いは、「<b>自分で書く部分</b>」と「<b>用意されている部分</b>」の割合で比べると分かりやすくなります。下に行くほど、用意されている部分が増えます。</p>
+<svg class="fig-narrow" viewBox="0 0 360 400" role="img" aria-labelledby="f-share">
+  <title id="f-share">生の HTTP はすべて自分で書く。クライアント SDK は HTTP・認証・再試行・型を用意してくれる。Claude Agent SDK はさらにエージェントのループと組み込みツールを用意してくれる。Claude Code はアプリとして全部入り</title>
+  <rect x="20" y="8" width="14" height="14" rx="3" class="d-box-ok"/><text x="40" y="20" class="d-sub">用意されている</text>
+  <rect x="160" y="8" width="14" height="14" rx="3" class="d-box-blue"/><text x="180" y="20" class="d-sub">自分で書く</text>
+  <text x="20" y="54" class="d-text" font-weight="700">① 生の HTTP</text>
+  <rect x="20" y="62" width="320" height="22" rx="5" class="d-box-blue"/>
+  <text x="20" y="104" class="d-sub">HTTP の組み立て・認証・再試行・ループ…すべて自分</text>
+  <text x="20" y="140" class="d-text" font-weight="700">② クライアント SDK</text>
+  <rect x="20" y="148" width="110" height="22" rx="5" class="d-box-ok"/>
+  <rect x="130" y="148" width="210" height="22" rx="5" class="d-box-blue"/>
+  <text x="20" y="190" class="d-sub">用意：HTTP・認証・再試行・型</text>
+  <text x="20" y="208" class="d-sub">自分：会話の管理・ツールのループ・ツールの中身</text>
+  <text x="20" y="244" class="d-text" font-weight="700">③ Claude Agent SDK</text>
+  <rect x="20" y="252" width="240" height="22" rx="5" class="d-box-ok"/>
+  <rect x="260" y="252" width="80" height="22" rx="5" class="d-box-blue"/>
+  <text x="20" y="294" class="d-sub">用意：＋ループ・組み込みツール・権限・フック</text>
+  <text x="20" y="312" class="d-sub">自分：依頼の内容・設定・独自のツール</text>
+  <text x="20" y="348" class="d-text" font-weight="700">④ Claude Code</text>
+  <rect x="20" y="356" width="310" height="22" rx="5" class="d-box-ok"/>
+  <rect x="330" y="356" width="10" height="22" rx="3" class="d-box-blue"/>
+  <text x="20" y="396" class="d-sub">アプリとして全部入り。自分は指示するだけ</text>
+</svg>
+<div class="callout"><p><b>Agent SDK と Claude Code の関係</b>：Agent SDK は、<b>Claude Code を部品（ライブラリ）にしたもの</b>です。中では Claude Code と同じエンジン（エージェントのループ、ファイル操作やコマンド実行などの組み込みツール、権限、フック、サブエージェント）が動きます。人がターミナルの画面から使うのが Claude Code、<b>自分のプログラムから使うのが Agent SDK</b> です。</p></div>
+
+<h2 id="raw">① Messages API（生の HTTP）</h2>
+<p>Messages API は、Claude と話すための窓口です。決まった URL に、決まった形の JSON を <b>POST</b> で送ると、Claude の返事が JSON で返ってきます。</p>
+<pre><code>curl https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2026-10-21" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-sonnet-5-5",
+    "max_tokens": 1024,
+    "messages": [{"role": "user", "content": "日本の首都はどこですか？"}]
+  }'</code></pre>
+<ul>
+<li>ヘッダーで、API キー（<code>x-api-key</code>）、API の版（<code>anthropic-version</code>）、データの形式を伝える。</li>
+<li>ボディの <code>model</code>・<code>max_tokens</code>・<code>messages</code> は必須。</li>
+<li>エラーが出たときの再試行や、ストリーミングのイベントの読み取りも、すべて自分で書く。</li>
+</ul>
+<p>HTTP やステータスコードの基本は <a href="basics.html#web">はじめに「Web のしくみ」</a>、リクエストの形の詳しい説明は <a href="../../learn/messages-api/index.html#request">Messages API 解説</a> にあります。</p>
+
+<h2 id="sdk">② クライアント SDK</h2>
+<p>SDK（Software Development Kit）は、Messages API を<b>プログラミング言語から使いやすくした部品</b>です。中でやっていることは、①と同じ HTTP のリクエストです。</p>
+<pre><code>from anthropic import Anthropic
+
+client = Anthropic()   # API キーは環境変数 ANTHROPIC_API_KEY から自動で読む
+message = client.messages.create(
+    model="claude-sonnet-5-5",
+    max_tokens=1024,
+    messages=[{"role": "user", "content": "日本の首都はどこですか？"}],
+)
+print(message.content[0].text)</code></pre>
+<div class="table-wrap"><table>
+<tr><th>SDK が用意してくれるもの</th><th>内容</th></tr>
+<tr><td>認証</td><td>環境変数から API キーを読み、ヘッダーに付ける</td></tr>
+<tr><td>再試行</td><td>429 や 5xx、接続のエラーを、<b>既定で2回</b>自動で再試行する</td></tr>
+<tr><td>タイムアウト</td><td>既定のタイムアウトがあり、変更できる</td></tr>
+<tr><td>型</td><td>リクエストとレスポンスの形が型で決まっていて、書き間違いに気づきやすい</td></tr>
+<tr><td>ストリーミング</td><td>SSE のイベントを読み取り、最後に全体の返事をまとめて受け取る補助</td></tr>
+<tr><td>エラーの種類</td><td>レート制限、認証の失敗などを、種類ごとの例外として受け取れる</td></tr>
+<tr><td>Tool Runner（beta）</td><td>自分で定義したツールについて、「呼ぶ → 実行 → 結果を返す」のループを回してくれる補助</td></tr>
+</table></div>
+<ul>
+<li>公式の SDK は、Python・TypeScript（JavaScript）・Java・Go・Ruby・C#・PHP などがあります。</li>
+<li>SDK の再試行の上に、<b>自分でも無制限の再試行を重ねない</b>こと。回数を要件に合わせて設定し、最後まで失敗したときの処理を書きます（→ <a href="model.html#sdk">SDK と API</a>）。</li>
+<li>Amazon Bedrock・Google Cloud の Vertex AI・Microsoft Foundry のような<b>クラウドから使うときも、同じ形のリクエスト</b>を、各クラウド用のクライアントから送ります（→ <a href="app.html#vendors">サードパーティのクラウドから使う</a>）。</li>
+</ul>
+<div class="callout"><p><b>Tool Runner と Agent SDK は別物</b>：Tool Runner は、ふつうの SDK の中にある補助で、<b>自分で定義したツール</b>のループを回すだけです。ファイル操作やコマンド実行のような組み込みツールはありません。Agent SDK は、組み込みツールも含めた Claude Code の仕組みまるごとです。</p></div>
+
+<h2 id="agent-sdk">③ Claude Agent SDK</h2>
+<p>Claude Agent SDK は、<b>Claude Code を、自分のプログラムの部品（ライブラリ）として使えるようにしたもの</b>です（Python 用と TypeScript 用があります）。中では Claude Code と同じエンジンが動きます。依頼の文章と設定を渡すと、エージェントのループを回し、ファイルを読み、コマンドを実行して、仕事を進めます。</p>
+<pre><code># Claude Agent SDK のイメージ（Python）
+async for message in query(
+    prompt="tests フォルダのテストを実行して、失敗しているものを直して",
+    options=ClaudeAgentOptions(allowed_tools=["Read", "Edit", "Bash"]),
+):
+    print(message)</code></pre>
+<div class="table-wrap"><table>
+<tr><th>用意されているもの</th><th>内容</th></tr>
+<tr><td>エージェントのループ</td><td>Claude の返事 → ツールの実行 → 結果を返す、を仕事が終わるまで繰り返す</td></tr>
+<tr><td>組み込みツール</td><td>ファイルの読み書き・編集（Read・Write・Edit）、コマンド実行（Bash）、検索（Glob・Grep）、Web 検索・取得など</td></tr>
+<tr><td>権限とフック</td><td>使ってよいツールの指定、実行前後に必ず動く処理。Claude Code と同じ考え方</td></tr>
+<tr><td>サブエージェント・MCP</td><td>役割を分けた子のエージェント、MCP サーバーのツール</td></tr>
+<tr><td>コンテキストの管理</td><td>長くなった会話の整理など</td></tr>
+</table></div>
+<p>自分の環境（自分のサーバー、CI など）で動かします。実行環境の運用は自分で行います。詳しくは <a href="agents.html#sdk">Claude でエージェントを作る</a> にあります。</p>
+<div class="callout"><p><b>参考：Anthropic がホストする方式</b>：エージェントのループだけでなく、ツールを動かす実行環境まで Anthropic に任せる方式（Managed Agents、beta）もあります。Agent SDK は「仕組みだけ。動かす場所は自分」、こちらは「仕組みも動かす場所も Anthropic」です。セルフホストとの違いは <a href="agents.html#deploy">デプロイの方式</a> を見てください。</p></div>
+
+<h2 id="claude-code">④ Claude Code</h2>
+<p>Claude Code は、ターミナルや IDE で動く<b>開発用のアプリ</b>です。人が指示し、Claude がリポジトリのコードを読み、編集し、コマンドを実行します。決まりは CLAUDE.md に、権限は settings.json に書きます（→ <a href="claude-config.html">Claude Code の設定と権限</a>）。CI から使うときは、ヘッドレスモード（<code>claude -p</code>）で1回の指示を実行させます。</p>
+
+<h2 id="choose">場面から選ぶ</h2>
+<div class="table-wrap"><table>
+<tr><th>場面</th><th>選ぶもの</th></tr>
+<tr><td>Web アプリに、問い合わせの分類や要約を組み込みたい</td><td>クライアント SDK（Messages API）</td></tr>
+<tr><td>SDK のない言語や、シェルのスクリプトから呼びたい</td><td>生の HTTP（Messages API）</td></tr>
+<tr><td>決まった手順のワークフローで、ツールの呼び方を細かく制御したい</td><td>クライアント SDK で、自分でループを書く</td></tr>
+<tr><td>自分のサービスの中で、ファイルを読み書きしコマンドを実行するエージェントを動かしたい</td><td>Claude Agent SDK</td></tr>
+<tr><td>開発者が手元で、コードを書く・直す・調べる</td><td>Claude Code</td></tr>
+<tr><td>CI で、プルリクエストの差分を自動でレビューしたい</td><td>Claude Code のヘッドレスモード（または Agent SDK）</td></tr>
+<tr><td>急がない大量の処理を安くしたい</td><td>Messages API の Message Batches</td></tr>
+<tr><td>会社が契約しているクラウドの中で使いたい</td><td>Bedrock・Vertex AI・Foundry 経由で、同じ Messages API の形</td></tr>
+</table></div>
+
+<h2 id="pitfalls">Messages API でつまずきやすい点</h2>
+<p>ここからは、Messages API（SDK を使う場合も同じ）を使うときに、エラーや思わぬ動きの原因になりやすい点です。試験では「このリクエストの誤りはどれか」の形でよく出ます。</p>
+
+<h3 id="stateless">1. 会話は毎回すべて送り直す</h3>
+<p>Messages API は<b>前の会話を覚えていません</b>（ステートレス）。会話を続けるには、それまでのやり取りを<b>すべて</b> <code>messages</code> に入れて送ります。</p>
+<svg class="fig-narrow" viewBox="0 0 360 250" role="img" aria-labelledby="f-resend">
+  <title id="f-resend">1回目は質問1だけ、2回目は質問1と返事1と質問2、3回目はさらに返事2と質問3を足して送る。送るたびに messages は長くなる</title>
+  <text x="10" y="22" class="d-text" font-weight="700">1回目に送る messages</text>
+  <rect x="10" y="32" width="62" height="34" rx="6" class="d-box-blue"/><text x="41" y="54" text-anchor="middle" class="d-sub">user①</text>
+  <text x="10" y="102" class="d-text" font-weight="700">2回目に送る messages</text>
+  <rect x="10" y="112" width="62" height="34" rx="6" class="d-box-blue"/><text x="41" y="134" text-anchor="middle" class="d-sub">user①</text>
+  <rect x="78" y="112" width="62" height="34" rx="6" class="d-box-ok"/><text x="109" y="134" text-anchor="middle" class="d-sub">返事①</text>
+  <rect x="146" y="112" width="62" height="34" rx="6" class="d-box-blue"/><text x="177" y="134" text-anchor="middle" class="d-sub">user②</text>
+  <text x="10" y="182" class="d-text" font-weight="700">3回目に送る messages</text>
+  <rect x="10" y="192" width="62" height="34" rx="6" class="d-box-blue"/><text x="41" y="214" text-anchor="middle" class="d-sub">user①</text>
+  <rect x="78" y="192" width="62" height="34" rx="6" class="d-box-ok"/><text x="109" y="214" text-anchor="middle" class="d-sub">返事①</text>
+  <rect x="146" y="192" width="62" height="34" rx="6" class="d-box-blue"/><text x="177" y="214" text-anchor="middle" class="d-sub">user②</text>
+  <rect x="214" y="192" width="62" height="34" rx="6" class="d-box-ok"/><text x="245" y="214" text-anchor="middle" class="d-sub">返事②</text>
+  <rect x="282" y="192" width="62" height="34" rx="6" class="d-box-blue"/><text x="313" y="214" text-anchor="middle" class="d-sub">user③</text>
+  <text x="10" y="246" class="d-sub">返事（assistant）も、自分で messages に足していく</text>
+</svg>
+<p>最後の質問だけを送ると、「その」「さっきの」が何を指すか分からない返事になります。履歴が長くなったら、要約する・古いものを外すなどで整理し、同じ前置きにはプロンプトキャッシュを使います（→ <a href="../../learn/messages-api/index.html#stateless">ステートレス</a>）。</p>
+
+<h3 id="content">2. 返事の content は丸ごと戻す</h3>
+<p>Claude の返事の <code>content</code> は、<b>ブロックの配列</b>です。文章（text）だけでなく、ツールを使いたいという依頼（tool_use）や、思考（thinking）のブロックが入っていることがあります。次のリクエストでは、<b>受け取った content を丸ごと、そのまま</b> assistant のメッセージとして戻します。</p>
+<svg class="fig-narrow" viewBox="0 0 360 330" role="img" aria-labelledby="f-content">
+  <title id="f-content">Claude の返事の content には text と tool_use のブロックがある。次のリクエストでは、assistant に content を丸ごと戻し、その直後の user メッセージの先頭に tool_result を置く</title>
+  <defs><marker id="ar-ct" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="10" y="8" width="340" height="96" rx="10" class="d-box"/>
+  <text x="24" y="32" class="d-text" font-weight="700">Claude の返事の content</text>
+  <rect x="24" y="44" width="130" height="44" rx="6" class="d-box-ok"/><text x="89" y="71" text-anchor="middle" class="d-sub">text「調べます」</text>
+  <rect x="166" y="44" width="170" height="44" rx="6" class="d-box-accent"/><text x="251" y="64" text-anchor="middle" class="d-sub">tool_use</text><text x="251" y="81" text-anchor="middle" class="d-sub">id: toolu_A</text>
+  <path d="M180 104 L180 130" class="d-line" marker-end="url(#ar-ct)"/>
+  <text x="190" y="122" class="d-sub" font-weight="700">丸ごと、そのまま戻す</text>
+  <rect x="10" y="132" width="340" height="190" rx="10" class="d-box"/>
+  <text x="24" y="156" class="d-text" font-weight="700">次のリクエストの messages</text>
+  <rect x="24" y="168" width="312" height="34" rx="6" class="d-box-blue"/><text x="36" y="190" class="d-sub">user：注文 A-123 は届きますか？</text>
+  <rect x="24" y="210" width="312" height="44" rx="6" class="d-box-ok"/><text x="36" y="229" class="d-sub">assistant：text ＋ tool_use（toolu_A）</text><text x="36" y="246" class="d-sub">　→ 受け取ったものを変えずに</text>
+  <rect x="24" y="262" width="312" height="48" rx="6" class="d-box-accent"/><text x="36" y="282" class="d-sub">user：tool_result（toolu_A）← 先頭に</text><text x="36" y="300" class="d-sub">　　　必要なら、その後ろに text</text>
+</svg>
+<ul>
+<li><b>文章だけ取り出して戻すのはだめ</b>：tool_use のブロックが消えると、次の tool_result がどの依頼への答えか分からず、400 エラーになります。</li>
+<li><b>thinking のブロックは中身を変えずに返す</b>：書き換えると 400 になります。</li>
+<li>迷ったら「<b>返ってきた content を、そのまま assistant として足す</b>」と覚えます。</li>
+</ul>
+
+<h3 id="tool-result">3. tool_result の置き場所と数</h3>
+<div class="table-wrap"><table>
+<tr><th>ルール</th><th>守らないと</th></tr>
+<tr><td>tool_use を含む assistant メッセージの<b>直後の user メッセージ</b>に置く</td><td>400（tool_use に対応する結果がない）</td></tr>
+<tr><td>user の content の<b>先頭</b>に置く。文章を添えるなら tool_result の後ろ</td><td>400</td></tr>
+<tr><td>tool_use が<b>複数</b>なら、<b>1つの user メッセージ</b>に、それぞれの tool_result を入れる</td><td>400、または並列でツールを呼ばなくなる</td></tr>
+<tr><td><code>tool_use_id</code> で、どの依頼への結果かを対応づける</td><td>400</td></tr>
+<tr><td>ツールが失敗しても、<code>is_error: true</code> を付けて<b>結果を返す</b></td><td>結果がないので 400。Claude が失敗を知って対応できない</td></tr>
+</table></div>
+<p>ツールを実行するのは<b>アプリ</b>です。Claude は「このツールをこの入力で使いたい」と返すだけです（→ <a href="../../learn/messages-api/index.html#tool-use">ツール利用のループ</a>）。</p>
+
+<h3 id="other">4. そのほかのつまずきやすい点</h3>
+<div class="table-wrap"><table>
+<tr><th>つまずき</th><th>正しくは</th></tr>
+<tr><td><code>max_tokens</code> を書き忘れる</td><td><code>model</code>・<code>max_tokens</code>・<code>messages</code> は必須。抜けると 400</td></tr>
+<tr><td>全体の役割や方針を、毎回の user メッセージに混ぜる</td><td>会話全体の方針はトップレベルの <code>system</code> に書く</td></tr>
+<tr><td>返事の最後に assistant を置いて、続きを書かせる（プリフィル）</td><td>最近のモデルでは 400。出力の形を決めたいなら構造化出力を使う</td></tr>
+<tr><td>返事が途中で切れているのに気づかない</td><td><code>stop_reason</code> を確かめる。<code>max_tokens</code> なら上限で切れている</td></tr>
+<tr><td>JSON で答えさせ、そのまま読む</td><td>構造化出力で形を決め、受け取ったら検証する</td></tr>
+<tr><td>400 のエラーを何度も再試行する</td><td>400 はリクエストの誤り。直さない限り同じ。再試行するのは 429・500・529 など</td></tr>
+<tr><td>API キーをブラウザの JavaScript に書く</td><td>キーはサーバー側で、環境変数などから使う</td></tr>
+<tr><td>Message Batches の結果を、送った順番どおりに読む</td><td>順番は保証されない。<code>custom_id</code> で対応づける</td></tr>
+</table></div>
+<p>エラーの種類と再試行は <a href="../../learn/messages-api/index.html#errors">エラーと再試行</a>、実際にわざと誤ったリクエストを送ってエラーを見るなら <a href="../../learn/messages-api/playground.html">疑似環境</a> で試せます。</p>
+
+<h2 id="exam">試験での見分け方</h2>
+<div class="table-wrap"><table>
+<tr><th>問題文のサイン</th><th>正解になりやすい答え</th><th>引っかけ</th></tr>
+<tr><td>2回目の質問で、前の話を覚えていない返事になる</td><td>それまでの会話を messages に入れて送り直す</td><td>会話の ID を送る、system に「覚えて」と書く</td></tr>
+<tr><td>ツールを使う会話で、2回目のリクエストが 400 になる</td><td>assistant の content（tool_use を含む）を丸ごと戻し、直後の user に tool_result を置く</td><td>返事の文章だけを戻す</td></tr>
+<tr><td>ツールが失敗した</td><td><code>is_error: true</code> を付けて tool_result を返す</td><td>tool_result を返さずに次に進む</td></tr>
+<tr><td>一時的なエラーへの備え</td><td>SDK の再試行（既定2回）を設定で調整し、最後の失敗の処理を書く</td><td>自前の無制限な再試行を重ねる</td></tr>
+<tr><td>ファイルを読み書きしコマンドを実行するエージェントを、自社のサーバーで</td><td>Claude Agent SDK</td><td>Tool Runner（組み込みツールがない）</td></tr>
+<tr><td>Agent SDK と Claude Code の関係</td><td>Agent SDK は Claude Code を部品にしたもの。同じエンジンを、プログラムから使うか、画面から使うか</td><td>Agent SDK は Messages API と無関係</td></tr>
+</table></div>
+
+<div class="key-points"><h3>この章のまとめ</h3><ul>
+<li>どの方法も、最後は Messages API（<code>POST /v1/messages</code>）を通って Claude に届く。違いは、手前でどこまで用意してくれるか。</li>
+<li>生の HTTP → すべて自分。クライアント SDK → 認証・再試行・型・ストリーミングの補助。Claude Agent SDK → さらにエージェントのループと組み込みツール。Claude Code → アプリとして全部入り。</li>
+<li>Agent SDK は Claude Code を部品（ライブラリ）にしたもの。中では同じ Claude Code のエンジンが動く。Tool Runner（SDK の補助）とは別物。</li>
+<li>API は会話を覚えていない。毎回すべて送り直す。</li>
+<li>返事の content は丸ごと、そのまま戻す。tool_result は直後の user の先頭に、tool_use の数だけ、失敗も is_error で返す。</li>
+<li>model・max_tokens・messages は必須。方針は system。途中で切れたら stop_reason を見る。400 は再試行しても直らない。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="claude-config.html">← Claude Code の設定と権限</a>
+      <a class="btn primary" href="terms.html">試験に出る用語集 →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

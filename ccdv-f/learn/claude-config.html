@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F：Claude Code の設定と権限（どのファイルに何を書くか） | Claude 認定資格 学習サイト</title>
+<meta name="description" content="Claude Code の CLAUDE.md・rules・settings.json の関係と、権限（permissions）の書き方を図で整理します。どのファイルに何を書くか、どれが強制でどれがお願いか、優先順位、試験での見分け方まで。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../plus.html">プラスONEチェック</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › Claude Code の設定と権限</p>
+    <h1>Claude Code の設定と権限（どのファイルに何を書くか） <span class="badge blue">Claude Code・セキュリティ</span></h1>
+    <p class="lead">Claude Code には、CLAUDE.md、rules、settings.json など、設定のファイルがいくつもあります。試験では「<b>この目的なら、どのファイルに何を書くか</b>」がよく問われます。この章では、ファイルの役割と関係を図で整理し、権限（permissions）の書き方を説明します。</p>
+<div class="callout point"><p><b>試験との関係</b>：「Claude Code」の分野が中心です。権限やフックは「セキュリティと安全」（Claude Hooks）、設定ファイルの共有は「構成管理」の問題にも出てきます。ふだんの開発でもそのまま使える知識です。根拠は Claude Code の公式ドキュメント（2026-11-28 に確認）です。</p></div>
+
+<h2 id="map">いちばん大事な区別：お願いか、強制か</h2>
+<p>設定のファイルは、大きく2種類に分かれます。</p>
+<svg class="fig-narrow" viewBox="0 0 360 310" role="img" aria-labelledby="f-map">
+  <title id="f-map">CLAUDE.md・rules・スキルは文脈（お願い）で、守られないこともある。settings.json の権限・フック・サンドボックスは設定（強制）で、必ず効く</title>
+  <defs><marker id="ar-mp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="10" y="10" width="165" height="210" rx="12" class="d-box-blue"/>
+  <text x="92" y="36" text-anchor="middle" class="d-text" font-weight="700">文脈（お願い）</text>
+  <rect x="24" y="52" width="137" height="38" rx="8" class="d-box"/><text x="92" y="76" text-anchor="middle" class="d-text">CLAUDE.md</text>
+  <rect x="24" y="98" width="137" height="38" rx="8" class="d-box"/><text x="92" y="122" text-anchor="middle" class="d-text">rules</text>
+  <rect x="24" y="144" width="137" height="38" rx="8" class="d-box"/><text x="92" y="168" text-anchor="middle" class="d-text">スキル</text>
+  <text x="92" y="206" text-anchor="middle" class="d-sub">守られないこともある</text>
+  <rect x="185" y="10" width="165" height="210" rx="12" class="d-box-ok"/>
+  <text x="267" y="36" text-anchor="middle" class="d-text" font-weight="700">設定（強制）</text>
+  <rect x="199" y="52" width="137" height="38" rx="8" class="d-box"/><text x="267" y="76" text-anchor="middle" class="d-text">権限のルール</text>
+  <rect x="199" y="98" width="137" height="38" rx="8" class="d-box"/><text x="267" y="122" text-anchor="middle" class="d-text">フック</text>
+  <rect x="199" y="144" width="137" height="38" rx="8" class="d-box"/><text x="267" y="168" text-anchor="middle" class="d-text">サンドボックス</text>
+  <text x="267" y="206" text-anchor="middle" class="d-sub">settings.json に書く・必ず効く</text>
+  <path d="M92 220 L150 248" class="d-line" marker-end="url(#ar-mp)"/>
+  <path d="M267 220 L210 248" class="d-line" marker-end="url(#ar-mp)"/>
+  <rect x="100" y="250" width="160" height="44" rx="10" class="d-box-accent"/>
+  <text x="180" y="277" text-anchor="middle" class="d-text" font-weight="700">Claude Code</text>
+</svg>
+<ul>
+<li><b>文脈（お願い）</b>：CLAUDE.md・rules・スキルは、Claude が<b>読む文章</b>です。プロジェクトの決まりを伝えるのに使います。公式ドキュメントも「強制される設定ではなく、文脈として扱われる」と説明しています。</li>
+<li><b>設定（強制）</b>：settings.json に書く権限のルールやフックは、Claude Code という<b>プログラムが判定</b>します。モデルの判断に関係なく、必ず効きます。</li>
+</ul>
+<div class="exam-tip">「確実に」「必ず」「絶対に読ませない」と問われたら、CLAUDE.md ではなく <b>settings.json の deny ルールやフック</b>。CLAUDE.md に「絶対に」と強く書いても、お願いであることは変わりません。</div>
+
+<h2 id="files">どのファイルに何を書くか：一覧</h2>
+<p>ファイルの置き場所は、<b>ホームフォルダ（自分のすべてのプロジェクト）</b>と<b>プロジェクトのフォルダ</b>の2か所に分かれます。</p>
+<pre><code>~/.claude/                     ← 自分のすべてのプロジェクトに効く
+├── CLAUDE.md                  自分の好み（「説明は日本語で」など）
+├── rules/                     自分の決まりを話題ごとに
+└── settings.json              自分の権限・フック・環境変数
+
+my-project/                    ← このプロジェクトだけ
+├── CLAUDE.md                  チームの決まり（Git で共有）
+├── CLAUDE.local.md            自分だけのメモ（Git に入れない）
+├── .mcp.json                  チームで使う MCP サーバー
+└── .claude/
+    ├── settings.json          チームの権限・フック（Git で共有）
+    ├── settings.local.json    自分だけの設定（Git に入れない）
+    ├── rules/                 話題ごと・フォルダごとの決まり
+    ├── skills/                やり方の手順（必要なときに読む）
+    └── agents/                サブエージェント</code></pre>
+<div class="table-wrap"><table>
+<tr><th>ファイル</th><th>書くもの</th><th>共有</th></tr>
+<tr><td><code>./<wbr>CLAUDE.md</code><br><small>（<code>./<wbr>.claude/<wbr>CLAUDE.md</code> でもよい）</small></td><td>ビルド・テストのコマンド、コーディング規約などのチームの決まり</td><td>Git で共有</td></tr>
+<tr><td><code>./<wbr>CLAUDE<wbr>.local.md</code></td><td>自分の環境の URL など、自分だけのメモ</td><td>自分だけ</td></tr>
+<tr><td><code>~/<wbr>.claude/<wbr>CLAUDE.md</code></td><td>すべてのプロジェクトで使う自分の好み</td><td>自分だけ</td></tr>
+<tr><td><code>.claude/<wbr>rules/<wbr>*.md</code></td><td>話題ごと（テスト、API の書き方）や、特定のフォルダ・ファイルだけの決まり</td><td>Git で共有</td></tr>
+<tr><td><code>.claude/<wbr>settings.json</code></td><td>チームの権限のルール、フック、環境変数</td><td>Git で共有</td></tr>
+<tr><td><code>.claude/<wbr>settings<wbr>.local.json</code></td><td>このプロジェクトでの自分だけの権限など</td><td>自分だけ</td></tr>
+<tr><td><code>~/<wbr>.claude/<wbr>settings.json</code></td><td>すべてのプロジェクトで使う自分の権限・設定</td><td>自分だけ</td></tr>
+<tr><td>組織の管理設定<br><small>（<code>managed-settings.json</code> など）</small></td><td>組織全体で守らせるルール。利用者は上書きできない</td><td>管理者が配布</td></tr>
+</table></div>
+<div class="callout"><p><b>見分け方</b>：名前に <b>.local</b> が付くものは「自分だけ・Git に入れない」。<b>~/</b>（ホーム）にあるものは「自分のすべてのプロジェクト」。プロジェクトの中で .local が付かないものは「チームで共有」。</p></div>
+
+<h2 id="claude-md">CLAUDE.md：毎回伝えたい決まり</h2>
+<p>CLAUDE.md は、Claude Code が<b>起動したときに読む</b>決まりのファイルです。</p>
+<pre><code># プロジェクトの決まり
+- テストは `npm test` で実行する
+- 型チェックは `npm run typecheck`
+- コミットの前に必ずテストを通す
+- 詳しいコーディング規約は @docs/style.md を参照</code></pre>
+<ul>
+<li><b>200行未満</b>が目安。長くなったら rules に分けるか、<code>@パス</code> で別のファイルを取り込む（取り込みは最大4段まで）。</li>
+<li>ユーザー・プロジェクトなど複数の CLAUDE.md は、<b>上書きではなく、つなげて</b>読まれる。</li>
+<li><code>/init</code> でコードベースを調べてたたき台を作れる。<code>/memory</code> で編集できる。</li>
+<li>CLAUDE.md がないときは、AGENTS.md を読む。</li>
+</ul>
+
+<h2 id="rules">rules：話題ごと・フォルダごとの決まり</h2>
+<p><code>.claude/rules/</code> に、<b>1つの話題につき1つの Markdown ファイル</b>を置きます。CLAUDE.md が長くなったときに、話題ごとに分けて整理するための場所です。</p>
+<p>いちばんの特徴は、<b><code>paths</code> を書くと、そのファイルを扱うときだけ読み込まれる</b>ことです。</p>
+<pre><code>---
+paths:
+  - "src/api/**/*.ts"
+---
+# API の決まり
+- すべての API でエラーの形を { code, message } にそろえる
+- 入力は必ず検証してから使う</code></pre>
+<svg class="fig-narrow" viewBox="0 0 360 260" role="img" aria-labelledby="f-rules">
+  <title id="f-rules">起動したときには CLAUDE.md と paths のない rules が読まれる。src/api のファイルを扱ったときに、paths が一致する rules とそのフォルダの CLAUDE.md が読まれる</title>
+  <defs><marker id="ar-rl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="20" y="8" width="320" height="94" rx="10" class="d-box-blue"/>
+  <text x="34" y="32" class="d-text" font-weight="700">起動したとき（いつも読む）</text>
+  <text x="34" y="58" class="d-sub">・CLAUDE.md（ユーザー・プロジェクト）</text>
+  <text x="34" y="82" class="d-sub">・rules のうち、paths がないもの</text>
+  <path d="M180 102 L180 126" class="d-line" marker-end="url(#ar-rl)"/>
+  <rect x="20" y="128" width="320" height="122" rx="10" class="d-box"/>
+  <text x="34" y="152" class="d-text" font-weight="700">src/api/user.ts を扱ったとき</text>
+  <text x="34" y="178" class="d-sub">・rules のうち、paths が一致するもの</text>
+  <text x="34" y="202" class="d-sub">・src/api/ フォルダの CLAUDE.md</text>
+  <text x="34" y="234" class="d-sub" font-weight="700">関係のない作業では読み込まれない</text>
+</svg>
+<p class="fig-caption">必要なときだけ読むので、コンテキストを無駄に使わない</p>
+<ul>
+<li><code>paths</code> がない rules は、起動時に <code>.claude/CLAUDE.md</code> と<b>同じ優先度</b>で読まれる。</li>
+<li>自分用の rules は <code>~/.claude/rules/</code> に置く。</li>
+<li>rules も CLAUDE.md と同じく<b>文脈（お願い）</b>。強制はできない。</li>
+</ul>
+<div class="table-wrap"><table>
+<tr><th>伝えたいこと</th><th>置き場所</th></tr>
+<tr><td>毎回の作業で必要な事実（テストのコマンド、全体の規約）</td><td>CLAUDE.md</td></tr>
+<tr><td>特定の種類のファイルやフォルダだけの決まり</td><td>rules（<code>paths</code> つき）</td></tr>
+<tr><td>特定の作業の手順（リリースの手順、レビューのやり方）</td><td><a href="terms.html#t-cc-skills">スキル</a></td></tr>
+</table></div>
+
+<h2 id="settings">settings.json：動作の設定と優先順位</h2>
+<p>settings.json には、<b>権限のルール・フック・環境変数・使うモデル</b>などを JSON で書きます。同じ項目が複数のファイルにあるときは、次の順に強いほうが使われます。</p>
+<svg class="fig-narrow" viewBox="0 0 360 300" role="img" aria-labelledby="f-prec">
+  <title id="f-prec">設定の優先順位：組織の管理設定、コマンドライン、ローカル、プロジェクト、ユーザーの順に強い</title>
+  <defs><marker id="ar-pc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <path d="M18 286 L18 14" class="d-line-accent" marker-end="url(#ar-pc)"/>
+  <text x="10" y="150" text-anchor="middle" class="d-sub" transform="rotate(-90 10 150)">上ほど強い</text>
+  <rect x="36" y="8" width="314" height="50" rx="10" class="d-box-ng"/>
+  <text x="50" y="29" class="d-text" font-weight="700">1. 組織の管理設定</text>
+  <text x="50" y="48" class="d-sub">managed-settings.json など。上書き不可</text>
+  <rect x="36" y="66" width="314" height="50" rx="10" class="d-box-accent"/>
+  <text x="50" y="87" class="d-text" font-weight="700">2. コマンドライン</text>
+  <text x="50" y="106" class="d-sub">--settings、--permission-mode など</text>
+  <rect x="36" y="124" width="314" height="50" rx="10" class="d-box-blue"/>
+  <text x="50" y="145" class="d-text" font-weight="700">3. ローカル（自分だけ）</text>
+  <text x="50" y="164" class="d-sub">.claude/settings.local.json</text>
+  <rect x="36" y="182" width="314" height="50" rx="10" class="d-box-blue"/>
+  <text x="50" y="203" class="d-text" font-weight="700">4. プロジェクト（チーム）</text>
+  <text x="50" y="222" class="d-sub">.claude/settings.json</text>
+  <rect x="36" y="240" width="314" height="50" rx="10" class="d-box"/>
+  <text x="50" y="261" class="d-text" font-weight="700">5. ユーザー</text>
+  <text x="50" y="280" class="d-sub">~/.claude/settings.json</text>
+</svg>
+<p>ただし、<b>allow・ask・deny のような一覧（配列）は、上書きではなく合算</b>されます。たとえば、ユーザーの設定の deny と、プロジェクトの設定の deny は、両方とも効きます。上書きの順番が効くのは、使うモデルのように値が1つの項目です。</p>
+<pre><code>{
+  "permissions": {
+    "allow": ["Bash(npm test)", "Bash(npm run lint)"],
+    "ask":   ["Bash(git push *)"],
+    "deny":  ["Read(./.env)", "Read(./secrets/**)"]
+  },
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Edit|Write",
+        "hooks": [{ "type": "command", "command": "npm run format" }] }
+    ]
+  },
+  "env": { "NODE_ENV": "development" }
+}</code></pre>
+<p class="small muted">permissions は権限のルール、hooks はフック（この例では、編集・書き込みのあとに整形のコマンドを実行）、env は環境変数です。</p>
+
+<h2 id="permissions">権限のルールの書き方</h2>
+<p>権限のルールは3種類です。</p>
+<div class="table-wrap"><table>
+<tr><th>種類</th><th>意味</th><th>使う場面</th></tr>
+<tr><td><b>allow</b></td><td>確認なしで使ってよい</td><td>テストやリントなど、安全でよく使うコマンド</td></tr>
+<tr><td><b>ask</b></td><td>毎回、利用者に確認する</td><td>push など、使うことはあるが慎重にしたい操作</td></tr>
+<tr><td><b>deny</b></td><td>使わせない</td><td>秘密の情報を読む、危険な操作</td></tr>
+</table></div>
+<h3>判定の順番：deny がいつも勝つ</h3>
+<svg class="fig-narrow" viewBox="0 0 360 300" role="img" aria-labelledby="f-order">
+  <title id="f-order">ツールを使うとき、まず deny に一致すれば拒否、次に ask に一致すれば確認、次に allow に一致すれば実行、どれにも一致しなければ権限モードに従う</title>
+  <defs><marker id="ar-od" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="20" y="8" width="180" height="36" rx="10" class="d-box-accent"/>
+  <text x="110" y="31" text-anchor="middle" class="d-text">ツールを使いたい</text>
+  <path d="M110 44 L110 62" class="d-line" marker-end="url(#ar-od)"/>
+  <rect x="20" y="64" width="180" height="40" rx="10" class="d-box"/><text x="110" y="89" text-anchor="middle" class="d-text">① deny に一致？</text>
+  <path d="M200 84 L236 84" class="d-line" marker-end="url(#ar-od)"/><text x="218" y="77" text-anchor="middle" class="d-sub">はい</text>
+  <rect x="238" y="64" width="112" height="40" rx="10" class="d-box-ng"/><text x="294" y="89" text-anchor="middle" class="d-text">拒否</text>
+  <path d="M110 104 L110 126" class="d-line" marker-end="url(#ar-od)"/><text x="122" y="120" class="d-sub">いいえ</text>
+  <rect x="20" y="128" width="180" height="40" rx="10" class="d-box"/><text x="110" y="153" text-anchor="middle" class="d-text">② ask に一致？</text>
+  <path d="M200 148 L236 148" class="d-line" marker-end="url(#ar-od)"/><text x="218" y="141" text-anchor="middle" class="d-sub">はい</text>
+  <rect x="238" y="128" width="112" height="40" rx="10" class="d-box-accent"/><text x="294" y="153" text-anchor="middle" class="d-text">確認する</text>
+  <path d="M110 168 L110 190" class="d-line" marker-end="url(#ar-od)"/><text x="122" y="184" class="d-sub">いいえ</text>
+  <rect x="20" y="192" width="180" height="40" rx="10" class="d-box"/><text x="110" y="217" text-anchor="middle" class="d-text">③ allow に一致？</text>
+  <path d="M200 212 L236 212" class="d-line" marker-end="url(#ar-od)"/><text x="218" y="205" text-anchor="middle" class="d-sub">はい</text>
+  <rect x="238" y="192" width="112" height="40" rx="10" class="d-box-ok"/><text x="294" y="217" text-anchor="middle" class="d-text">実行</text>
+  <path d="M110 232 L110 254" class="d-line" marker-end="url(#ar-od)"/><text x="122" y="248" class="d-sub">いいえ</text>
+  <rect x="20" y="256" width="330" height="38" rx="10" class="d-box"/><text x="185" y="280" text-anchor="middle" class="d-sub">どれにも一致しない → 権限モードに従う</text>
+</svg>
+<ul>
+<li><b>最初に一致したもので決まり</b>ます。書いた順番や、ルールが具体的かどうかは関係ありません。</li>
+<li>どこか1つのファイルで deny されたものは、ほかのファイルの allow では許可できません。</li>
+<li>フックが「許可」と返しても、deny は上書きされません。</li>
+</ul>
+<h3>ルールの書き方</h3>
+<div class="table-wrap"><table>
+<tr><th>書き方</th><th>意味</th></tr>
+<tr><td><code>Bash(npm run test *)</code></td><td>「npm run test 」で始まるコマンド（前方一致）</td></tr>
+<tr><td><code>Bash(npm run build)</code></td><td>このコマンドだけ（完全一致）</td></tr>
+<tr><td><code>Read(./.env)</code></td><td>今のフォルダの .env を読む</td></tr>
+<tr><td><code>Read(./secrets/**)</code></td><td>secrets フォルダの中のすべて（.gitignore と同じ書き方）</td></tr>
+<tr><td><code>Edit(~/.zshrc)</code></td><td><code>~/</code> はホームフォルダから</td></tr>
+<tr><td><code>WebFetch(domain:example.com)</code></td><td>このドメインのページを取ってくる</td></tr>
+<tr><td><code>mcp__github__*</code></td><td>github という MCP サーバーのすべてのツール</td></tr>
+<tr><td><code>Agent(Explore)</code></td><td>Explore というサブエージェントを使う</td></tr>
+</table></div>
+<p><code>&amp;&amp;</code> や <code>|</code> でつないだコマンドは、1つずつに分けて判定され、<b>すべてが許可されていないと</b>確認なしでは動きません。</p>
+<div class="callout warn"><p><b>Bash のルールの弱点</b>：コマンドの引数を絞るルールは、すり抜けられることがあります。たとえば <code>Bash(curl *)</code> を deny にしても、<code>/usr/bin/curl</code> や <code>sh -c 'curl …'</code> は止められません。外への通信を確実に止めたいときは、Web の取得を <code>WebFetch(domain:…)</code> に限る、PreToolUse のフックで検査する、サンドボックスでネットワークを制限する、などを組み合わせます。</p></div>
+<p>今のルールの一覧は、Claude Code の中で <code>/permissions</code> を実行すると、<b>どの settings.json から来たルールか</b>と一緒に見られます。確認の画面で「Yes, and don't ask again」を選ぶと、そのルールが <code>.claude/settings.local.json</code> に allow として保存されます。</p>
+
+<h2 id="modes">権限モード</h2>
+<p>ルールに一致しない操作をどう扱うかは、<b>権限モード</b>で決まります。対話中は <kbd>Shift</kbd>＋<kbd>Tab</kbd> で切り替え、settings.json の <code>permissions.defaultMode</code> で最初のモードを決められます。</p>
+<div class="table-wrap"><table>
+<tr><th>モード</th><th>動き</th></tr>
+<tr><td>default</td><td>必要に応じて確認する（画面では Manual）</td></tr>
+<tr><td>acceptEdits</td><td>作業フォルダの中のファイル編集などを、確認なしで行う</td></tr>
+<tr><td>plan</td><td>読み取り中心で調べ、計画を立てる。ソースは変更しない</td></tr>
+<tr><td>auto</td><td>確認の代わりに、別の分類用のモデルが実行前に操作を審査する</td></tr>
+<tr><td>dontAsk</td><td>確認が必要な操作は、聞かずに拒否する</td></tr>
+<tr><td>bypassPermissions</td><td>確認を省く。<b>隔離された環境でだけ</b>使う</td></tr>
+</table></div>
+<ul>
+<li><code>auto</code> と <code>bypassPermissions</code> を最初のモードにする設定は、<b>プロジェクトやローカルの settings.json に書いても効きません</b>。ユーザーや組織の設定、または <code>--permission-mode</code> で指定します。共有のリポジトリに書かれた設定で、勝手に確認が省かれないようにするためです。</li>
+<li>組織で禁止したいときは、管理設定に <code>"permissions": { "disableBypassPermissionsMode": "disable" }</code> と書きます。</li>
+</ul>
+
+<h2 id="hooks">フックとサンドボックス</h2>
+<ul>
+<li><b>フック</b>は settings.json の <code>hooks</code> に書きます。PreToolUse（ツールの実行前）で終了コード 2 を返すと、権限のルールより前にその操作を止められます。詳しくは用語集の <a href="terms.html#t-cc-hooks">フック</a>。</li>
+<li><b>サンドボックス</b>（<code>sandbox.enabled</code>）は、OS の仕組みで、シェルのコマンドが触れるファイルやネットワークを制限します。Bash のルールのすり抜けにも効きます。</li>
+</ul>
+
+<h2 id="choose">目的からファイルを選ぶ</h2>
+<div class="table-wrap"><table>
+<tr><th>やりたいこと</th><th>書く場所</th></tr>
+<tr><td>テストのコマンドを、チーム全員の Claude に伝えたい</td><td><code>./CLAUDE.md</code></td></tr>
+<tr><td>src/api の TypeScript にだけ効く決まりを書きたい</td><td><code>.claude/rules/</code> に <code>paths</code> つきで</td></tr>
+<tr><td>.env を<b>確実に</b>読ませたくない</td><td><code>.claude/settings.json</code> の deny に <code>Read(./.env)</code></td></tr>
+<tr><td><code>npm test</code> を、チーム全員が確認なしで動かせるように</td><td><code>.claude/settings.json</code> の allow</td></tr>
+<tr><td>自分だけ、このプロジェクトで追加のコマンドを許可したい</td><td><code>.claude/settings.local.json</code></td></tr>
+<tr><td>自分のすべてのプロジェクトで、同じ許可を使いたい</td><td><code>~/.claude/settings.json</code></td></tr>
+<tr><td>git push は毎回確認してほしい</td><td>settings.json の ask に <code>Bash(git push *)</code></td></tr>
+<tr><td>編集するたびに必ず整形したい</td><td>settings.json の hooks（PostToolUse）</td></tr>
+<tr><td>組織全体で bypassPermissions を禁止したい</td><td>組織の管理設定の <code>disableBypassPermissionsMode</code></td></tr>
+<tr><td>チームで同じ MCP サーバーを使いたい</td><td><code>.mcp.json</code>（project スコープ）</td></tr>
+</table></div>
+
+<h2 id="exam">試験での見分け方</h2>
+<div class="table-wrap"><table>
+<tr><th>問題文のサイン</th><th>正解になりやすい答え</th><th>引っかけ</th></tr>
+<tr><td>CLAUDE.md に禁止と書いたのに、守られないことがある</td><td>settings.json の deny ルールやフックで強制する</td><td>CLAUDE.md の文言を強くする、何度も書く</td></tr>
+<tr><td>allow と deny の両方に一致する</td><td>deny が勝つ（拒否される）</td><td>書いた順番、範囲の広さで決まる</td></tr>
+<tr><td>ユーザーとプロジェクトの両方に deny がある</td><td>合算されて、両方とも効く</td><td>強いほうのファイルだけが使われる</td></tr>
+<tr><td>チームで共有する／自分だけの設定</td><td>共有は <code>.claude/settings.json</code>、自分だけは <code>.claude/settings.local.json</code></td><td>自分だけの設定を Git に入れる</td></tr>
+<tr><td>CLAUDE.md が長くなり、一部のフォルダでしか使わない決まりがある</td><td>rules に分けて <code>paths</code> を付ける</td><td>CLAUDE.md にすべて書き続ける</td></tr>
+<tr><td>curl での外部送信を確実に止めたい</td><td>サンドボックスやフック、WebFetch のドメイン制限を組み合わせる</td><td><code>Bash(curl *)</code> の deny だけで十分とする</td></tr>
+<tr><td>リポジトリの設定で、確認を省くモードにされたくない</td><td>bypassPermissions はプロジェクトの設定では効かない。組織で禁止もできる</td><td>CLAUDE.md で禁止をお願いする</td></tr>
+</table></div>
+
+<div class="key-points"><h3>この章のまとめ</h3><ul>
+<li>CLAUDE.md・rules・スキルは「文脈（お願い）」。settings.json の権限・フック・サンドボックスは「強制」。確実に止めたいなら後者。</li>
+<li>.local が付くものは自分だけ（Git に入れない）。~/ にあるものは自分のすべてのプロジェクト。それ以外のプロジェクトのファイルはチームで共有。</li>
+<li>CLAUDE.md は毎回必要な決まり。rules は話題ごと・フォルダごとの決まりで、paths を付けると関係するファイルを扱うときだけ読まれる。</li>
+<li>設定の強さは 組織 ＞ コマンドライン ＞ ローカル ＞ プロジェクト ＞ ユーザー。ただし allow・ask・deny は合算される。</li>
+<li>判定は deny → ask → allow。deny がいつも勝つ。Bash の引数を絞るルールはすり抜けられるので、フックやサンドボックスを重ねる。</li>
+<li>auto と bypassPermissions は、プロジェクトの設定からは最初のモードにできない。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="injection.html">← 文書やメールに仕込まれた命令</a>
+      <a class="btn primary" href="api-sdk.html">Messages API と SDK →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

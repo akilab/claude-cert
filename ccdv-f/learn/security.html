@@ -32,12 +32,12 @@
     <p class="lead">プロンプトインジェクションへの対策、ガードレール、フックによる制御、シークレットの管理、個人情報の扱いを学びます。キーワードは「モデルの判断に頼らず、仕組みで守る」です。</p>
 <div class="callout point"><p><b>この章の前提</b>：<a href="basics.html">はじめに（前提知識）</a>の <a href="basics.html#apikey">API キー</a>・<a href="basics.html#authz">認証と認可</a>・<a href="basics.html#tool-use">ツール利用の流れ</a></p></div>
 <h2 id="injection">プロンプトインジェクション</h2>
-<p>外部の文書・Web ページ・メールなどに埋め込まれた命令に、モデルが従ってしまう攻撃です。利用者が直接入力する場合（直接）と、Claude が読む資料に仕込まれる場合（間接）があります。</p>
+<p>外部の文書・Web ページ・メールなどに埋め込まれた命令に、モデルが従ってしまう攻撃です。利用者が直接入力する場合（直接）と、Claude が読む資料に仕込まれる場合（間接）があります。仕込まれる場所や被害までの流れは <a href="injection.html">文書やメールに仕込まれた命令</a> で図を使って詳しく説明しています。</p>
 <figure class="diagram" data-src="../../assets/img/injection-isolation.svg"><figcaption>信頼できない入力を分け、重要な操作は仕組みで止める</figcaption></figure>
 <div class="table-wrap"><table>
 <tr><th>対策</th><th>効果</th></tr>
 <tr><td>信頼できない入力を指示と分ける（タグで囲む、データであると明記）</td><td>騙されにくくする（完全ではない）</td></tr>
-<tr><td>最小権限：役割に必要なツール・権限だけを渡す</td><td>騙されても被害が出ない</td></tr>
+<tr><td>最小権限：役割に必要なツール・権限だけを渡す（→ <a href="privilege.html">最小権限の図解</a>）</td><td>騙されても被害が出ない</td></tr>
 <tr><td>重要な操作（送信・送金・削除）は承認やフックで止める</td><td>騙されても実行されない</td></tr>
 <tr><td>出力の検査、監視</td><td>異常を見つける</td></tr>
 </table></div>
