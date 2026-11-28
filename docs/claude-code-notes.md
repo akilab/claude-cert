@@ -73,3 +73,15 @@
 ## 未確認
 - フックの Stop・SubagentStop の詳しい判定方法。
 - 自動コンパクションの詳しい条件。
+
+## 10. 対話の操作・チェックポイント・MCP（確認日：2026-11-28）
+出典：code.claude.com/docs/en/interactive-mode、/checkpointing、/mcp
+- Esc：作業を途中で止める（そこまでの作業は残る）。確認の画面では拒否。Esc 2回：入力が空なら巻き戻しのメニュー（入力があれば入力を消して履歴に保存）。
+- Shift+Tab：権限モードの切り替え（default〔表示は Manual〕→ acceptEdits → plan → 使える場合は bypassPermissions・auto）。
+- Ctrl+C：実行中の処理を止める。何も動いていなければ1回目で入力を消し、2回目で終了。
+- 複数行：`\`＋Enter、Ctrl+J（どのターミナルでも）、Option+Enter、Shift+Enter（対応ターミナル）。
+- 入力の先頭：`@` ファイルのパスの補完、`!` シェルのモード（直接実行し出力を会話に入れる。サンドボックスの外）、`/` コマンド・スキル。`#` によるメモリへの追加はページに記載なし（問題にしない）。
+- チェックポイント：依頼の前に自動で作成。`/rewind`（別名 `/undo`）か、入力が空のときの Esc 2回。「コードと会話」「会話だけ」「コードだけ」を戻せる。要約もできる。
+  - Bash のコマンドだけで変えたファイルは追跡されず戻らない。サブエージェントの編集も基本的に戻らない。Git の代わりにはならない。
+- MCP：`claude mcp add --transport http <名前> <URL>`、`claude mcp add [options] <名前> -- <コマンド> [引数]`（stdio）。transport は http（推奨）・stdio・sse（非推奨）。
+  - スコープ：local（既定）・project（プロジェクト直下の `.mcp.json`、チームで共有）・user。`/mcp` で状態の確認・認証。`claude mcp list`／`get`／`remove`。

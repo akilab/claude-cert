@@ -83,6 +83,7 @@ export function resetExam(examId) {
   remove(`history:${examId}`);
   remove(`bookmarks:${examId}`);
   remove(`bookmark-log:${examId}`);
+  remove(`best:${examId}`); // 制限時間ありの自己ベスト（この端末だけ）
   // 同期しているほかの端末でも、この時刻より前の記録を消したものとして扱う
   save(`reset:${examId}`, Date.now());
 }

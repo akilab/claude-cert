@@ -2,6 +2,8 @@
 // data-set="challenge" を付けると最難関演習（「すべて選べ」形式、別の問題データと記録）になる。
 // data-set="plus" を付けるとプラスONEチェック（用語と考え方の確認。別の問題データと記録、難易度なし）になる。
 // プラスONEチェックは、選択肢を選んだらすぐに結果を出し、同じ条件ですぐに繰り返せるようにする。
+// プラスONEチェックでは、1問ずつ答え合わせするか、続けて解いて最後に振り返るかを選べる（flow: each／batch）。
+// プラスONEチェックでは制限時間（5・10・20分）も選べる。時間内に何問正解できるかを競い、時間ごとの自己ベストを残す。
 import { loadData, escapeHtml, richText, siteUrl, confirmClick } from './common.js';
 import { getHistory, recordAnswer, needsReview, getBookmarks, toggleBookmark, resetExam, load, save } from './store.js';
 import { startAutoSync } from './sync.js';
@@ -69,7 +71,12 @@ let questions = []; // 全問題
 let domainMap = {};
 let hasChallenge = false; // 最難関の問題データがあるか（通常の開始画面に案内を出す）
 let hasPlus = false;      // プラスONEチェックの問題データがあるか
-let session = null; // { list, index, results: [{q, chosen, correct}] }
+let session = null; // { list, index, results: [{q, chosen, correct}], time, endsAt, timeUp, flow }
+let timer = null;   // 制限時間ありのときの残り時間の表示
+const TIMES = [[0, 'なし（問題数で解く）'], [300, '5分'], [600, '10分'], [1200, '20分']];
+const timeLabel = (sec) => (TIMES.find(([t]) => t === sec) || [0, `${sec}秒`])[1];
+const fmtLeft = (ms) => { const s = Math.ceil(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+function stopTimer() { clearInterval(timer); timer = null; }
 
 // ---------- ユーティリティ ----------
 function shuffle(arr) {
@@ -99,6 +106,7 @@ function filterPool(settings) {
 }
 
 function renderSetup() {
+  stopTimer();
   const saved = load(`settings:${storeId}`, null);
   const settings = {
     level: saved?.level ?? 'all',
@@ -106,6 +114,9 @@ function renderSetup() {
     mode: saved?.mode ?? (isPlus ? 'all' : 'new'),
     count: saved?.count ?? 10,
     style: saved?.style ?? 'exam',
+    // 以前の選択肢（1分・3分）が保存されていたら「なし」に戻す
+    flow: isPlus && saved?.flow === 'batch' ? 'batch' : 'each',
+    time: isPlus && TIMES.some(([t]) => t === saved?.time) ? saved.time : 0,
   };
   if (!settings.domains.length) settings.domains = exam.domains.map((d) => d.id);
 
@@ -124,7 +135,7 @@ function renderSetup() {
         ? `<p class="muted">本番より難しい「正しいもの（誤っているもの）をすべて選べ」形式の問題です。選ぶ数は示されません。選択肢の1つ1つが重要事項の確認になっています。全 ${questions.length}問。1回 5問程度がおすすめです。</p>`
         : isPlus
         ? `<p class="muted">試験の問題文に出てくる<b>用語と考え方</b>を、短い問題で確認します。紛らわしい用語どうしを見分けられるかがポイントです。全 ${questions.length}問。1回 10〜20問がおすすめです。</p>
-           <p class="callout small">用語の意味とサンプルは <a href="./learn/terms.html">試験に出る用語集</a> にまとめています。解答後の解説から、該当する用語に直接飛べます。</p>`
+           <p class="callout small">用語の意味とサンプルは <a href="./learn/terms.html">試験に出る用語集</a> にまとめています。解答後の解説から、該当する用語や学習ページの説明に直接飛べます。</p>`
         : `<p class="muted">条件を選んで始めます。1回 10問程度がおすすめです。全 ${questions.length}問。</p>
            ${hasChallenge ? `<p class="callout small">本番より難しい「すべて選べ」形式の問題は <a href="./challenge.html">最難関演習</a> で解けます（通常の問題とは混ざりません）。</p>` : ''}
            ${hasPlus ? `<p class="callout small">用語と考え方の確認は <a href="./plus.html">プラスONEチェック</a> で（通常の問題とは混ざりません）。</p>` : ''}`}
@@ -166,7 +177,22 @@ function renderSetup() {
           </div>
         </fieldset>
 
+        ${isPlus ? `<fieldset>
+          <legend>答え合わせ</legend>
+          <div class="seg" role="radiogroup">
+            ${[['each', '1問ずつ', '選ぶとすぐに正誤と解説'], ['batch', '最後にまとめて', '次々に解き、結果の画面で振り返る']].map(([v, label, sub]) => `<label class="seg-item"><input type="radio" name="flow" value="${v}" ${settings.flow === v ? 'checked' : ''}><span>${label}<small>${sub}</small></span></label>`).join('')}
+          </div>
+        </fieldset>
+
         <fieldset>
+          <legend>制限時間</legend>
+          <div class="seg" role="radiogroup">
+            ${TIMES.map(([t, label]) => `<label class="seg-item"><input type="radio" name="time" value="${t}" ${Number(settings.time) === t ? 'checked' : ''}><span>${label}</span></label>`).join('')}
+          </div>
+          <p class="xsmall muted">時間を決めると、時間内に何問正解できるかに挑戦します。解説を読む時間も含みます。時間ごとに自己ベストを残します。</p>
+        </fieldset>` : ''}
+
+        <fieldset id="count-set">
           <legend>出題数</legend>
           <div class="seg" role="radiogroup">
             ${[5, 10, 20, 0].map((n) => `<label class="seg-item"><input type="radio" name="count" value="${n}" ${Number(settings.count) === n ? 'checked' : ''}><span>${n ? n + '問' : '全部'}</span></label>`).join('')}
@@ -183,7 +209,7 @@ function renderSetup() {
         <summary>使い方</summary>
         <ul class="small">
           ${isPlus
-            ? '<li>選択肢を選ぶと、すぐに結果が出ます。</li><li>キーボード：<kbd>1</kbd>〜<kbd>4</kbd> で解答、<kbd>Enter</kbd> で次へ、<kbd>B</kbd> でブックマーク。結果の画面で <kbd>Enter</kbd> を押すと、同じ条件でもう一度始めます。</li>'
+            ? '<li>「1問ずつ」では、選択肢を選ぶとすぐに結果が出ます。「最後にまとめて」では、選ぶとすぐ次の問題に進み、結果の画面で正誤と解説を振り返ります。</li><li>制限時間を選ぶと、時間内に何問正解できるかに挑戦できます（解説を読む時間も含みます）。時間切れになると、そこで結果の画面になります。</li><li>キーボード：<kbd>1</kbd>〜<kbd>4</kbd> で解答、<kbd>Enter</kbd> で次へ、<kbd>B</kbd> でブックマーク。結果の画面で <kbd>Enter</kbd> を押すと、同じ条件でもう一度始めます。</li>'
             : '<li>選択肢の右にある <b>✕</b> で、違うと思う選択肢を消せます（もう一度押すと戻ります）。</li><li>キーボード：<kbd>1</kbd>〜<kbd>7</kbd> で選択、<kbd>Enter</kbd> で解答・次へ、<kbd>B</kbd> でブックマーク。</li>'}
           ${isChallenge ? '<li>各選択肢の右の <b>◯ 正しい</b>／<b>✗ 誤り</b> で記述の正誤を判定します。「正しいものを選べ」なら ◯、「誤っているものを選べ」なら ✗ を付けたものが解答です。もう一度押すと判定を取り消せます。</li><li>すべての選択肢の判断が合って初めて正解です。あわせて「6つ中4つの判断が正しい」のような部分点も表示します。</li>' : ''}
           <li>解答すると、すべての選択肢について「なぜ正しいか・なぜ違うか」が表示されます。</li>
@@ -202,13 +228,18 @@ function renderSetup() {
     style: isChallenge ? form.style.value : 'exam',
     level: noLevel ? 'all' : form.level.value,
     count: Number(form.count.value),
+    time: isPlus ? Number(form.time.value) : 0,
+    flow: isPlus ? form.flow.value : 'each',
     domains: [...form.querySelectorAll('input[name=domain]:checked')].map((i) => i.value),
   });
   const update = () => {
     const s = read();
     const n = filterPool(s).length;
     const take = s.count ? Math.min(s.count, n) : n;
-    info.textContent = n ? `条件に合う問題：${n}問（今回 ${take}問を出題）` : '条件に合う問題がありません。条件を変えてください。';
+    document.getElementById('count-set').hidden = s.time > 0;
+    info.textContent = !n ? '条件に合う問題がありません。条件を変えてください。'
+      : s.time ? `条件に合う問題：${n}問（${timeLabel(s.time)}で、できるだけ多く解く）`
+      : `条件に合う問題：${n}問（今回 ${take}問を出題）`;
     startBtn.disabled = n === 0;
   };
   form.addEventListener('change', update);
@@ -236,12 +267,24 @@ function renderSetup() {
 function startWith(s) {
   const pool = shuffle(filterPool(s));
   if (!pool.length) { renderSetup(); return; }
-  startSession(s.count ? pool.slice(0, s.count) : pool);
+  startSession(s.time || !s.count ? pool : pool.slice(0, s.count), s.time, s.flow);
 }
 
-function startSession(list) {
-  session = { list, index: 0, results: [] };
+function startSession(list, time = 0, flow = 'each') {
+  stopTimer();
+  session = { list, index: 0, results: [], time, endsAt: time ? Date.now() + time * 1000 : 0, timeUp: false, flow };
   renderQuestion();
+  if (time) timer = setInterval(tick, 200);
+}
+
+// 制限時間：残り時間を表示し、0 になったら（解説を読んでいる途中でも）結果へ
+function tick() {
+  const left = session.endsAt - Date.now();
+  if (left <= 0) { session.timeUp = true; renderResults(); return; }
+  const t = document.getElementById('timer');
+  if (t) t.textContent = `残り ${fmtLeft(left)}`;
+  const bar = document.querySelector('.q-progress .bar i');
+  if (bar) bar.style.width = `${(left / (session.time * 1000)) * 100}%`;
 }
 
 function renderQuestion() {
@@ -256,10 +299,16 @@ function renderQuestion() {
   app.innerHTML = `
     <section class="question" aria-live="polite">
       <div class="q-top">
-        <div class="q-progress" aria-label="${session.index + 1}問目／全${total}問">
-          <span>${session.index + 1} / ${total}</span>
-          <span class="bar"><i style="width:${(session.index / total) * 100}%"></i></span>
-        </div>
+        ${session.time
+          ? `<div class="q-progress timed">
+              <span id="timer">残り ${fmtLeft(session.endsAt - Date.now())}</span>
+              <span class="bar"><i style="width:${((session.endsAt - Date.now()) / (session.time * 1000)) * 100}%"></i></span>
+              <span>${session.flow === 'batch' ? `解いた ${session.results.length}` : `正解 ${session.results.filter((r) => r.correct).length}`}</span>
+            </div>`
+          : `<div class="q-progress" aria-label="${session.index + 1}問目／全${total}問">
+              <span>${session.index + 1} / ${total}</span>
+              <span class="bar"><i style="width:${(session.index / total) * 100}%"></i></span>
+            </div>`}
         <button class="btn small ghost" id="quit" type="button">終了</button>
       </div>
 
@@ -425,6 +474,11 @@ function renderQuestion() {
     recordAnswer(storeId, q.id, isCorrect);
     const chosen = [...state.selected];
     session.results.push({ q, chosen, correct: isCorrect, order, judged: judgedCount(q, chosen) });
+    if (session.flow === 'batch') { // 最後にまとめて振り返る：正誤を出さずに次の問題へ
+      if (session.index === session.list.length - 1) renderResults();
+      else { session.index += 1; renderQuestion(); }
+      return;
+    }
     showFeedback(q, state, isCorrect);
     refresh();
   };
@@ -494,7 +548,7 @@ function showFeedback(q, state, isCorrect) {
     if (isLast) renderResults();
     else { session.index += 1; renderQuestion(); }
   });
-  document.querySelector('.q-progress .bar i').style.width = `${((session.index + 1) / session.list.length) * 100}%`;
+  if (!session.time) document.querySelector('.q-progress .bar i').style.width = `${((session.index + 1) / session.list.length) * 100}%`;
   if (isPlus) { verdict.scrollIntoView({ block: 'nearest' }); document.getElementById('next').focus({ preventScroll: true }); }
   else if (q.aim) verdict.scrollIntoView({ behavior: 'smooth', block: 'start' });
   else fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -502,6 +556,7 @@ function showFeedback(q, state, isCorrect) {
 
 // ---------- 結果 ----------
 function renderResults() {
+  stopTimer();
   document.onkeydown = null;
   const res = session.results;
   const ok = res.filter((r) => r.correct).length;
@@ -517,15 +572,33 @@ function renderResults() {
   const optTotal = res.reduce((a, r) => a + r.q.options.length, 0);
   const optOk = res.reduce((a, r) => a + r.judged, 0);
 
+  // 制限時間ありの回：時間ごとの自己ベスト（正解数）を更新する
+  let bestHtml = '';
+  if (session.time) {
+    const best = load(`best:${storeId}`, {}) || {};
+    const prev = best[session.time] || 0;
+    if (ok > prev) {
+      best[session.time] = ok;
+      save(`best:${storeId}`, best);
+      bestHtml = `<p class="best-line new">🎉 自己ベスト更新！${prev ? `（これまで ${prev}問）` : ''}</p>`;
+    } else {
+      bestHtml = `<p class="best-line">自己ベスト：${prev}問</p>`;
+    }
+  }
+
   app.innerHTML = `
     <section class="results">
       <h1>結果</h1>
       <div class="card score-card">
-        <div class="score"><b>${ok}</b> / ${res.length} 問正解 <span class="rate ${rate >= 72 ? 'ok' : 'ng'}">${rate}%</span></div>
+        ${session.time
+          ? `<p class="small muted">${session.timeUp ? '⏱ 時間切れ' : '終了'}（制限時間 ${timeLabel(session.time)}）</p>
+             <div class="score"><b>${ok}</b> 問正解 <span class="small muted">（解いた ${res.length}問）</span> <span class="rate ${rate >= 72 ? 'ok' : 'ng'}">${rate}%</span></div>
+             ${bestHtml}`
+          : `<div class="score"><b>${ok}</b> / ${res.length} 問正解 <span class="rate ${rate >= 72 ? 'ok' : 'ng'}">${rate}%</span></div>`}
         ${isChallenge
           ? `<p class="small">選択肢ごとの判断：<b>${optTotal}個中 ${optOk}個</b>が正しい（${optTotal ? Math.round((optOk / optTotal) * 100) : 0}%）</p>
              <p class="small muted">最難関は本番より難しく作っています。完全正解の数より、選択肢ごとの判断の正答率を伸ばすことを目標にしましょう。</p>`
-          : isPlus ? '<p class="small muted">間違えた用語は、解説のリンクから用語集で確認し、「間違えた問題」で解き直しましょう。</p>'
+          : isPlus ? '<p class="small muted">間違えた問題は、解説のリンクから用語集や学習ページで確認し、「間違えた問題」で解き直しましょう。</p>'
           : '<p class="small muted">目安：本番の合格ライン（720/1000）は正答率そのものではありませんが、練習では 7〜8割を安定して取れることを目標にしましょう。</p>'}
         <div class="weights">
           ${Object.entries(byDomain).map(([d, v]) => `<div class="weight-row">
@@ -546,7 +619,7 @@ function renderResults() {
       <h2>解いた問題の振り返り</h2>
       <ol class="review-list">
         ${res.map((r, i) => `<li class="card review-item ${r.correct ? 'ok' : 'ng'}">
-            <details>
+            <details ${session.flow === 'batch' && !r.correct ? 'open' : ''}>
               <summary><span class="mark">${r.correct ? '◯' : '✕'}</span> <span class="badge">${escapeHtml(domainName(r.q.domain))}</span> ${escapeHtml(r.q.stem.split('\n')[0].slice(0, 80))}${r.q.stem.length > 80 ? '…' : ''}</summary>
               <div class="review-body">
                 <div class="q-stem">${richText(r.q.stem)}</div>
@@ -574,7 +647,7 @@ function renderResults() {
 
   document.getElementById('again').addEventListener('click', renderSetup);
   const rw = document.getElementById('retry-wrong');
-  if (rw) rw.addEventListener('click', () => startSession(shuffle(wrong.map((r) => r.q))));
+  if (rw) rw.addEventListener('click', () => startSession(shuffle(wrong.map((r) => r.q)), 0, session.flow));
   const same = document.getElementById('same');
   if (same) {
     same.addEventListener('click', () => startWith(load(`settings:${storeId}`, null) || { mode: 'all', level: 'all', count: 10, domains: exam.domains.map((d) => d.id) }));

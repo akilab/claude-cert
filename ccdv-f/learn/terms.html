@@ -507,12 +507,164 @@ print(f"正解率 {ok}/{len(cases)}")</code></pre>
 <p>一定時間に送れるリクエスト数やトークン数の上限。超えると 429 が返る。</p>
 </div>
 
+<h2 id="code">Claude Code の用語</h2>
+<p>Claude Code は、ターミナルで動く開発用のエージェントです。試験の配点は小さいですが、設定やフックは構成管理やセキュリティの問題にも出てきます。ふだんの開発でもそのまま使える知識です。章の解説は <a href="code-eval.html">Claude Code と評価・デバッグ</a> にあります。</p>
+
+<div class="term" id="t-cc-memory">
+<h3>CLAUDE.md の階層 <small>memory</small></h3>
+<p>Claude Code が<b>起動時に読む決まり</b>を書くファイル。置く場所で、効く範囲が変わる。</p>
+<div class="table-wrap"><table>
+<tr><th>種類</th><th>場所</th><th>効く範囲</th></tr>
+<tr><td>組織</td><td>管理者が配布する場所</td><td>組織全体。利用者は外せない</td></tr>
+<tr><td>ユーザー</td><td><code>~/.claude/CLAUDE.md</code></td><td>自分のすべてのプロジェクト</td></tr>
+<tr><td>プロジェクト</td><td><code>./CLAUDE.md</code> または <code>./.claude/CLAUDE.md</code></td><td>チームで共有（Git に入れる）</td></tr>
+<tr><td>ローカル</td><td><code>./CLAUDE.local.md</code></td><td>自分だけ（.gitignore に入れる）</td></tr>
+</table></div>
+<ul>
+<li>複数ある場合は<b>上書きではなく、つなげて</b>読み込まれる。サブディレクトリの CLAUDE.md は、そのディレクトリのファイルを扱ったときに読み込まれる。</li>
+<li><code>/init</code> でコードベースを調べてたたき台を作れる。<code>/memory</code> で編集できる。<code>@path/to/file</code> で別のファイルを取り込める。</li>
+<li>CLAUDE.md は<b>指示であって強制ではない</b>。必ず守らせたいことは、権限の deny ルールやフックで行う。</li>
+</ul>
+</div>
+
+<div class="term" id="t-cc-settings">
+<h3>settings.json と優先順位 <small>settings</small></h3>
+<p>権限・フック・環境変数・モデルなど、<b>動作の設定</b>を書くファイル。強い順に次のとおり。</p>
+<p><b>組織の管理設定 ＞ コマンドラインの引数 ＞ ローカル（<code>.claude/settings.local.json</code>）＞ プロジェクト（<code>.claude/settings.json</code>）＞ ユーザー（<code>~/.claude/settings.json</code>）</b></p>
+<p><code>.claude/settings.json</code> はチームで共有するので Git に入れる。<code>.claude/settings.local.json</code> は自分だけの設定で、Git には入れない。</p>
+</div>
+
+<div class="term" id="t-cc-permissions">
+<h3>権限のルール <small>permissions: allow / ask / deny</small></h3>
+<p>どのツールを<b>確認なしで使わせるか（allow）、毎回確認するか（ask）、使わせないか（deny）</b>を決めるルール。</p>
+<pre><code>{
+  "permissions": {
+    "allow": ["Bash(npm run test *)"],
+    "deny":  ["Read(./.env)", "Bash(git push *)"]
+  }
+}</code></pre>
+<ul>
+<li>判定の順は <b>deny → ask → allow</b>。<b>deny がいつも優先</b>し、allow で deny の例外は作れない。</li>
+<li>各スコープの allow・ask・deny は<b>合算</b>される（強いほうの設定で消えるわけではない）。</li>
+<li><code>Bash(npm run test *)</code> は前方一致、<code>Bash(npm run build)</code> は完全一致。MCP のツールは <code>mcp__サーバー名__*</code> のように書く。</li>
+</ul>
+</div>
+
+<div class="term" id="t-cc-modes">
+<h3>権限モード <small>permission modes</small></h3>
+<div class="table-wrap"><table>
+<tr><th>モード</th><th>動き</th></tr>
+<tr><td>default</td><td>操作のたびに必要に応じて確認する（画面では Manual と表示）</td></tr>
+<tr><td>acceptEdits</td><td>ファイルの編集は確認なしで行う</td></tr>
+<tr><td>plan</td><td>読み取り中心で調べて、計画を立てる。変更はしない</td></tr>
+<tr><td>auto</td><td>確認を出す代わりに、別の分類用のモデルが実行前に操作を審査する</td></tr>
+<tr><td>dontAsk</td><td>確認が必要な操作は、聞かずに拒否する</td></tr>
+<tr><td>bypassPermissions</td><td>確認をすべて省く。<b>隔離された環境でだけ</b>使う</td></tr>
+</table></div>
+<p>対話中は <kbd>Shift</kbd>＋<kbd>Tab</kbd> でモードを切り替えられる。</p>
+</div>
+
+<div class="term" id="t-cc-hooks">
+<h3>フック <small>hooks</small></h3>
+<p>「ツールを使う前」「使った後」などの<b>決まったタイミングで、必ず実行される処理</b>。モデルの判断に関係なく動くので、「確実に止めたい」「必ず整形したい」に向く。</p>
+<ul>
+<li>主なイベント：<b>PreToolUse</b>（ツールの実行前）、<b>PostToolUse</b>（実行後）、UserPromptSubmit（依頼の送信時）、SessionStart、Stop など。</li>
+<li>matcher で対象のツールを絞る（例：<code>Edit|Write</code>）。</li>
+<li>PreToolUse でツールを止めるには、<b>終了コード 2</b>（理由は標準エラーに書く）を返す。</li>
+<li>例：PostToolUse で、ファイルを編集するたびにフォーマッタを実行する。PreToolUse で <code>rm -rf</code> を含むコマンドを止める。</li>
+</ul>
+</div>
+
+<div class="term" id="t-cc-skills">
+<h3>スキルとカスタムコマンド <small>skills / slash commands</small></h3>
+<p><b>スキル</b>は、手順や書式などの「やり方」をまとめたもの。<code>.claude/skills/<i>名前</i>/SKILL.md</code>（個人用は <code>~/.claude/skills/</code>）に置く。</p>
+<ul>
+<li><b>段階的に読み込まれる</b>：名前と説明だけがいつも一覧に載り、本文は使うときに、補助のファイルは本文が参照したときだけ読まれる。だからたくさん置いてもコンテキストを圧迫しにくい。</li>
+<li><code>/名前</code> で呼び出せる。引数は <code>$ARGUMENTS</code> で受け取る。</li>
+<li>カスタムコマンド（<code>.claude/commands/deploy.md</code> → <code>/deploy</code>）は今も動くが、<b>スキルに統合</b>された。新しく作るならスキル。</li>
+</ul>
+</div>
+
+<div class="term" id="t-cc-subagents">
+<h3>サブエージェント <small>subagents</small></h3>
+<p>役割と使えるツールを絞った<b>子のエージェント</b>。<code>.claude/agents/</code>（個人用は <code>~/.claude/agents/</code>）に、<code>name</code> と <code>description</code> を書いたファイルを置く。</p>
+<ul>
+<li>それぞれ<b>独自の新しいコンテキスト</b>で動き、親には最後の要約だけが返る。大量のファイルを読む調査を任せると、親の会話が散らからない。</li>
+<li><code>tools</code> を省くと親のツールをすべて受け継ぐ。読むだけの役なら、読み取りのツールだけに絞る。</li>
+<li>組み込みの例：Explore（読み取り専用の検索）、Plan、general-purpose。<code>/agents</code> で管理する。</li>
+</ul>
+</div>
+
+<div class="term" id="t-cc-session">
+<h3>会話の管理 <small>/clear・/compact・/context・--continue・--resume</small></h3>
+<div class="table-wrap"><table>
+<tr><th>操作</th><th>何が起きるか</th><th>使う場面</th></tr>
+<tr><td><code>/clear</code></td><td>会話を空にする。CLAUDE.md は残る</td><td>別の作業を始めるとき</td></tr>
+<tr><td><code>/compact [指示]</code></td><td>会話を要約して、コンテキストを空ける</td><td>同じ作業を続けたいが、会話が長くなったとき</td></tr>
+<tr><td><code>/context</code></td><td>コンテキストの使われ方を表示する</td><td>何が場所を取っているか知りたいとき</td></tr>
+<tr><td><code>claude --continue</code>（<code>-c</code>）</td><td>いちばん新しい会話を再開する</td><td>昨日の続きから始めるとき</td></tr>
+<tr><td><code>claude --resume</code>（<code>-r</code>）</td><td>一覧や ID から会話を選んで再開する</td><td>前の別の会話に戻るとき</td></tr>
+</table></div>
+</div>
+
+<div class="term" id="t-cc-rewind">
+<h3>チェックポイントと巻き戻し <small>checkpoints / /rewind</small></h3>
+<p>Claude Code は、依頼を送るたびに自動で<b>チェックポイント</b>を作る。<code>/rewind</code>、または入力が空のときに <kbd>Esc</kbd> を2回押すと、前の時点に戻せる。</p>
+<ul>
+<li>戻せるもの：<b>コードと会話の両方／会話だけ／コードだけ</b>から選べる。</li>
+<li><b>Bash のコマンドだけで変えたファイルは戻らない</b>（例：コマンドで消したファイル）。サブエージェントの編集も基本的に戻らない。</li>
+<li>その場ですぐ戻すための仕組みで、<b>Git の代わりにはならない</b>。履歴の保存と共有は Git で行う。</li>
+</ul>
+</div>
+
+<div class="term" id="t-cc-keys">
+<h3>よく使う操作 <small>shortcuts / prefixes</small></h3>
+<div class="table-wrap"><table>
+<tr><th>操作</th><th>何が起きるか</th></tr>
+<tr><td><kbd>Esc</kbd></td><td>作業を途中で止める。そこまでの作業は残る。確認の画面では「拒否」</td></tr>
+<tr><td><kbd>Esc</kbd> を2回</td><td>入力が空なら巻き戻しのメニューを開く</td></tr>
+<tr><td><kbd>Shift</kbd>＋<kbd>Tab</kbd></td><td>権限モードを切り替える</td></tr>
+<tr><td><kbd>Ctrl</kbd>＋<kbd>C</kbd></td><td>実行中の処理を止める。何も動いていなければ、2回で終了</td></tr>
+<tr><td><code>\</code>＋<kbd>Enter</kbd>、<kbd>Ctrl</kbd>＋<kbd>J</kbd></td><td>改行（複数行の入力）。どのターミナルでも使える</td></tr>
+<tr><td><code>@</code></td><td>ファイルのパスを補完して、ファイルを指定する</td></tr>
+<tr><td><code>!</code>（先頭）</td><td>シェルのモード。コマンドを直接実行し、その出力を会話に入れる</td></tr>
+<tr><td><code>/</code>（先頭）</td><td>コマンドやスキルを呼び出す</td></tr>
+</table></div>
+</div>
+
+<div class="term" id="t-cc-headless">
+<h3>ヘッドレスモード <small>headless / print mode</small></h3>
+<p>対話画面を使わず、<b>1回の指示で実行して結果を出力する</b>使い方。CI やスクリプトからの自動化に使う。</p>
+<pre><code>claude -p "この差分を要約して" --output-format json --allowedTools "Read"</code></pre>
+<ul>
+<li><code>--output-format</code>：<code>text</code>（既定）・<code>json</code>（結果・セッション ID・費用を含む）・<code>stream-json</code>。</li>
+<li><code>--allowedTools</code> で確認なしに使えるツールを絞る。<code>--max-turns</code> で繰り返しの回数に上限を付ける。</li>
+</ul>
+</div>
+
+<div class="term" id="t-cc-mcp">
+<h3>MCP サーバーをつなぐ <small>claude mcp add</small></h3>
+<pre><code>claude mcp add --transport http notion https://mcp.notion.com/mcp
+claude mcp add --transport stdio mytool -- npx -y my-mcp-server</code></pre>
+<ul>
+<li>リモートのサーバーは <code>http</code>（推奨）、ローカルで起動するサーバーは <code>stdio</code>。<code>--</code> の後ろがサーバーを起動するコマンド。</li>
+<li>スコープ：<b>local</b>（既定。自分のこのプロジェクトだけ）、<b>project</b>（プロジェクトの <code>.mcp.json</code> に書かれ、チームで共有）、<b>user</b>（自分のすべてのプロジェクト）。</li>
+<li>Claude Code の中で <code>/mcp</code> を使うと、サーバーの状態の確認や認証ができる。</li>
+</ul>
+</div>
+
+<div class="term" id="t-cc-plugins">
+<h3>プラグイン <small>plugins</small></h3>
+<p>スキル・サブエージェント・フック・MCP サーバーなどを<b>ひとまとめにして配る</b>仕組み。<code>/plugin</code> でマーケットプレイスから入れる。プラグインのスキルは <code>/プラグイン名:スキル名</code> で呼ぶ。チームで同じ道具をそろえたいときに使う。</p>
+</div>
+
 <div class="key-points"><h3>この章のまとめ</h3><ul>
 <li>計装（データを出す仕込み）→ テレメトリ（ログ・メトリクス・トレース）→ 監視と調査。中が見える性質がオブザーバビリティ。</li>
 <li>デプロイメントは「本番で利用者に使わせること」全体や「どこで動かすか」まで含む広い言葉。</li>
 <li>LLM の出力はぶれるので、テストセットで<b>割合や点数</b>を測る評価が必要。採点はできるだけ自動で。</li>
 <li>適合率は誤検知の少なさ、再現率は見逃しの少なさ。</li>
 <li>敵対的テストは悪意のある入力で安全性を確かめる。回帰テストは前にできたことが壊れていないかを確かめる。</li>
+<li>Claude Code：決まりは CLAUDE.md（強制ではない）、必ず守らせるのは deny ルールとフック。deny が常に優先。</li>
 </ul></div>
 
     <div class="page-nav">

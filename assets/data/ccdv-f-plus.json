@@ -2686,5 +2686,3653 @@
   ],
   "point": "コンテキストウィンドウ＝入力＋出力の上限。モデルは前の会話を覚えていない。",
   "learn": "ccdv-f/learn/terms.html#t-context-window"
+ },
+ {
+  "id": "plus-flow-001",
+  "domain": "app",
+  "skill": "Systems Life Cycle",
+  "level": 1,
+  "type": "single",
+  "stem": "開発の最初に行う「ディスカバリー」の説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "誰が何にどれくらい困っているかを聞き、本当の課題を見つける",
+    "correct": true,
+    "why": "ディスカバリーは「発見」。依頼の奥にある本当の課題を見つける、開発の最初の段階です。"
+   },
+   {
+    "text": "要件を満たすように、部品のつなぎ方と使うモデルを決める",
+    "correct": false,
+    "why": "それは③設計です。"
+   },
+   {
+    "text": "一部の利用者から出して、問題がなければ範囲を広げていく",
+    "correct": false,
+    "why": "それは⑦デプロイメント（カナリアリリース）です。"
+   },
+   {
+    "text": "本番の出力を見張り、品質が下がっていないかを確かめる",
+    "correct": false,
+    "why": "それは⑧運用・改善の監視です。"
+   }
+  ],
+  "point": "ディスカバリー＝本当の課題を見つける最初の段階。",
+  "learn": "ccdv-f/learn/flow.html#discovery"
+ },
+ {
+  "id": "plus-flow-002",
+  "domain": "app",
+  "skill": "Understanding Requirements",
+  "level": 1,
+  "type": "single",
+  "stem": "サポート部長から「チャットボットを作ってほしい」と依頼されました。最初にすることとして、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "なぜ必要かを聞き、その奥にある困りごとを確かめる",
+    "correct": true,
+    "why": "依頼は「解決策」の形で来ることが多いので、「なぜ？」で本当の課題を確かめます。例では本当の課題は「メールの振り分け」でした。"
+   },
+   {
+    "text": "すぐにチャットボットの試作品を作って見せる",
+    "correct": false,
+    "why": "課題を確かめずに作ると、本当の課題とずれて作り直しになりがちです。"
+   },
+   {
+    "text": "いちばん高性能なモデルで作ることを先に決める",
+    "correct": false,
+    "why": "モデルは要件が決まってから、評価して選びます。"
+   },
+   {
+    "text": "評価データを集めて、プロンプトを書き始める",
+    "correct": false,
+    "why": "何を解くかが決まらないと、評価データも合格の基準も決まりません。"
+   }
+  ],
+  "point": "依頼は解決策の形で来る。まず「なぜ？」で本当の課題を確かめる。",
+  "learn": "ccdv-f/learn/flow.html#discovery"
+ },
+ {
+  "id": "plus-flow-003",
+  "domain": "app",
+  "skill": "Understanding Requirements",
+  "level": 1,
+  "type": "single",
+  "stem": "問い合わせメールの振り分けアプリの要件のうち、機能要件にあたるものはどれですか。",
+  "options": [
+   {
+    "text": "メールを5種類に分類し、担当の窓口のキューに入れる",
+    "correct": true,
+    "why": "「何をするか」を書いたものなので機能要件です。"
+   },
+   {
+    "text": "1件のメールを、受け取ってから5秒以内に処理する",
+    "correct": false,
+    "why": "「どのように（速さ）」なので非機能要件です。"
+   },
+   {
+    "text": "評価データ300件で、正答率95%以上を出す",
+    "correct": false,
+    "why": "「どのように（品質）」なので非機能要件です。"
+   },
+   {
+    "text": "1件あたりの費用を、平均3円以下に抑える",
+    "correct": false,
+    "why": "「どのように（費用）」なので非機能要件です。"
+   }
+  ],
+  "point": "機能要件＝何をするか。非機能要件＝どのように（速さ・品質・費用・安全）。",
+  "learn": "ccdv-f/learn/flow.html#requirements"
+ },
+ {
+  "id": "plus-flow-004",
+  "domain": "app",
+  "skill": "Understanding Requirements",
+  "level": 1,
+  "type": "single",
+  "stem": "次のうち、非機能要件にあたるものはどれですか。",
+  "options": [
+   {
+    "text": "メールの本文を社外のログに残さない",
+    "correct": true,
+    "why": "「どのように（安全）」を決めたものなので非機能要件です。"
+   },
+   {
+    "text": "判断できないメールは人の確認に回す",
+    "correct": false,
+    "why": "アプリが「何をするか」なので機能要件です。"
+   },
+   {
+    "text": "分類に応じて、担当の窓口のキューに入れる",
+    "correct": false,
+    "why": "アプリが「何をするか」なので機能要件です。"
+   },
+   {
+    "text": "メールを「配送」「返品」などに分類する",
+    "correct": false,
+    "why": "アプリが「何をするか」なので機能要件です。"
+   }
+  ],
+  "point": "速さ・品質・費用・安全（セキュリティ）・止まらないこと（可用性）は非機能要件。",
+  "learn": "ccdv-f/learn/flow.html#requirements"
+ },
+ {
+  "id": "plus-flow-005",
+  "domain": "app",
+  "skill": "Understanding Requirements",
+  "level": 1,
+  "type": "single",
+  "stem": "機能要件と非機能要件の違いとして、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "機能要件は「何をするか」、非機能要件は「どのようにするか」",
+    "correct": true,
+    "why": "非機能要件は、速さ・品質・費用・安全など「どのように」を決めます。"
+   },
+   {
+    "text": "機能要件は利用者が決め、非機能要件は開発者が決める",
+    "correct": false,
+    "why": "誰が決めるかで分けるのではありません。どちらも関係者と合意して決めます。"
+   },
+   {
+    "text": "機能要件は必須で、非機能要件はあればよい希望",
+    "correct": false,
+    "why": "非機能要件も必須です。モデルや構成を選ぶ根拠になります。"
+   },
+   {
+    "text": "機能要件は設計の後に、非機能要件はテストの後に決める",
+    "correct": false,
+    "why": "どちらも②要件定義で、設計の前に決めます。"
+   }
+  ],
+  "point": "機能＝何を、非機能＝どのように。どちらも設計の前に決める。",
+  "learn": "ccdv-f/learn/flow.html#requirements"
+ },
+ {
+  "id": "plus-flow-006",
+  "domain": "app",
+  "skill": "Understanding Requirements",
+  "level": 1,
+  "type": "single",
+  "stem": "「お客様を待たせたくない」という要望を要件に書き直したものとして、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "最初の文字が表示されるまで2秒以内",
+    "correct": true,
+    "why": "数字で測れるので、できたかどうかを判定できます。"
+   },
+   {
+    "text": "どんなときも、できるだけ速く応答すること",
+    "correct": false,
+    "why": "「できるだけ」では、完成したかどうかを判定できません。"
+   },
+   {
+    "text": "最も高性能なモデルを使って応答すること",
+    "correct": false,
+    "why": "手段であって要件ではありません。高性能なモデルは遅いこともあります。"
+   },
+   {
+    "text": "利用者が遅いと感じないように応答すること",
+    "correct": false,
+    "why": "感じ方は人によって違い、測れません。"
+   }
+  ],
+  "point": "要件は数字で測れる形に。「速く」「なるべく」は要件として不十分。",
+  "learn": "ccdv-f/learn/app.html#requirements"
+ },
+ {
+  "id": "plus-flow-007",
+  "domain": "app",
+  "skill": "Understanding Requirements",
+  "level": 1,
+  "type": "single",
+  "stem": "予算は月3万円、問い合わせは1日300件（月30日）です。1件あたりの費用の上限は、およそいくらですか。",
+  "options": [
+   {
+    "text": "約3円",
+    "correct": true,
+    "why": "3万円 ÷（300件 × 30日 ＝ 9,000件）≒ 3.3円なので、約3円です。"
+   },
+   {
+    "text": "約30円",
+    "correct": false,
+    "why": "1日あたりの件数（300件）だけで割ると、およそこの値になります。月の件数で割ります。"
+   },
+   {
+    "text": "約100円",
+    "correct": false,
+    "why": "1日の予算（3万円 ÷ 30日 ＝ 1,000円）を、10件で割った値に近く、計算が合いません。"
+   },
+   {
+    "text": "約0.3円",
+    "correct": false,
+    "why": "桁が1つ小さすぎます。"
+   }
+  ],
+  "point": "月の予算 ÷ 月の件数 ＝ 1件あたりの上限。これがモデル選びの根拠になる。",
+  "learn": "ccdv-f/learn/flow.html#requirements"
+ },
+ {
+  "id": "plus-flow-008",
+  "domain": "app",
+  "skill": "Understanding Requirements",
+  "level": 1,
+  "type": "single",
+  "stem": "ディスカバリーで特に大事な2つの確認事項として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "成功の指標と、使えるデータ",
+    "correct": true,
+    "why": "成功の指標は評価の合格基準に、データは評価データの材料になります。"
+   },
+   {
+    "text": "使うモデルの名前と、プロンプトの文面",
+    "correct": false,
+    "why": "どちらも設計・実装で決めることです。"
+   },
+   {
+    "text": "本番のサーバーの台数と、公開の日付",
+    "correct": false,
+    "why": "どちらも後の段階で決めることです。"
+   },
+   {
+    "text": "画面のデザインと、ボタンの配置",
+    "correct": false,
+    "why": "ディスカバリーでは、まず課題と成功の指標を確かめます。"
+   }
+  ],
+  "point": "成功の指標 → 評価の合格基準。データ → 評価データ。",
+  "learn": "ccdv-f/learn/flow.html#discovery"
+ },
+ {
+  "id": "plus-flow-009",
+  "domain": "app",
+  "skill": "Understanding Requirements",
+  "level": 1,
+  "type": "single",
+  "stem": "次のうち、LLM を使わずにふつうのプログラムで処理したほうがよいものはどれですか。",
+  "options": [
+   {
+    "text": "注文番号が「A-12345」の形式になっているかの確認",
+    "correct": true,
+    "why": "決まった形のチェックは、正規表現などのコードで確実・高速・安価にできます。"
+   },
+   {
+    "text": "書き方が人によってばらばらな、問い合わせの分類",
+    "correct": false,
+    "why": "文の意味を読む必要があるので、LLM が向いています。"
+   },
+   {
+    "text": "長い会議の記録から、決まったことをまとめる要約",
+    "correct": false,
+    "why": "文章の内容を理解する必要があるので、LLM が向いています。"
+   },
+   {
+    "text": "自由に書かれた感想から、よい点と悪い点を整理",
+    "correct": false,
+    "why": "書き方がばらばらで、ルールでは扱いにくいので LLM が向いています。"
+   }
+  ],
+  "point": "決まったルールで判定できることはコードで。意味を読む必要があるときに LLM。",
+  "learn": "ccdv-f/learn/flow.html#discovery"
+ },
+ {
+  "id": "plus-flow-010",
+  "domain": "app",
+  "skill": "Systems Life Cycle",
+  "level": 1,
+  "type": "single",
+  "stem": "評価の準備（成功基準と評価データを用意すること）を行うタイミングとして、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "実装を始める前",
+    "correct": true,
+    "why": "先に合格の基準とデータを作り、作ったら評価で磨きます。Anthropic のドキュメントもこの順番です。"
+   },
+   {
+    "text": "実装とテストが終わった後",
+    "correct": false,
+    "why": "後から作ると、何を目指して作ったのかが決まらず、改善したかも判断できません。"
+   },
+   {
+    "text": "本番に出して、苦情が来た後",
+    "correct": false,
+    "why": "本番の失敗は評価データに足しますが、評価そのものは出す前から始めます。"
+   },
+   {
+    "text": "プロンプトが完成した後",
+    "correct": false,
+    "why": "プロンプトは評価しながら磨くものなので、評価の準備はその前です。"
+   }
+  ],
+  "point": "評価の準備は実装より先。",
+  "learn": "ccdv-f/learn/flow.html#eval-prep"
+ },
+ {
+  "id": "plus-flow-011",
+  "domain": "app",
+  "skill": "Systems Life Cycle",
+  "level": 1,
+  "type": "single",
+  "stem": "プロンプトを改善するとき、一度に1か所だけ変えて評価する主な理由はどれですか。",
+  "options": [
+   {
+    "text": "どの変更が結果に効いたかが分かるから",
+    "correct": true,
+    "why": "まとめて変えると、良くなっても悪くなっても、原因の変更が分かりません。"
+   },
+   {
+    "text": "API の料金が、変更1か所ごとに請求されるから",
+    "correct": false,
+    "why": "料金はトークン数で決まり、変更の数とは関係ありません。"
+   },
+   {
+    "text": "複数を変えると、プロンプトが無効になるから",
+    "correct": false,
+    "why": "何か所変えてもプロンプトは使えます。"
+   },
+   {
+    "text": "変更のたびに評価データを作り直す必要があるから",
+    "correct": false,
+    "why": "評価データは同じものを使い続けて比べます。"
+   }
+  ],
+  "point": "一度に1か所だけ変える。プロンプトは版で管理し、版ごとの点数を残す。",
+  "learn": "ccdv-f/learn/flow.html#build"
+ },
+ {
+  "id": "plus-flow-012",
+  "domain": "app",
+  "skill": "Systems Life Cycle",
+  "level": 1,
+  "type": "single",
+  "stem": "テストと評価の違いとして、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "テストはプログラムの動き、評価は出力の質を確かめる",
+    "correct": true,
+    "why": "テストは「決めたとおりに動くか」、評価は「出力の質」を割合で測ります。"
+   },
+   {
+    "text": "テストは本番に出した後、評価は本番に出す前に行う",
+    "correct": false,
+    "why": "どちらも出す前に行います。評価は出した後も続けます。"
+   },
+   {
+    "text": "テストは人が、評価は必ず LLM が採点する",
+    "correct": false,
+    "why": "評価の採点はコード・LLM・人の3つの方法があります。"
+   },
+   {
+    "text": "テストと評価は同じ意味で、呼び方が違うだけ",
+    "correct": false,
+    "why": "目的が違います。出力がぶれる LLM の部分は、評価で割合を測ります。"
+   }
+  ],
+  "point": "テスト＝プログラムが決めたとおりに動くか。評価＝LLM の出力の質。",
+  "learn": "ccdv-f/learn/flow.html#test"
+ },
+ {
+  "id": "plus-flow-013",
+  "domain": "app",
+  "skill": "Systems Life Cycle",
+  "level": 1,
+  "type": "single",
+  "stem": "開発の流れの順番として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "ディスカバリー → 要件定義 → 設計 → 評価の準備 → 実装",
+    "correct": true,
+    "why": "課題を見つけ、測れる要件にし、設計して、合格の基準とデータを作ってから実装します。"
+   },
+   {
+    "text": "設計 → 実装 → ディスカバリー → 要件定義 → 評価の準備",
+    "correct": false,
+    "why": "作ってから課題を確かめると、作り直しになりがちです。"
+   },
+   {
+    "text": "要件定義 → 実装 → 評価の準備 → 設計 → ディスカバリー",
+    "correct": false,
+    "why": "課題が分からないと、要件を決められません。"
+   },
+   {
+    "text": "実装 → 評価の準備 → 設計 → 要件定義 → ディスカバリー",
+    "correct": false,
+    "why": "逆の順番です。まず課題を見つけます。"
+   }
+  ],
+  "point": "①ディスカバリー → ②要件 → ③設計 → ④評価の準備 → ⑤実装 → ⑥テスト → ⑦デプロイ → ⑧運用。",
+  "learn": "ccdv-f/learn/flow.html#overview"
+ },
+ {
+  "id": "plus-flow-014",
+  "domain": "app",
+  "skill": "Systems Life Cycle",
+  "level": 1,
+  "type": "single",
+  "stem": "コードを1行も変えていないのに、本番での分類の正答率が下がってきました。考えられる理由として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "利用者の書き方や問い合わせの種類が変わってきた",
+    "correct": true,
+    "why": "LLM のアプリは、入力の変化やモデルの更新で、コードを変えなくても品質が変わります。"
+   },
+   {
+    "text": "プログラムのファイルが、時間とともに古くなった",
+    "correct": false,
+    "why": "ファイルは時間がたっても中身は変わりません。"
+   },
+   {
+    "text": "評価データの件数が、自然に少しずつ減っていった",
+    "correct": false,
+    "why": "評価データは消さない限り減りません。"
+   },
+   {
+    "text": "API キーの有効期限が近づいてきた",
+    "correct": false,
+    "why": "キーが無効になればエラー（401）になり、正答率が少しずつ下がることはありません。"
+   }
+  ],
+  "point": "LLM のアプリは出した後も見張る。エラー率だけでは品質の低下に気づけない。",
+  "learn": "ccdv-f/learn/flow.html#operate"
+ },
+ {
+  "id": "plus-flow-015",
+  "domain": "app",
+  "skill": "Systems Life Cycle",
+  "level": 1,
+  "type": "single",
+  "stem": "振り分け先に、新しい窓口「定期便」が加わりました。最も適切な対応はどれですか。",
+  "options": [
+   {
+    "text": "分類の種類が変わるので、要件と評価データから見直す",
+    "correct": true,
+    "why": "大きな変化は①②から考え直し、新しい種類の例を評価データに足して評価します。"
+   },
+   {
+    "text": "プロンプトに「定期便」と足して、すぐ全員に出す",
+    "correct": false,
+    "why": "評価せずに全員に出すと、ほかの分類が壊れても気づけません。"
+   },
+   {
+    "text": "今の評価データのまま、もう一度評価して出す",
+    "correct": false,
+    "why": "今のデータには「定期便」の例がないので、新しい分類を測れません。"
+   },
+   {
+    "text": "定期便に関するメールは、すべて受け付けないことにする",
+    "correct": false,
+    "why": "課題の解決になりません。"
+   }
+  ],
+  "point": "分類の種類が変わるような大きな変化は、①②から考え直す。",
+  "learn": "ccdv-f/learn/flow.html#operate"
+ },
+ {
+  "id": "plus-flow-016",
+  "domain": "app",
+  "skill": "Systems Life Cycle",
+  "level": 1,
+  "type": "single",
+  "stem": "ディスカバリーで決めた「成功の指標」は、④評価の準備で何として使われますか。",
+  "options": [
+   {
+    "text": "評価の合格の基準（成功基準）",
+    "correct": true,
+    "why": "成功の指標を測れる形にしたものが、そのまま評価の成功基準になります。"
+   },
+   {
+    "text": "評価データの、入力の文章",
+    "correct": false,
+    "why": "入力の文章は、過去のメールなどのデータから作ります。"
+   },
+   {
+    "text": "プロンプトの最初の1文",
+    "correct": false,
+    "why": "成功の指標はプロンプトに書くものではありません。"
+   },
+   {
+    "text": "テストで使う、モックの応答",
+    "correct": false,
+    "why": "モックは単体テストで Claude の代わりに使う偽物の応答です。"
+   }
+  ],
+  "point": "成功の指標は、要件 → 評価の基準 → リリースの判定 → 監視の数字と、最後まで使われる。",
+  "learn": "ccdv-f/learn/flow.html#thread"
+ },
+ {
+  "id": "plus-design-001",
+  "domain": "agents",
+  "skill": "Agent Architecture",
+  "level": 1,
+  "type": "single",
+  "stem": "問い合わせメールを「前処理 → 分類 → 検証 → 窓口へ」と、毎回同じ順番で処理します。構成として最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "決まった順番で処理するワークフロー",
+    "correct": true,
+    "why": "手順が毎回同じなら、予測しやすくテストしやすいワークフローで足ります。"
+   },
+   {
+    "text": "次の一手を毎回 LLM が決めるエージェント",
+    "correct": false,
+    "why": "手順が決まっているのに LLM に決めさせると、遅く・高く・予測しにくくなります。"
+   },
+   {
+    "text": "複数のエージェントが話し合って進める構成",
+    "correct": false,
+    "why": "単純な処理には複雑すぎます。"
+   },
+   {
+    "text": "利用者と会話しながら進めるチャットボット",
+    "correct": false,
+    "why": "振り分けに会話は必要ありません。"
+   }
+  ],
+  "point": "手順が決まっていればワークフロー。手順を決められないときにエージェント。",
+  "learn": "ccdv-f/learn/agents.html#architecture"
+ },
+ {
+  "id": "plus-design-002",
+  "domain": "agents",
+  "skill": "Agent Architecture",
+  "level": 1,
+  "type": "single",
+  "stem": "エージェントを選ぶのが適しているのは、次のうちどれですか。",
+  "options": [
+   {
+    "text": "障害の原因調査など、調べる順番が結果で変わる作業",
+    "correct": true,
+    "why": "次に何をするかが途中の結果しだいで変わるので、LLM に次の一手を決めさせるエージェントが向いています。"
+   },
+   {
+    "text": "請求書から金額を取り出し、検算して登録する作業",
+    "correct": false,
+    "why": "手順が決まっているので、ワークフローが向いています。"
+   },
+   {
+    "text": "決まった形式の日報を、毎朝同じ手順で集計する作業",
+    "correct": false,
+    "why": "手順が毎回同じなので、ワークフロー（またはふつうのプログラム）が向いています。"
+   },
+   {
+    "text": "1通のメールを、5種類のどれかに分類する作業",
+    "correct": false,
+    "why": "1回の呼び出しで足ります。"
+   }
+  ],
+  "point": "エージェントは「手順を前もって決められない」作業に。",
+  "learn": "ccdv-f/learn/agents.html#architecture"
+ },
+ {
+  "id": "plus-design-003",
+  "domain": "agents",
+  "skill": "Agent Architecture",
+  "level": 1,
+  "type": "single",
+  "stem": "構成を選ぶときの原則として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "要件を満たす、いちばん単純な構成から始める",
+    "correct": true,
+    "why": "Anthropic も「最も単純な方法から」を勧めています。必要になったときだけ複雑にします。"
+   },
+   {
+    "text": "後で困らないよう、最初から自律的なエージェントにする",
+    "correct": false,
+    "why": "遅く、高く、予測しにくくなります。よくある間違いです。"
+   },
+   {
+    "text": "性能を上げるため、できるだけ多くのツールを持たせる",
+    "correct": false,
+    "why": "ツールが多いと選び間違いが増え、権限も広がります。必要なものだけにします。"
+   },
+   {
+    "text": "将来の変更に備えて、すべての処理を LLM に任せる",
+    "correct": false,
+    "why": "確実にしたい処理（形の確認など）はコードで行います。"
+   }
+  ],
+  "point": "いちばん単純な構成から。必要なときだけパターンやエージェントを足す。",
+  "learn": "ccdv-f/learn/agents.html#architecture"
+ },
+ {
+  "id": "plus-design-004",
+  "domain": "app",
+  "skill": "Claude Application Design",
+  "level": 1,
+  "type": "single",
+  "stem": "分類の結果が、決めた5種類のどれかになっているかの確認は、どこで行うのが最も適切ですか。",
+  "options": [
+   {
+    "text": "ふつうのコードで確認する",
+    "correct": true,
+    "why": "決まった形のチェックはコードで確実に行えます。"
+   },
+   {
+    "text": "もう一度 Claude に聞いて確認する",
+    "correct": false,
+    "why": "LLM の確認もぶれることがあり、時間と費用もかかります。"
+   },
+   {
+    "text": "利用者に画面で確認してもらう",
+    "correct": false,
+    "why": "毎回人に確認させるのは、自動化の目的に合いません。"
+   },
+   {
+    "text": "プロンプトに「必ず守って」と書いて任せる",
+    "correct": false,
+    "why": "指示だけでは確実にはなりません。確実にしたい処理はコードで行います。"
+   }
+  ],
+  "point": "確実にしたい処理（形の確認、個人情報の除去）はモデルに頼らずコードで。",
+  "learn": "ccdv-f/learn/flow.html#design"
+ },
+ {
+  "id": "plus-design-005",
+  "domain": "app",
+  "skill": "Claude Application Design",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude の出力を、別のプログラムがデータベースに登録します。設計として最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "スキーマで出力の形を決め、受け取ったら検証する",
+    "correct": true,
+    "why": "構造化出力などで形を決め、さらに値の範囲などをアプリで確かめます。"
+   },
+   {
+    "text": "自由な文章で出力させ、人が読んで登録する",
+    "correct": false,
+    "why": "大量に処理できず、自動化になりません。"
+   },
+   {
+    "text": "出力の形は決めず、プログラム側で何とか読み取る",
+    "correct": false,
+    "why": "形が毎回変わると、読み取りに失敗します。"
+   },
+   {
+    "text": "「JSON で」と頼むだけにして、検証は省く",
+    "correct": false,
+    "why": "頼むだけでは形が崩れることがあります。検証も必要です。"
+   }
+  ],
+  "point": "出力をプログラムが読むなら、形を決めて（スキーマ）、検証する。",
+  "learn": "ccdv-f/learn/app.html#design"
+ },
+ {
+  "id": "plus-design-006",
+  "domain": "app",
+  "skill": "Claude Application Design",
+  "level": 1,
+  "type": "single",
+  "stem": "出力の category を「配送」「返品」「その他」のどれかに限りたいとき、JSON Schema で使う指定はどれですか。",
+  "options": [
+   {
+    "text": "enum",
+    "correct": true,
+    "why": "enum は、値を決まった候補の中からしか選べないようにする指定です。"
+   },
+   {
+    "text": "required",
+    "correct": false,
+    "why": "required は、必ず入れる項目を決める指定です。値の候補は限りません。"
+   },
+   {
+    "text": "maxLength",
+    "correct": false,
+    "why": "maxLength は文字列の長さの上限です。"
+   },
+   {
+    "text": "description",
+    "correct": false,
+    "why": "description は項目の説明です。値を限る力はありません。"
+   }
+  ],
+  "point": "enum＝候補の中から選ばせる。required＝必須の項目。",
+  "learn": "ccdv-f/learn/app.html#design"
+ },
+ {
+  "id": "plus-design-007",
+  "domain": "app",
+  "skill": "Claude Application Design",
+  "level": 1,
+  "type": "single",
+  "stem": "利用者から届いたメールを Claude に要約させます。プロンプトへのメールの渡し方として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "指示とは分けて、<email> タグで囲んで渡す",
+    "correct": true,
+    "why": "指示（信頼できる）とデータ（信頼できない）を分けると、メールの中の命令に引きずられにくくなります。"
+   },
+   {
+    "text": "system プロンプトの指示の続きに、そのまま書き足す",
+    "correct": false,
+    "why": "どこからがメールか区別できず、メールの中の命令が指示のように読まれる危険があります。"
+   },
+   {
+    "text": "指示とメールを区切らず、1つの文章にまとめる",
+    "correct": false,
+    "why": "境界があいまいになり、プロンプトインジェクションに弱くなります。"
+   },
+   {
+    "text": "メールの中の指示にも従うよう、先に伝えておく",
+    "correct": false,
+    "why": "攻撃者の命令に従うことになり、危険です。"
+   }
+  ],
+  "point": "指示とデータ（材料）は分けて渡す（コンテンツの境界）。ただし完全には防げない。",
+  "learn": "ccdv-f/learn/app.html#design"
+ },
+ {
+  "id": "plus-design-008",
+  "domain": "app",
+  "skill": "Claude Application Design",
+  "level": 1,
+  "type": "single",
+  "stem": "すべての問い合わせに共通する役割や方針は、どこに書くのが基本ですか。",
+  "options": [
+   {
+    "text": "system プロンプト",
+    "correct": true,
+    "why": "会話全体に効く役割や方針は system に、その回の依頼は user のメッセージに書きます。"
+   },
+   {
+    "text": "毎回の user メッセージの末尾",
+    "correct": false,
+    "why": "毎回混ぜると、書き忘れや食い違いが起きます。"
+   },
+   {
+    "text": "assistant のメッセージ",
+    "correct": false,
+    "why": "assistant は Claude の返事を入れる役割です。"
+   },
+   {
+    "text": "ツールの説明文（description）",
+    "correct": false,
+    "why": "ツールの説明は、そのツールをいつ・どう使うかを書く場所です。"
+   }
+  ],
+  "point": "方針は system、その回の依頼とデータは user。",
+  "learn": "ccdv-f/learn/app.html#design"
+ },
+ {
+  "id": "plus-design-009",
+  "domain": "model",
+  "skill": "Model Selection and Tradeoffs",
+  "level": 1,
+  "type": "single",
+  "stem": "要件は「1件5秒以内・1件3円以下・正答率95%以上」です。モデルの決め方として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "速くて安いモデルから評価し、満たす最小のものを選ぶ",
+    "correct": true,
+    "why": "要件を満たす最小のモデルを、評価データで確かめて選びます。"
+   },
+   {
+    "text": "最も高性能なモデルを選び、費用は後で考える",
+    "correct": false,
+    "why": "費用の要件を満たせない可能性があります。"
+   },
+   {
+    "text": "評判のよいモデルを、評価せずにそのまま使う",
+    "correct": false,
+    "why": "自分のタスクで要件を満たすかは、評価しないと分かりません。"
+   },
+   {
+    "text": "すべてのモデルで処理して、多数決で答えを決める",
+    "correct": false,
+    "why": "費用と時間が何倍にもなり、要件を満たせません。"
+   }
+  ],
+  "point": "小さいモデルから評価し、要件を満たす最小のものを選ぶ。",
+  "learn": "ccdv-f/learn/model.html#selection"
+ },
+ {
+  "id": "plus-design-010",
+  "domain": "model",
+  "skill": "Model Selection and Tradeoffs",
+  "level": 1,
+  "type": "single",
+  "stem": "大量の問い合わせのほとんどは簡単ですが、一部に難しい判断が必要です。費用を抑える設計として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "簡単なものは速いモデル、難しいものは上位モデル",
+    "correct": true,
+    "why": "処理ごとにモデルを使い分けると、品質を保ちながら費用を抑えられます。"
+   },
+   {
+    "text": "全件を、いちばん高性能なモデルで処理する",
+    "correct": false,
+    "why": "簡単な処理にも高いモデルを使うので、費用がかさみます。"
+   },
+   {
+    "text": "難しい問い合わせは、受け付けないことにする",
+    "correct": false,
+    "why": "課題の解決になりません。"
+   },
+   {
+    "text": "全件を2つのモデルで処理し、結果を比べる",
+    "correct": false,
+    "why": "費用が2倍になります。"
+   }
+  ],
+  "point": "処理ごとにモデルを使い分ける（例：一次分類は Haiku、難しい判断は Opus）。",
+  "learn": "ccdv-f/learn/model.html#selection"
+ },
+ {
+  "id": "plus-design-011",
+  "domain": "model",
+  "skill": "Cost and Token Management",
+  "level": 1,
+  "type": "single",
+  "stem": "毎晩、前日の問い合わせ1万件をまとめて要約します。急ぎではありません。費用を下げる方法として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "Message Batches でまとめて処理する",
+    "correct": true,
+    "why": "急がない大量処理なら、料金が半分になる Message Batches が向いています。結果は最長24時間以内に返ります。"
+   },
+   {
+    "text": "ストリーミングで1件ずつ表示する",
+    "correct": false,
+    "why": "ストリーミングは体感の速さのための仕組みで、料金は変わりません。"
+   },
+   {
+    "text": "1件ごとに最も高性能なモデルを使う",
+    "correct": false,
+    "why": "費用が上がります。"
+   },
+   {
+    "text": "max_tokens をできるだけ大きくする",
+    "correct": false,
+    "why": "上限を上げても費用は下がりません。"
+   }
+  ],
+  "point": "急がない大量処理 → Message Batches（料金50%）。",
+  "learn": "ccdv-f/learn/model.html#cost"
+ },
+ {
+  "id": "plus-design-012",
+  "domain": "model",
+  "skill": "Cost and Token Management",
+  "level": 1,
+  "type": "single",
+  "stem": "毎回、同じ長い社内規程（数万トークン）を前置きとして送っています。費用と待ち時間を減らす方法として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "プロンプトキャッシュを使う",
+    "correct": true,
+    "why": "同じ前置きを使い回すので、2回目以降の読み込みが安く・速くなります。"
+   },
+   {
+    "text": "ストリーミングを使う",
+    "correct": false,
+    "why": "最初の文字が早く出ますが、料金は変わりません。"
+   },
+   {
+    "text": "stop_sequences を指定する",
+    "correct": false,
+    "why": "出力を止める文字列の指定で、入力の費用は減りません。"
+   },
+   {
+    "text": "Message Batches を使う",
+    "correct": false,
+    "why": "料金は下がりますが、結果がすぐには返らず、待ち時間はむしろ長くなります。"
+   }
+  ],
+  "point": "同じ長い前置きを繰り返し送る → プロンプトキャッシュ。",
+  "learn": "ccdv-f/learn/model.html#cost"
+ },
+ {
+  "id": "plus-design-013",
+  "domain": "app",
+  "skill": "Claude Application Design",
+  "level": 1,
+  "type": "single",
+  "stem": "チャット画面で「お客様を待たせたくない」という要件があります。最初の文字が出るまでの時間を短くする方法として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "ストリーミングで、できた部分から表示する",
+    "correct": true,
+    "why": "全体の時間は同じでも、最初の文字が早く出るので、待ち時間の体感が短くなります。"
+   },
+   {
+    "text": "Message Batches で、まとめて処理する",
+    "correct": false,
+    "why": "結果がすぐには返らないので、画面で待つ用途には向きません。"
+   },
+   {
+    "text": "max_tokens を、できるだけ大きくする",
+    "correct": false,
+    "why": "返事の長さの上限が増えるだけで、速くはなりません。"
+   },
+   {
+    "text": "出力が全部そろってから、一度に表示する",
+    "correct": false,
+    "why": "全部できるまで画面が空白になり、待たせてしまいます。"
+   }
+  ],
+  "point": "画面で待つ・体感を速くしたい → ストリーミング。",
+  "learn": "ccdv-f/learn/app.html#api"
+ },
+ {
+  "id": "plus-design-014",
+  "domain": "app",
+  "skill": "Claude Application Design",
+  "level": 1,
+  "type": "single",
+  "stem": "分類に自信がないメールの扱いとして、設計の段階で決めておくこととして最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "人の確認に回す行き先を用意しておく",
+    "correct": true,
+    "why": "誤りはゼロにならない前提で、失敗したときの行き先を決めておきます。"
+   },
+   {
+    "text": "自信がなくても、いちばん近い窓口に入れる",
+    "correct": false,
+    "why": "誤った振り分けが増えます。"
+   },
+   {
+    "text": "正しく分類できるまで、何度でも再生成する",
+    "correct": false,
+    "why": "上限がないと時間と費用が増え続けます。"
+   },
+   {
+    "text": "自信がないメールは、受け取らずに捨てる",
+    "correct": false,
+    "why": "お客様の問い合わせが失われます。"
+   }
+  ],
+  "point": "失敗したときの行き先（人の確認、既定の安全な処理）を設計で決めておく。",
+  "learn": "ccdv-f/learn/flow.html#design"
+ },
+ {
+  "id": "plus-design-015",
+  "domain": "prompt",
+  "skill": "Output Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "構造化出力を検証したところ、業務上ありえない値（金額がマイナス）が入っていました。対応として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "理由を添えて再生成し、だめなら人に引き継ぐ",
+    "correct": true,
+    "why": "検証に失敗したら、理由を伝えて作り直させ、それでもだめなら人に回します。"
+   },
+   {
+    "text": "形は合っているので、そのまま登録する",
+    "correct": false,
+    "why": "形が合っていても、値が業務上正しいとは限りません。"
+   },
+   {
+    "text": "マイナスの値を 0 に書き換えて登録する",
+    "correct": false,
+    "why": "勝手に書き換えると、誤ったデータが登録されます。"
+   },
+   {
+    "text": "エラーは記録せずに、次の件に進む",
+    "correct": false,
+    "why": "失敗に気づけず、問い合わせが処理されないまま残ります。"
+   }
+  ],
+  "point": "形を決める → 検証する（スキーマ・値の範囲）→ 失敗に備える（再生成・人へ）。",
+  "learn": "ccdv-f/learn/prompt.html#output"
+ },
+ {
+  "id": "plus-design-016",
+  "domain": "app",
+  "skill": "Claude Application Design",
+  "level": 1,
+  "type": "single",
+  "stem": "設計の段階で「分類の結果・処理時間・費用・エラーを記録する」と決めておく主な理由はどれですか。",
+  "options": [
+   {
+    "text": "本番に出した後、品質と費用を見張れるようにするため",
+    "correct": true,
+    "why": "記録がないと、⑧運用で品質の低下や費用の増加に気づけません。"
+   },
+   {
+    "text": "API の料金の割引を受けられるようにするため",
+    "correct": false,
+    "why": "記録しても料金は割引されません。"
+   },
+   {
+    "text": "プロンプトを短くして、トークンを減らすため",
+    "correct": false,
+    "why": "記録はプロンプトの長さとは関係ありません。"
+   },
+   {
+    "text": "単体テストを書かずに済ませられるようにするため",
+    "correct": false,
+    "why": "記録はテストの代わりになりません。"
+   }
+  ],
+  "point": "観測（記録）は設計の段階で決めておく。運用で見張るため。",
+  "learn": "ccdv-f/learn/flow.html#design"
+ },
+ {
+  "id": "plus-design-017",
+  "domain": "agents",
+  "skill": "Agent Patterns and Frameworks",
+  "level": 1,
+  "type": "single",
+  "stem": "問い合わせの種類を見て、「返品」「配送」などの専用の処理のうち1つだけに振り分けるパターンはどれですか。",
+  "options": [
+   {
+    "text": "ルーティング",
+    "correct": true,
+    "why": "分かれ道から1本だけ選んで進むのがルーティングです。"
+   },
+   {
+    "text": "並列化",
+    "correct": false,
+    "why": "並列化は、複数の道を全部同時に進めて結果をまとめます。"
+   },
+   {
+    "text": "プロンプトチェーン",
+    "correct": false,
+    "why": "チェーンは、決まった1本道を順に進みます。"
+   },
+   {
+    "text": "評価者／改善者",
+    "correct": false,
+    "why": "作る → 採点 → 直す、を繰り返すパターンです。"
+   }
+  ],
+  "point": "ルーティング＝1本だけ選ぶ。並列化＝全部同時に実行してまとめる。",
+  "learn": "ccdv-f/learn/agents.html#choose"
+ },
+ {
+  "id": "plus-design-018",
+  "domain": "agents",
+  "skill": "Agent Patterns and Frameworks",
+  "level": 1,
+  "type": "single",
+  "stem": "課題を見て、何をいくつに分けるかを LLM が実行時に決め、結果をまとめるパターンはどれですか。",
+  "options": [
+   {
+    "text": "オーケストレーター／ワーカー",
+    "correct": true,
+    "why": "分け方を LLM が実行時に決めるのが特徴です。"
+   },
+   {
+    "text": "並列化（パラレル処理）",
+    "correct": false,
+    "why": "並列化は、分け方がコードに書いてあって固定です。"
+   },
+   {
+    "text": "ルーティング（振り分け）",
+    "correct": false,
+    "why": "ルーティングは、1本の道を選ぶだけで、分割してまとめることはしません。"
+   },
+   {
+    "text": "プロンプトチェーン（連鎖）",
+    "correct": false,
+    "why": "チェーンは、決まった順に1本道を進みます。"
+   }
+  ],
+  "point": "分け方が固定 → 並列化。LLM が決める → オーケストレーター／ワーカー。",
+  "learn": "ccdv-f/learn/agents.html#choose"
+ },
+ {
+  "id": "plus-eval-013",
+  "domain": "eval",
+  "skill": "Debugging and Error Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "評価データ300件のうち、264件が正解でした。正答率はいくつですか。",
+  "options": [
+   {
+    "text": "88.0%",
+    "correct": true,
+    "why": "264 ÷ 300 ＝ 0.88 なので 88.0% です。"
+   },
+   {
+    "text": "26.4%",
+    "correct": false,
+    "why": "264 を 1,000 で割った値です。300 で割ります。"
+   },
+   {
+    "text": "36.0%",
+    "correct": false,
+    "why": "間違えた件数（36件）を、割合と取り違えています。"
+   },
+   {
+    "text": "95.7%",
+    "correct": false,
+    "why": "これは改善後の v2 の値（287 ÷ 300）です。"
+   }
+  ],
+  "point": "正答率 ＝ 正解の件数 ÷ 全件数。",
+  "learn": "ccdv-f/learn/eval.html#example"
+ },
+ {
+  "id": "plus-eval-014",
+  "domain": "eval",
+  "skill": "Debugging and Error Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "成功基準は「正答率95%以上」です。評価の結果は 93.3% でした。次の行動として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "失敗した例を読んで直し、もう一度評価する",
+    "correct": true,
+    "why": "基準に届かないので、間違えた例から原因を探して直し、同じ評価データで測り直します。"
+   },
+   {
+    "text": "90% を超えているので、そのまま本番に出す",
+    "correct": false,
+    "why": "成功基準を満たしていません。"
+   },
+   {
+    "text": "基準を93%に下げて、合格ということにする",
+    "correct": false,
+    "why": "結果に合わせて基準を変えると、評価の意味がなくなります。"
+   },
+   {
+    "text": "間違えた例をデータから除き、もう一度測る",
+    "correct": false,
+    "why": "難しい例を消すと、見かけの点数が上がるだけです。"
+   }
+  ],
+  "point": "基準に届かなければ、失敗例を読む → 直す → 同じデータで再評価。",
+  "learn": "ccdv-f/learn/eval.html#example"
+ },
+ {
+  "id": "plus-eval-015",
+  "domain": "eval",
+  "skill": "Debugging and Error Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "LLM に返信文の丁寧さを採点させる前に行うこととして、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "一部を人も採点して、結果が合うかを確かめる",
+    "correct": true,
+    "why": "LLM の採点を使う前に、人の採点と合うか（信頼できるか）を確かめます。"
+   },
+   {
+    "text": "出力を作ったのと同じモデルで採点させる",
+    "correct": false,
+    "why": "Anthropic のドキュメントは、出力を作ったモデルとは別のモデルで採点することを勧めています。"
+   },
+   {
+    "text": "採点の基準は渡さず、モデルの感覚に任せる",
+    "correct": false,
+    "why": "具体的な採点基準（ルーブリック）を渡します。"
+   },
+   {
+    "text": "理由は書かせず、点数だけを答えさせる",
+    "correct": false,
+    "why": "判定の前に理由を考えさせると、採点が安定します。"
+   }
+  ],
+  "point": "LLM の採点は、人の採点と合うかを確かめてから使う。",
+  "learn": "ccdv-f/learn/eval.html#grading"
+ },
+ {
+  "id": "plus-eval-016",
+  "domain": "eval",
+  "skill": "Debugging and Error Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "作り始めるときに、今の版で評価して数字を取っておく主な目的はどれですか。",
+  "options": [
+   {
+    "text": "改善したかどうかを、この数字と比べて判断するため",
+    "correct": true,
+    "why": "この数字（ベースライン）と比べないと、変更で良くなったのか分かりません。"
+   },
+   {
+    "text": "API の利用料金を、前もって払っておくため",
+    "correct": false,
+    "why": "評価と料金の支払いは関係ありません。"
+   },
+   {
+    "text": "評価データの件数を、この数字で決めるため",
+    "correct": false,
+    "why": "件数は、知りたい精度やデータの量で決めます。"
+   },
+   {
+    "text": "本番のサーバーの台数を、この数字で決めるため",
+    "correct": false,
+    "why": "サーバーの台数は、処理量などの非機能要件で決めます。"
+   }
+  ],
+  "point": "最初にベースラインを取り、変更のたびに比べる。",
+  "learn": "ccdv-f/learn/eval.html#when"
+ },
+ {
+  "id": "plus-eval-017",
+  "domain": "eval",
+  "skill": "Debugging and Error Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "評価を CI に組み込みました。成功基準を下回ったときに行うようにすることとして、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "デプロイを止める",
+    "correct": true,
+    "why": "基準を下回った版が本番に出ないように、自動で止めます。"
+   },
+   {
+    "text": "成功基準を、自動で少し下げる",
+    "correct": false,
+    "why": "基準を下げると、品質の低下を見逃します。"
+   },
+   {
+    "text": "失敗した例を、評価データから消す",
+    "correct": false,
+    "why": "失敗例は残して、直したあとも再発しないかを確かめます。"
+   },
+   {
+    "text": "評価データの件数を減らして、再実行する",
+    "correct": false,
+    "why": "件数を減らすと、結果がぶれやすくなるだけです。"
+   }
+  ],
+  "point": "評価を CI に組み込み、基準を下回ったらデプロイを止める。",
+  "learn": "ccdv-f/learn/eval.html#when"
+ },
+ {
+  "id": "plus-eval-018",
+  "domain": "eval",
+  "skill": "Debugging and Error Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "「前処理の関数が、電話番号を伏せ字にするか」を確かめるのに向いているのはどれですか。",
+  "options": [
+   {
+    "text": "単体テスト",
+    "correct": true,
+    "why": "1つの関数を取り出して、決めたとおりに動くかを確かめるのは単体テストです。"
+   },
+   {
+    "text": "LLM による採点",
+    "correct": false,
+    "why": "LLM の出力の質を測る方法です。ふつうの関数の確認には使いません。"
+   },
+   {
+    "text": "A/B テスト",
+    "correct": false,
+    "why": "本番で2つの案を比べる方法です。"
+   },
+   {
+    "text": "レッドチーミング",
+    "correct": false,
+    "why": "攻撃者の立場で弱点を探す活動です。"
+   }
+  ],
+  "point": "ふつうの関数の動き → 単体テスト。LLM の出力の質 → 評価。",
+  "learn": "ccdv-f/learn/flow.html#test"
+ },
+ {
+  "id": "plus-eval-019",
+  "domain": "eval",
+  "skill": "Debugging and Error Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "評価データの「正解」を用意する方法として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "業務を知る人が確認した、過去の振り分け結果を使う",
+    "correct": true,
+    "why": "人が確認した正しい結果（ゴールデンデータ）を正解にします。"
+   },
+   {
+    "text": "評価するモデル自身に、正解を決めさせる",
+    "correct": false,
+    "why": "評価される側が正解を決めると、間違いに気づけません。"
+   },
+   {
+    "text": "正解は付けず、出力が長いほど良いとする",
+    "correct": false,
+    "why": "長さは正しさと関係ありません。"
+   },
+   {
+    "text": "開発者が想像で、もっともらしい正解を書く",
+    "correct": false,
+    "why": "業務の実際と合わない正解になるおそれがあります。"
+   }
+  ],
+  "point": "正解は、業務を知る人が確認したもの。過去の業務の記録は評価データの材料になる。",
+  "learn": "ccdv-f/learn/eval.html#data"
+ },
+ {
+  "id": "plus-eval-020",
+  "domain": "eval",
+  "skill": "Debugging and Error Handling",
+  "level": 1,
+  "type": "single",
+  "stem": "新しいモデルへの切り替えを評価するとき、正答率のほかに比べるべきものとして、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "1件あたりの処理時間と費用",
+    "correct": true,
+    "why": "品質・速度・費用のバランスで決めます。小さいモデルで足りるかもここで分かります。"
+   },
+   {
+    "text": "評価データのファイルの大きさ",
+    "correct": false,
+    "why": "ファイルの大きさはモデルの良し悪しと関係ありません。"
+   },
+   {
+    "text": "プロンプトに書いた行の数",
+    "correct": false,
+    "why": "同じプロンプトで比べるので、行の数は変わりません。"
+   },
+   {
+    "text": "モデルが公開された日付",
+    "correct": false,
+    "why": "新しいほど自分のタスクに合うとは限りません。評価で確かめます。"
+   }
+  ],
+  "point": "モデルの切り替えは、同じ評価データで品質・速度・費用を比べて決める。",
+  "learn": "ccdv-f/learn/eval.html#when"
+ },
+ {
+  "id": "plus-term-001",
+  "domain": "model",
+  "skill": "LLM Fundamentals",
+  "level": 1,
+  "type": "single",
+  "stem": "トークンの説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "文章を扱う単位で、料金や上限の計算に使う",
+    "correct": true,
+    "why": "Claude は文章をトークンに区切って読み書きします。料金も max_tokens もトークンで数えます。"
+   },
+   {
+    "text": "API を呼ぶときに使う、秘密の合言葉",
+    "correct": false,
+    "why": "それは API キーです。"
+   },
+   {
+    "text": "1回のリクエストで送れる、メッセージの数",
+    "correct": false,
+    "why": "メッセージの数ではなく、文章の量の単位です。"
+   },
+   {
+    "text": "モデルの応答が返るまでの、時間の単位",
+    "correct": false,
+    "why": "時間ではなく、文章の量の単位です。"
+   }
+  ],
+  "point": "トークン＝文章の単位。料金・速度・上限を決める。",
+  "learn": "ccdv-f/learn/basics.html#llm"
+ },
+ {
+  "id": "plus-term-002",
+  "domain": "app",
+  "skill": "Claude API Mechanics",
+  "level": 1,
+  "type": "single",
+  "stem": "応答の stop_reason が \"max_tokens\" でした。意味として正しいものはどれですか。",
+  "options": [
+   {
+    "text": "出力が上限の長さに達して、途中で止まった",
+    "correct": true,
+    "why": "max_tokens に達して切れています。上限を見直すか、出力を短くするよう指示します。"
+   },
+   {
+    "text": "モデルが答えを書き終えて、自然に止まった",
+    "correct": false,
+    "why": "それは end_turn です。"
+   },
+   {
+    "text": "指定した停止の文字列が、出力に出てきた",
+    "correct": false,
+    "why": "それは stop_sequence です。"
+   },
+   {
+    "text": "モデルが、ツールを使いたいと求めている",
+    "correct": false,
+    "why": "それは tool_use です。"
+   }
+  ],
+  "point": "end_turn＝書き終えた。max_tokens＝上限で切れた。tool_use＝ツールを使いたい。",
+  "learn": "ccdv-f/learn/basics.html#first-call"
+ },
+ {
+  "id": "plus-term-003",
+  "domain": "tools",
+  "skill": "Tool Implementation",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude が stop_reason \"tool_use\" を返しました。アプリが次にすることはどれですか。",
+  "options": [
+   {
+    "text": "ツールを実行し、結果を tool_result で返す",
+    "correct": true,
+    "why": "ツールを実行するのはアプリです。結果を tool_result として会話に足して送り直します。"
+   },
+   {
+    "text": "同じリクエストを、そのまま送り直す",
+    "correct": false,
+    "why": "ツールの結果がないので、同じ返事が返るだけです。"
+   },
+   {
+    "text": "会話を終了して、利用者に結果を表示する",
+    "correct": false,
+    "why": "まだ答えはできていません。ツールの結果を返すと、Claude が続きを書きます。"
+   },
+   {
+    "text": "max_tokens を増やして、もう一度送る",
+    "correct": false,
+    "why": "長さの上限の問題ではありません。"
+   }
+  ],
+  "point": "tool_use → アプリがツールを実行 → tool_result で返す。これを繰り返すのがエージェント。",
+  "learn": "ccdv-f/learn/basics.html#tool-use"
+ },
+ {
+  "id": "plus-term-004",
+  "domain": "app",
+  "skill": "Claude API Mechanics",
+  "level": 1,
+  "type": "single",
+  "stem": "Messages API で会話を続けるときの説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "それまでの会話を、毎回 messages に入れて送る",
+    "correct": true,
+    "why": "API は会話を覚えていない（ステートレス）ので、続きを話すにはやり取りを送り直します。"
+   },
+   {
+    "text": "会話の ID を送れば、API が前の会話を思い出す",
+    "correct": false,
+    "why": "Messages API は前の会話を保存していません。"
+   },
+   {
+    "text": "最後の質問だけ送れば、前の流れも伝わる",
+    "correct": false,
+    "why": "前のやり取りを送らないと、「その」が何を指すかも分かりません。"
+   },
+   {
+    "text": "system に「前の会話を覚えて」と書けば伝わる",
+    "correct": false,
+    "why": "指示しても、送っていない会話は読めません。"
+   }
+  ],
+  "point": "API はステートレス。会話はアプリが管理して毎回送る。",
+  "learn": "ccdv-f/learn/basics.html#llm"
+ },
+ {
+  "id": "plus-term-005",
+  "domain": "app",
+  "skill": "Claude API Mechanics",
+  "level": 1,
+  "type": "single",
+  "stem": "JSON Schema の説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "データにどんな項目があり、どんな型かを決めた設計図",
+    "correct": true,
+    "why": "項目・型・必須かどうかなどを決めた、データの形の設計図です。"
+   },
+   {
+    "text": "JSON のファイルを圧縮して、小さくする方法",
+    "correct": false,
+    "why": "圧縮の方法ではありません。"
+   },
+   {
+    "text": "JSON を画面に見やすく表示するための色分け",
+    "correct": false,
+    "why": "表示の方法ではありません。"
+   },
+   {
+    "text": "JSON の中の個人情報を、伏せるための仕組み",
+    "correct": false,
+    "why": "個人情報の伏せ字は、別に処理します。"
+   }
+  ],
+  "point": "JSON Schema＝データの形の設計図。ツールの input_schema や構造化出力で使う。",
+  "learn": "ccdv-f/learn/basics.html#schema"
+ },
+ {
+  "id": "plus-term-006",
+  "domain": "tools",
+  "skill": "MCP Server Development",
+  "level": 1,
+  "type": "single",
+  "stem": "MCP（Model Context Protocol）の説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "ツールやデータを、共通の決まりで AI につなぐ仕組み",
+    "correct": true,
+    "why": "一度 MCP サーバーを作れば、対応したアプリから同じ方法で使えます。"
+   },
+   {
+    "text": "Claude のモデルを、社内のデータで学習し直す仕組み",
+    "correct": false,
+    "why": "MCP は学習の仕組みではありません。"
+   },
+   {
+    "text": "API キーを、安全な場所に保管しておく仕組み",
+    "correct": false,
+    "why": "キーの保管はシークレット管理の仕組みで行います。"
+   },
+   {
+    "text": "長いプロンプトを、自動で短くまとめる仕組み",
+    "correct": false,
+    "why": "それはコンパクションなどの話です。"
+   }
+  ],
+  "point": "MCP＝ツール・データを AI のアプリにつなぐ共通の規格。複数のアプリで再利用できる。",
+  "learn": "ccdv-f/learn/tools.html#mcp"
+ },
+ {
+  "id": "plus-term-007",
+  "domain": "tools",
+  "skill": "Agentic Customization",
+  "level": 1,
+  "type": "single",
+  "stem": "手順や書式のルールなどの「やり方」をまとめておき、関係するときだけ読み込ませる仕組みはどれですか。",
+  "options": [
+   {
+    "text": "Skills",
+    "correct": true,
+    "why": "Skills は「どうやるか（知識・手順）」を与え、必要なときだけ読み込まれます。"
+   },
+   {
+    "text": "MCP サーバー",
+    "correct": false,
+    "why": "MCP は「何ができるか（道具・データ）」を増やす仕組みです。"
+   },
+   {
+    "text": "フック",
+    "correct": false,
+    "why": "フックは決まったタイミングで自動で実行される処理です。"
+   },
+   {
+    "text": "CLAUDE.md",
+    "correct": false,
+    "why": "CLAUDE.md は起動時に毎回読み込まれる、プロジェクトの決まりです。"
+   }
+  ],
+  "point": "MCP は道具を増やし、Skills はやり方を与える。",
+  "learn": "ccdv-f/learn/tools.html#customization"
+ },
+ {
+  "id": "plus-term-008",
+  "domain": "sec",
+  "skill": "Claude Hooks",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude Code で「コマンドを実行する前に、危険なパターンを必ず検査して止める」ようにしたいとき、使うものはどれですか。",
+  "options": [
+   {
+    "text": "フック",
+    "correct": true,
+    "why": "フックはモデルの判断に関係なく必ず実行されるので、確実に防ぐ用途に向いています。"
+   },
+   {
+    "text": "CLAUDE.md",
+    "correct": false,
+    "why": "CLAUDE.md に書いた決まりは指示なので、守られないこともあります。"
+   },
+   {
+    "text": "Skills",
+    "correct": false,
+    "why": "Skills はやり方の知識で、実行を強制的に止める仕組みではありません。"
+   },
+   {
+    "text": "スラッシュコマンド",
+    "correct": false,
+    "why": "人が呼び出す定型の指示で、自動で検査する仕組みではありません。"
+   }
+  ],
+  "point": "「必ず」行いたい処理はフックで（例：PreToolUse で危険な操作をブロック）。",
+  "learn": "ccdv-f/learn/security.html#hooks"
+ },
+ {
+  "id": "plus-term-009",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude Code が起動時に読む、「テストは npm test で実行」のようなプロジェクトの決まりを書くファイルはどれですか。",
+  "options": [
+   {
+    "text": "CLAUDE.md",
+    "correct": true,
+    "why": "プロジェクトの決まりを書いておくと、Claude Code が起動時に読み込みます。"
+   },
+   {
+    "text": "settings.json",
+    "correct": false,
+    "why": "権限やフックなどの設定を書くファイルです。"
+   },
+   {
+    "text": "README.md",
+    "correct": false,
+    "why": "人が読むための説明書で、決まりを読ませる専用のファイルではありません。"
+   },
+   {
+    "text": "package.json",
+    "correct": false,
+    "why": "Node.js のプロジェクトの依存関係やスクリプトを書くファイルです。"
+   }
+  ],
+  "point": "CLAUDE.md＝プロジェクトの決まり。settings.json＝権限やフックの設定。",
+  "learn": "ccdv-f/learn/code-eval.html#claude-md"
+ },
+ {
+  "id": "plus-term-010",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "CI の中で、対話画面を使わずに1回の指示で Claude Code を実行させる使い方を何と呼びますか。",
+  "options": [
+   {
+    "text": "ヘッドレスモード",
+    "correct": true,
+    "why": "claude -p で、1回の指示を実行して結果を出力します。CI やスクリプトからの自動化に使います。"
+   },
+   {
+    "text": "プランモード",
+    "correct": false,
+    "why": "変更の前に計画を立てて確認するためのモードです。"
+   },
+   {
+    "text": "対話モード",
+    "correct": false,
+    "why": "人が画面でやり取りしながら使う、ふだんの使い方です。"
+   },
+   {
+    "text": "デバッグモード",
+    "correct": false,
+    "why": "自動化のための使い方を指す言葉ではありません。"
+   }
+  ],
+  "point": "ヘッドレスモード（-p）＝対話なしで実行。CI では必要なツールだけを許可する。",
+  "learn": "ccdv-f/learn/code-eval.html#headless"
+ },
+ {
+  "id": "plus-term-011",
+  "domain": "app",
+  "skill": "Claude API Mechanics",
+  "level": 1,
+  "type": "single",
+  "stem": "API から 429 が返りました。意味として正しいものはどれですか。",
+  "options": [
+   {
+    "text": "送りすぎで、回数や量の上限を超えた",
+    "correct": true,
+    "why": "レート制限です。少し待ってから送り直します。"
+   },
+   {
+    "text": "API キーが正しくない",
+    "correct": false,
+    "why": "それは 401（認証の失敗）です。"
+   },
+   {
+    "text": "リクエストの書き方が正しくない",
+    "correct": false,
+    "why": "それは 400 です。直してから送り直します。"
+   },
+   {
+    "text": "API のサーバーが混み合っている",
+    "correct": false,
+    "why": "サーバー側の混雑は 500 台（529 など）です。"
+   }
+  ],
+  "point": "400 書き方の誤り／401 キーの誤り／429 送りすぎ／500台 相手側の問題。",
+  "learn": "ccdv-f/learn/basics.html#status"
+ },
+ {
+  "id": "plus-term-012",
+  "domain": "app",
+  "skill": "Claude API Mechanics",
+  "level": 1,
+  "type": "single",
+  "stem": "リクエストに max_tokens を書き忘れて送ったときに返るステータスコードはどれですか。",
+  "options": [
+   {
+    "text": "400",
+    "correct": true,
+    "why": "必須の項目がないのは「リクエストの書き方の誤り」なので 400 です。直してから送り直します。"
+   },
+   {
+    "text": "401",
+    "correct": false,
+    "why": "401 は API キーの誤りなど、認証の失敗です。"
+   },
+   {
+    "text": "429",
+    "correct": false,
+    "why": "429 は送りすぎ（レート制限）です。"
+   },
+   {
+    "text": "529",
+    "correct": false,
+    "why": "529 は API が混み合っている（過負荷）ときです。"
+   }
+  ],
+  "point": "model・max_tokens・messages は必須。抜けると 400。",
+  "learn": "ccdv-f/learn/basics.html#status"
+ },
+ {
+  "id": "plus-term-013",
+  "domain": "app",
+  "skill": "Claude API Mechanics",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude に文章を送って返事をもらうときに使う HTTP のメソッドはどれですか。",
+  "options": [
+   {
+    "text": "POST",
+    "correct": true,
+    "why": "質問の文章（データ）を送る必要があるので POST /v1/messages を使います。"
+   },
+   {
+    "text": "GET",
+    "correct": false,
+    "why": "GET は情報の取得で、ボディを送りません。バッチの進み具合の確認などに使います。"
+   },
+   {
+    "text": "DELETE",
+    "correct": false,
+    "why": "DELETE は削除です。"
+   },
+   {
+    "text": "PUT",
+    "correct": false,
+    "why": "PUT は置き換えです。"
+   }
+  ],
+  "point": "データを送って処理してもらう → POST。取得するだけ → GET。",
+  "learn": "ccdv-f/learn/basics.html#methods"
+ },
+ {
+  "id": "plus-term-014",
+  "domain": "sec",
+  "skill": "Identity, Secrets, and Key Management",
+  "level": 1,
+  "type": "single",
+  "stem": "API キーをプログラムに渡す方法として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "サーバー側で、環境変数などから読み込む",
+    "correct": true,
+    "why": "キーはパスワードと同じです。コードやブラウザに置かず、サーバー側で環境変数やシークレット管理の仕組みから使います。"
+   },
+   {
+    "text": "ソースコードに直接書いて、Git で共有する",
+    "correct": false,
+    "why": "リポジトリから漏れる危険があります。"
+   },
+   {
+    "text": "ブラウザで動く JavaScript に書いておく",
+    "correct": false,
+    "why": "誰でもブラウザから見られてしまいます。"
+   },
+   {
+    "text": "プロンプトの中に書いて、Claude に渡す",
+    "correct": false,
+    "why": "キーをモデルに渡す必要はなく、漏れる危険が増えるだけです。"
+   }
+  ],
+  "point": "API キーはパスワードと同じ。サーバー側で環境変数などから使う。",
+  "learn": "ccdv-f/learn/basics.html#apikey"
+ },
+ {
+  "id": "plus-term-015",
+  "domain": "model",
+  "skill": "Cost and Token Management",
+  "level": 1,
+  "type": "single",
+  "stem": "送る前に、リクエストの入力トークン数を見積もるのに使えるものはどれですか。",
+  "options": [
+   {
+    "text": "count_tokens エンドポイント",
+    "correct": true,
+    "why": "送る前に入力トークン数を数えられるので、費用の見積もりに使えます。"
+   },
+   {
+    "text": "max_tokens パラメータ",
+    "correct": false,
+    "why": "返事の長さの上限を決める項目で、入力は数えません。"
+   },
+   {
+    "text": "stop_sequences パラメータ",
+    "correct": false,
+    "why": "出力を止める文字列を決める項目です。"
+   },
+   {
+    "text": "Message Batches API",
+    "correct": false,
+    "why": "まとめて処理する方式で、見積もりの機能ではありません。"
+   }
+  ],
+  "point": "見積もりは count_tokens、実際に使った量はレスポンスの usage。",
+  "learn": "ccdv-f/learn/model.html#cost"
+ },
+ {
+  "id": "plus-term-016",
+  "domain": "model",
+  "skill": "Cost and Token Management",
+  "level": 1,
+  "type": "single",
+  "stem": "費用を下げたいとき、出力の長さを管理するのがよく効く主な理由はどれですか。",
+  "options": [
+   {
+    "text": "出力トークンは、入力より単価が高いから",
+    "correct": true,
+    "why": "出力の単価は入力より高めなので、余分な出力を減らすと費用がよく下がります。"
+   },
+   {
+    "text": "出力トークンには、料金がかからないから",
+    "correct": false,
+    "why": "出力にも料金がかかります。"
+   },
+   {
+    "text": "出力が短いと、プロンプトキャッシュが効くから",
+    "correct": false,
+    "why": "キャッシュは入力の前置きに効く仕組みで、出力の長さとは関係ありません。"
+   },
+   {
+    "text": "出力の長さは、応答の速さに関係しないから",
+    "correct": false,
+    "why": "出力が長いほど、応答にも時間がかかります。"
+   }
+  ],
+  "point": "出力は単価が高い。長さの指示と max_tokens で管理する。",
+  "learn": "ccdv-f/learn/model.html#cost"
+ },
+ {
+  "id": "plus-term-017",
+  "domain": "model",
+  "skill": "Cost and Token Management",
+  "level": 1,
+  "type": "single",
+  "stem": "機能別・利用者別の費用を集計するために記録するとよい、レスポンスの項目はどれですか。",
+  "options": [
+   {
+    "text": "usage",
+    "correct": true,
+    "why": "使った入力・出力のトークン数が入っています。記録して集計し、異常な増加も検知します。"
+   },
+   {
+    "text": "stop_reason",
+    "correct": false,
+    "why": "返事が終わった理由です。トークン数は入っていません。"
+   },
+   {
+    "text": "role",
+    "correct": false,
+    "why": "誰の発言か（assistant）を表す項目です。"
+   },
+   {
+    "text": "content",
+    "correct": false,
+    "why": "返事の本文です。トークン数は入っていません。"
+   }
+  ],
+  "point": "レスポンスの usage を記録して、費用を集計・監視する。",
+  "learn": "ccdv-f/learn/model.html#cost"
+ },
+ {
+  "id": "plus-cc-001",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "「テストは npm test で実行する」という決まりを、チーム全員の Claude Code に伝えたいとき、書く場所はどれですか。",
+  "options": [
+   {
+    "text": "リポジトリの ./CLAUDE.md",
+    "correct": true,
+    "why": "プロジェクトの CLAUDE.md は Git に入れてチームで共有します。"
+   },
+   {
+    "text": "自分の ~/.claude/CLAUDE.md",
+    "correct": false,
+    "why": "自分のすべてのプロジェクトに効く個人用の場所なので、ほかの人には届きません。"
+   },
+   {
+    "text": "リポジトリの ./CLAUDE.local.md",
+    "correct": false,
+    "why": "自分だけのメモで、Git には入れません。"
+   },
+   {
+    "text": "自分の ~/.claude/settings.json",
+    "correct": false,
+    "why": "settings.json は権限やフックなどの動作の設定で、決まりの文章を書く場所ではありません。"
+   }
+  ],
+  "point": "チームの決まり → リポジトリの CLAUDE.md（Git で共有）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-memory"
+ },
+ {
+  "id": "plus-cc-002",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "「説明は日本語で」という自分の好みを、自分のすべてのプロジェクトで効かせたいとき、書く場所はどれですか。",
+  "options": [
+   {
+    "text": "~/.claude/CLAUDE.md",
+    "correct": true,
+    "why": "ユーザーの CLAUDE.md は、自分のすべてのプロジェクトで読み込まれます。"
+   },
+   {
+    "text": "リポジトリの ./CLAUDE.md",
+    "correct": false,
+    "why": "チーム全員に効いてしまい、ほかのプロジェクトには効きません。"
+   },
+   {
+    "text": "リポジトリの ./CLAUDE.local.md",
+    "correct": false,
+    "why": "そのプロジェクトだけで効く、自分用のメモです。"
+   },
+   {
+    "text": "リポジトリの .claude/settings.json",
+    "correct": false,
+    "why": "チームで共有する動作の設定で、好みの文章を書く場所ではありません。"
+   }
+  ],
+  "point": "自分の全プロジェクト → ~/.claude/CLAUDE.md。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-memory"
+ },
+ {
+  "id": "plus-cc-003",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "このプロジェクトで自分だけが使う情報（自分の環境の URL など）を、Git に入れずに Claude Code に伝えたいとき、書く場所はどれですか。",
+  "options": [
+   {
+    "text": "./CLAUDE.local.md",
+    "correct": true,
+    "why": "自分だけのプロジェクト用のメモです。.gitignore に入れて共有しません。"
+   },
+   {
+    "text": "./CLAUDE.md",
+    "correct": false,
+    "why": "Git に入れてチームで共有する場所です。"
+   },
+   {
+    "text": "~/.claude/CLAUDE.md",
+    "correct": false,
+    "why": "自分のすべてのプロジェクトに効いてしまいます。"
+   },
+   {
+    "text": ".claude/settings.json",
+    "correct": false,
+    "why": "チームで共有する動作の設定のファイルです。"
+   }
+  ],
+  "point": "このプロジェクトで自分だけ → CLAUDE.local.md（Git に入れない）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-memory"
+ },
+ {
+  "id": "plus-cc-004",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "ユーザーの CLAUDE.md とプロジェクトの CLAUDE.md の両方があるとき、どう読み込まれますか。",
+  "options": [
+   {
+    "text": "上書きではなく、両方がつなげて読み込まれる",
+    "correct": true,
+    "why": "複数の CLAUDE.md は、どれかで消えるのではなく、つなげて読み込まれます。"
+   },
+   {
+    "text": "作業中のフォルダにいちばん近いものだけが読まれる",
+    "correct": false,
+    "why": "近いものだけではなく、上位のフォルダのものも読まれます。"
+   },
+   {
+    "text": "ユーザーのものだけが読まれ、プロジェクトのものは無視される",
+    "correct": false,
+    "why": "プロジェクトの CLAUDE.md も読まれます。"
+   },
+   {
+    "text": "後から読んだものの内容で、前のものが消される",
+    "correct": false,
+    "why": "上書きはされません。"
+   }
+  ],
+  "point": "CLAUDE.md は連結される。サブフォルダのものは、そのフォルダを扱ったときに読まれる。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-memory"
+ },
+ {
+  "id": "plus-cc-005",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "CLAUDE.md に「.env ファイルは読まないこと」と書きましたが、確実に読ませないようにしたいと考えています。最も適切な方法はどれですか。",
+  "options": [
+   {
+    "text": "deny のルールに Read(./.env) を足す",
+    "correct": true,
+    "why": "CLAUDE.md は指示であって強制ではありません。確実に止めるには deny ルールやフックを使います。"
+   },
+   {
+    "text": "CLAUDE.md に「絶対に読まない」と太字で書き足す",
+    "correct": false,
+    "why": "強い言葉にしても、指示であることは変わりません。"
+   },
+   {
+    "text": "同じ指示を、CLAUDE.md に何度も書いておく",
+    "correct": false,
+    "why": "繰り返しても強制にはなりません。"
+   },
+   {
+    "text": "会話を始めるたびに、読まないようにお願いする",
+    "correct": false,
+    "why": "お願いも指示なので、確実ではありません。"
+   }
+  ],
+  "point": "CLAUDE.md は文脈。強制は deny ルールとフック。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-memory"
+ },
+ {
+  "id": "plus-cc-006",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "/init コマンドは何をしますか。",
+  "options": [
+   {
+    "text": "コードを調べて、CLAUDE.md のたたき台を作る",
+    "correct": true,
+    "why": "プロジェクトを調べ、ビルドやテストの方法などをまとめた CLAUDE.md を作ります。"
+   },
+   {
+    "text": "会話をすべて空にして、最初からやり直す",
+    "correct": false,
+    "why": "それは /clear です。"
+   },
+   {
+    "text": "会話を要約して、コンテキストの空きを増やす",
+    "correct": false,
+    "why": "それは /compact です。"
+   },
+   {
+    "text": "新しい Git のリポジトリを、このフォルダに作る",
+    "correct": false,
+    "why": "Git のリポジトリを作るのは git init です。"
+   }
+  ],
+  "point": "/init＝CLAUDE.md のたたき台を作る。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-memory"
+ },
+ {
+  "id": "plus-cc-007",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "CLAUDE.md に @docs/style.md と書くと、どうなりますか。",
+  "options": [
+   {
+    "text": "docs/style.md の内容が取り込まれる",
+    "correct": true,
+    "why": "@パス で、別のファイルの内容を CLAUDE.md に取り込めます。"
+   },
+   {
+    "text": "docs/style.md を読むことが禁止される",
+    "correct": false,
+    "why": "禁止するには権限の deny ルールを使います。"
+   },
+   {
+    "text": "docs/style.md が Git の管理から外される",
+    "correct": false,
+    "why": "Git の除外は .gitignore で行います。"
+   },
+   {
+    "text": "docs/style.md の作者に通知が送られる",
+    "correct": false,
+    "why": "通知の仕組みではありません。"
+   }
+  ],
+  "point": "CLAUDE.md の @パス で、別のファイルを取り込める。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-memory"
+ },
+ {
+  "id": "plus-cc-008",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude Code の設定のうち、最も優先されるのはどれですか。",
+  "options": [
+   {
+    "text": "組織の管理者が配布する設定",
+    "correct": true,
+    "why": "組織の管理設定が最も強く、利用者は上書きできません。"
+   },
+   {
+    "text": "ユーザーの ~/.claude/settings.json",
+    "correct": false,
+    "why": "ユーザーの設定は、いちばん弱い設定です。"
+   },
+   {
+    "text": "プロジェクトの .claude/settings.json",
+    "correct": false,
+    "why": "ローカルの設定や引数のほうが優先されます。"
+   },
+   {
+    "text": "ローカルの .claude/settings.local.json",
+    "correct": false,
+    "why": "組織の管理設定と引数のほうが優先されます。"
+   }
+  ],
+  "point": "組織 ＞ コマンドラインの引数 ＞ ローカル ＞ プロジェクト ＞ ユーザー。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-settings"
+ },
+ {
+  "id": "plus-cc-009",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "プロジェクトの .claude/settings.json とローカルの .claude/settings.local.json で、同じ項目の値が違います。どちらが使われますか。",
+  "options": [
+   {
+    "text": "ローカルの値",
+    "correct": true,
+    "why": "ローカル（自分用）の設定は、プロジェクトで共有する設定より優先されます。"
+   },
+   {
+    "text": "プロジェクトの値",
+    "correct": false,
+    "why": "プロジェクトの設定より、ローカルの設定が優先されます。"
+   },
+   {
+    "text": "先に作られたファイルの値",
+    "correct": false,
+    "why": "作られた順番では決まりません。"
+   },
+   {
+    "text": "どちらも無視され、既定の値",
+    "correct": false,
+    "why": "どちらかの値が使われます。"
+   }
+  ],
+  "point": "ローカル（settings.local.json）＞ プロジェクト（settings.json）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-settings"
+ },
+ {
+  "id": "plus-cc-010",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "チームで共有するために Git に入れるファイルはどれですか。",
+  "options": [
+   {
+    "text": ".claude/settings.json",
+    "correct": true,
+    "why": "プロジェクトの設定は、チームで共有するので Git に入れます。"
+   },
+   {
+    "text": ".claude/settings.local.json",
+    "correct": false,
+    "why": "自分だけの設定なので、Git には入れません。"
+   },
+   {
+    "text": "./CLAUDE.local.md",
+    "correct": false,
+    "why": "自分だけのメモなので、Git には入れません。"
+   },
+   {
+    "text": "~/.claude/settings.json",
+    "correct": false,
+    "why": "自分のホームフォルダの設定で、リポジトリの外にあります。"
+   }
+  ],
+  "point": "共有：settings.json と CLAUDE.md。自分だけ：.local が付くもの。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-settings"
+ },
+ {
+  "id": "plus-cc-011",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "allow に Bash(git *)、deny に Bash(git push *) があります。git push origin main を実行しようとすると、どうなりますか。",
+  "options": [
+   {
+    "text": "拒否される",
+    "correct": true,
+    "why": "deny はいつも優先されます。allow で deny の例外は作れません。"
+   },
+   {
+    "text": "許可される。allow のほうが先に書いてあるから",
+    "correct": false,
+    "why": "書いた順番では決まりません。deny → ask → allow の順に判定します。"
+   },
+   {
+    "text": "許可される。allow のほうが範囲が広いから",
+    "correct": false,
+    "why": "範囲の広さでは決まりません。deny が優先です。"
+   },
+   {
+    "text": "毎回、利用者に確認される",
+    "correct": false,
+    "why": "確認になるのは ask に一致したときです。"
+   }
+  ],
+  "point": "判定は deny → ask → allow。deny がいつも優先。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-permissions"
+ },
+ {
+  "id": "plus-cc-012",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "権限のルールが判定される順番として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "deny → ask → allow",
+    "correct": true,
+    "why": "最初に一致したものが決めます。deny が最初なので、いつも優先されます。"
+   },
+   {
+    "text": "allow → ask → deny",
+    "correct": false,
+    "why": "allow が先だと、deny で止めたいものが許可されてしまいます。"
+   },
+   {
+    "text": "ask → allow → deny",
+    "correct": false,
+    "why": "deny が最後では、確実に止められません。"
+   },
+   {
+    "text": "書いた順番に上から判定する",
+    "correct": false,
+    "why": "書いた順番ではなく、種類の順に判定します。"
+   }
+  ],
+  "point": "deny → ask → allow。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-permissions"
+ },
+ {
+  "id": "plus-cc-013",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "権限のルール Bash(npm run test *) に一致するコマンドはどれですか。",
+  "options": [
+   {
+    "text": "npm run test -- --watch",
+    "correct": true,
+    "why": "「npm run test 」で始まるので、前方一致で一致します。"
+   },
+   {
+    "text": "npm run build -- --watch",
+    "correct": false,
+    "why": "「npm run test」で始まらないので一致しません。"
+   },
+   {
+    "text": "npm install --save-dev jest",
+    "correct": false,
+    "why": "「npm run test」で始まらないので一致しません。"
+   },
+   {
+    "text": "npx jest --watch",
+    "correct": false,
+    "why": "テストを動かすコマンドでも、書き方が違えば一致しません。"
+   }
+  ],
+  "point": "末尾の * は前方一致。* がなければ完全一致。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-permissions"
+ },
+ {
+  "id": "plus-cc-014",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "github という名前の MCP サーバーのツールを、すべて許可するルールの書き方はどれですか。",
+  "options": [
+   {
+    "text": "mcp__github__*",
+    "correct": true,
+    "why": "MCP のツールは mcp__サーバー名__ツール名 の形で書きます。"
+   },
+   {
+    "text": "github.*",
+    "correct": false,
+    "why": "この書き方は使えません。"
+   },
+   {
+    "text": "MCP(github)",
+    "correct": false,
+    "why": "この書き方は使えません。"
+   },
+   {
+    "text": "Tool(github:*)",
+    "correct": false,
+    "why": "この書き方は使えません。"
+   }
+  ],
+  "point": "MCP のツール → mcp__サーバー名__*。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-permissions"
+ },
+ {
+  "id": "plus-cc-015",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "ユーザーの設定の deny に Read(./.env) があり、プロジェクトの設定には別の allow のルールがあります。ユーザーの deny はどうなりますか。",
+  "options": [
+   {
+    "text": "合算されるので、ユーザーの deny も効く",
+    "correct": true,
+    "why": "allow・ask・deny の配列は、スコープをまたいで合算されます。"
+   },
+   {
+    "text": "プロジェクトの設定が優先され、消える",
+    "correct": false,
+    "why": "配列は上書きではなく合算されます。"
+   },
+   {
+    "text": "プロジェクトに deny がないときだけ効く",
+    "correct": false,
+    "why": "条件付きではなく、合算されて効きます。"
+   },
+   {
+    "text": "ローカルの設定がないときだけ効く",
+    "correct": false,
+    "why": "条件付きではなく、合算されて効きます。"
+   }
+  ],
+  "point": "権限のルールの配列はスコープをまたいで合算される。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-permissions"
+ },
+ {
+  "id": "plus-cc-016",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "大きな変更の前に、ファイルを変えずにコードを調べて、計画だけを立てさせたいときに使う権限モードはどれですか。",
+  "options": [
+   {
+    "text": "plan",
+    "correct": true,
+    "why": "plan モードは読み取り中心で調べ、計画を立てます。変更はしません。"
+   },
+   {
+    "text": "acceptEdits",
+    "correct": false,
+    "why": "ファイルの編集を確認なしで行うモードです。"
+   },
+   {
+    "text": "bypassPermissions",
+    "correct": false,
+    "why": "確認をすべて省くモードです。"
+   },
+   {
+    "text": "dontAsk",
+    "correct": false,
+    "why": "確認が必要な操作を、聞かずに拒否するモードです。"
+   }
+  ],
+  "point": "調べて計画だけ → plan モード。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-modes"
+ },
+ {
+  "id": "plus-cc-017",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "ファイルの編集だけは確認せずに進め、ほかの操作は今までどおり確認してほしいときに使う権限モードはどれですか。",
+  "options": [
+   {
+    "text": "acceptEdits",
+    "correct": true,
+    "why": "ファイルの編集を確認なしで受け入れるモードです。"
+   },
+   {
+    "text": "bypassPermissions",
+    "correct": false,
+    "why": "編集だけでなく、すべての確認を省いてしまいます。"
+   },
+   {
+    "text": "dontAsk",
+    "correct": false,
+    "why": "確認が必要な操作を、聞かずに拒否するモードです。"
+   },
+   {
+    "text": "default",
+    "correct": false,
+    "why": "必要に応じて操作のたびに確認するモードです。"
+   }
+  ],
+  "point": "編集だけ確認を省く → acceptEdits。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-modes"
+ },
+ {
+  "id": "plus-cc-018",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "bypassPermissions（確認をすべて省くモード）を使ってよい環境として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "外部から隔離された、使い捨てのコンテナ",
+    "correct": true,
+    "why": "確認なしで何でも実行されるので、壊れても困らない隔離された環境でだけ使います。"
+   },
+   {
+    "text": "ふだん仕事で使っている、自分のパソコン",
+    "correct": false,
+    "why": "大事なファイルを消されるなどの危険があります。"
+   },
+   {
+    "text": "本番のサーバーに、直接ログインした環境",
+    "correct": false,
+    "why": "本番を壊すおそれがあり、最も避けるべき環境です。"
+   },
+   {
+    "text": "顧客のデータが置いてある、共有のサーバー",
+    "correct": false,
+    "why": "データの漏えいや破損のおそれがあります。"
+   }
+  ],
+  "point": "bypassPermissions は隔離された環境でだけ。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-modes"
+ },
+ {
+  "id": "plus-cc-019",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "auto モードの説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "確認の代わりに、別のモデルが実行前に操作を審査する",
+    "correct": true,
+    "why": "分類用のモデルが操作を実行前に審査します。明示的な ask のルールは引き続き確認を出します。"
+   },
+   {
+    "text": "すべての操作を、確認も審査もなしで実行する",
+    "correct": false,
+    "why": "それは bypassPermissions です。"
+   },
+   {
+    "text": "確認が必要な操作は、聞かずにすべて拒否する",
+    "correct": false,
+    "why": "それは dontAsk です。"
+   },
+   {
+    "text": "読み取りだけを許し、ファイルの変更は行わない",
+    "correct": false,
+    "why": "それは plan に近い動きです。"
+   }
+  ],
+  "point": "auto＝別のモデルが審査。bypassPermissions＝確認を省く。dontAsk＝聞かずに拒否。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-modes"
+ },
+ {
+  "id": "plus-cc-020",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "対話中に、権限モードを切り替えるキー操作はどれですか。",
+  "options": [
+   {
+    "text": "Shift＋Tab",
+    "correct": true,
+    "why": "押すたびに default → acceptEdits → plan …と切り替わります。"
+   },
+   {
+    "text": "Ctrl＋C を2回",
+    "correct": false,
+    "why": "何も動いていないときに押すと、Claude Code が終了します。"
+   },
+   {
+    "text": "Ctrl＋J",
+    "correct": false,
+    "why": "Ctrl＋J は改行（複数行の入力）です。"
+   },
+   {
+    "text": "Esc を2回",
+    "correct": false,
+    "why": "入力が空のときに、巻き戻しのメニューを開く操作です。"
+   }
+  ],
+  "point": "Shift＋Tab＝権限モードの切り替え。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-modes"
+ },
+ {
+  "id": "plus-cc-021",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude が意図と違う方向に作業を進め始めました。すぐに止めて指示し直したいとき、最も適切な操作はどれですか。",
+  "options": [
+   {
+    "text": "Esc を押す",
+    "correct": true,
+    "why": "Esc で作業を途中で止められます。そこまでの作業は残るので、続けて指示し直せます。"
+   },
+   {
+    "text": "Shift＋Tab を押す",
+    "correct": false,
+    "why": "権限モードの切り替えで、作業は止まりません。"
+   },
+   {
+    "text": "/clear を実行する",
+    "correct": false,
+    "why": "会話がすべて消え、それまでの流れも失われます。"
+   },
+   {
+    "text": "ターミナルのウィンドウを閉じる",
+    "correct": false,
+    "why": "止まりますが、会話を続けて指示し直せません。"
+   }
+  ],
+  "point": "Esc＝作業を止める（そこまでの作業は残る）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-keys"
+ },
+ {
+  "id": "plus-cc-022",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "入力欄が空のときに Esc を2回押すと、何が起きますか。",
+  "options": [
+   {
+    "text": "巻き戻しのメニューが開く",
+    "correct": true,
+    "why": "前の時点のコードや会話に戻すメニューが開きます（/rewind と同じ）。"
+   },
+   {
+    "text": "Claude Code が終了する",
+    "correct": false,
+    "why": "終了は、何も動いていないときの Ctrl＋C の2回などです。"
+   },
+   {
+    "text": "会話が空になる",
+    "correct": false,
+    "why": "会話を空にするのは /clear です。"
+   },
+   {
+    "text": "権限モードが切り替わる",
+    "correct": false,
+    "why": "モードの切り替えは Shift＋Tab です。"
+   }
+  ],
+  "point": "入力が空で Esc を2回 → 巻き戻し（/rewind）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-keys"
+ },
+ {
+  "id": "plus-cc-023",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "入力の先頭に ! を付けて「! npm test」と送ると、どうなりますか。",
+  "options": [
+   {
+    "text": "コマンドを直接実行し、出力を会話に入れる",
+    "correct": true,
+    "why": "シェルのモードです。Claude はその出力を見て返事をします。"
+   },
+   {
+    "text": "依頼を、ほかより優先して処理させる",
+    "correct": false,
+    "why": "優先度を変える記号ではありません。"
+   },
+   {
+    "text": "入力した文を、メモリに保存する",
+    "correct": false,
+    "why": "メモリの編集は /memory で行います。"
+   },
+   {
+    "text": "すべての操作を、確認なしで許可する",
+    "correct": false,
+    "why": "権限を変える記号ではありません。"
+   }
+  ],
+  "point": "! ＝シェルのモード。@ ＝ファイルの指定。/ ＝コマンド・スキル。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-keys"
+ },
+ {
+  "id": "plus-cc-024",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "入力の中で @ を使うと、何ができますか。",
+  "options": [
+   {
+    "text": "パスを補完して、ファイルを指定できる",
+    "correct": true,
+    "why": "@ に続けてパスを入れると補完され、そのファイルを指定できます。"
+   },
+   {
+    "text": "コマンドやスキルを呼び出せる",
+    "correct": false,
+    "why": "それは先頭の / です。"
+   },
+   {
+    "text": "シェルのコマンドを直接実行できる",
+    "correct": false,
+    "why": "それは先頭の ! です。"
+   },
+   {
+    "text": "権限モードを切り替えられる",
+    "correct": false,
+    "why": "それは Shift＋Tab です。"
+   }
+  ],
+  "point": "@ ＝ファイルの指定（パスの補完）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-keys"
+ },
+ {
+  "id": "plus-cc-025",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "どのターミナルでも使える、複数行の入力（改行）の方法はどれですか。",
+  "options": [
+   {
+    "text": "\\ を書いてから Enter を押す",
+    "correct": true,
+    "why": "行の最後に \\ を書いて Enter で改行できます。Ctrl＋J もどのターミナルでも使えます。"
+   },
+   {
+    "text": "行の最後で Shift＋Tab を押す",
+    "correct": false,
+    "why": "権限モードの切り替えです。"
+   },
+   {
+    "text": "行の最後で Esc を2回押す",
+    "correct": false,
+    "why": "巻き戻しのメニューを開く操作です。"
+   },
+   {
+    "text": "行の最後で Ctrl＋C を押す",
+    "correct": false,
+    "why": "処理を止める、または入力を消す操作です。"
+   }
+  ],
+  "point": "改行：\\＋Enter、Ctrl＋J（どこでも）。Shift＋Enter は対応ターミナルで。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-keys"
+ },
+ {
+  "id": "plus-cc-026",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "/rewind で戻せるものの説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "コードと会話の両方、会話だけ、コードだけから選べる",
+    "correct": true,
+    "why": "戻す対象を選べます。会話を要約する選択肢もあります。"
+   },
+   {
+    "text": "会話だけ戻せて、コードは戻せない",
+    "correct": false,
+    "why": "Claude が編集したファイルも戻せます。"
+   },
+   {
+    "text": "コードだけ戻せて、会話は戻せない",
+    "correct": false,
+    "why": "会話も戻せます。"
+   },
+   {
+    "text": "Git のコミットの履歴まで、まとめて戻せる",
+    "correct": false,
+    "why": "Git の履歴は変えません。チェックポイントは Git とは別の仕組みです。"
+   }
+  ],
+  "point": "/rewind：コードと会話／会話だけ／コードだけ。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-rewind"
+ },
+ {
+  "id": "plus-cc-027",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude が Bash の rm コマンドでファイルを1つ消しました。/rewind でそのファイルは戻りますか。",
+  "options": [
+   {
+    "text": "戻らない。Bash だけで変えたファイルは追跡されない",
+    "correct": true,
+    "why": "チェックポイントが追跡するのは、主にファイル編集のツールでの変更です。Git などで戻します。"
+   },
+   {
+    "text": "戻る。ファイルの変更は、すべて自動で記録されているから",
+    "correct": false,
+    "why": "Bash のコマンドだけで変えたファイルは記録されません。"
+   },
+   {
+    "text": "戻る。ただし、会話も同じ時点まで一緒に巻き戻る",
+    "correct": false,
+    "why": "そもそも、このファイルは戻りません。"
+   },
+   {
+    "text": "戻る。Esc を2回押して巻き戻しを開いた場合だけ",
+    "correct": false,
+    "why": "開き方では変わりません。"
+   }
+  ],
+  "point": "Bash だけで変えたファイルは /rewind で戻らない。Git を使う。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-rewind"
+ },
+ {
+  "id": "plus-cc-028",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "チェックポイント（/rewind）と Git の関係として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "その場ですぐ戻すための仕組みで、Git の代わりにはならない",
+    "correct": true,
+    "why": "履歴の保存やチームでの共有は、引き続き Git で行います。"
+   },
+   {
+    "text": "チェックポイントがあれば、Git のコミットは要らない",
+    "correct": false,
+    "why": "チェックポイントは会話の中の一時的な仕組みです。"
+   },
+   {
+    "text": "チェックポイントは、自動で Git にコミットされる",
+    "correct": false,
+    "why": "Git にはコミットされません。"
+   },
+   {
+    "text": "Git を使うと、チェックポイントは作られなくなる",
+    "correct": false,
+    "why": "Git と関係なく作られます。"
+   }
+  ],
+  "point": "チェックポイント＝その場の巻き戻し。履歴と共有は Git。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-rewind"
+ },
+ {
+  "id": "plus-cc-029",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "同じ作業を続けたいのですが、会話が長くなってコンテキストが残り少なくなりました。最も適切なコマンドはどれですか。",
+  "options": [
+   {
+    "text": "/compact",
+    "correct": true,
+    "why": "会話を要約してコンテキストを空けるので、流れを保ったまま続けられます。"
+   },
+   {
+    "text": "/clear",
+    "correct": false,
+    "why": "会話がすべて消え、作業の流れが失われます。別の作業を始めるときに使います。"
+   },
+   {
+    "text": "/init",
+    "correct": false,
+    "why": "CLAUDE.md のたたき台を作るコマンドです。"
+   },
+   {
+    "text": "/memory",
+    "correct": false,
+    "why": "CLAUDE.md などを編集するコマンドです。"
+   }
+  ],
+  "point": "続けたい → /compact。別の作業 → /clear。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-session"
+ },
+ {
+  "id": "plus-cc-030",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "ひとつの作業が終わり、関係のない別の作業を始めます。前の会話が邪魔にならないようにするコマンドはどれですか。",
+  "options": [
+   {
+    "text": "/clear",
+    "correct": true,
+    "why": "会話を空にして、新しく始められます。CLAUDE.md の決まりは残ります。"
+   },
+   {
+    "text": "/compact",
+    "correct": false,
+    "why": "前の会話の要約が残るので、別の作業では邪魔になることがあります。"
+   },
+   {
+    "text": "/context",
+    "correct": false,
+    "why": "コンテキストの使われ方を表示するだけです。"
+   },
+   {
+    "text": "/rewind",
+    "correct": false,
+    "why": "前の時点に戻す操作で、新しく始めるものではありません。"
+   }
+  ],
+  "point": "関係のない作業を始める → /clear。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-session"
+ },
+ {
+  "id": "plus-cc-031",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "/clear を実行した後、CLAUDE.md の決まりはどうなりますか。",
+  "options": [
+   {
+    "text": "残る。次の依頼でも読まれる",
+    "correct": true,
+    "why": "/clear で消えるのは会話です。CLAUDE.md はそのまま使われます。"
+   },
+   {
+    "text": "消えるので、/init で作り直す",
+    "correct": false,
+    "why": "ファイルは消えません。"
+   },
+   {
+    "text": "消えるので、会話に貼り直す",
+    "correct": false,
+    "why": "CLAUDE.md は自動で読まれるので、貼り直す必要はありません。"
+   },
+   {
+    "text": "ユーザーの CLAUDE.md だけが残る",
+    "correct": false,
+    "why": "プロジェクトの CLAUDE.md も残ります。"
+   }
+  ],
+  "point": "/clear は会話を消すだけ。CLAUDE.md は残る。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-session"
+ },
+ {
+  "id": "plus-cc-032",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "昨日の作業の続きから、いちばん新しい会話を再開したいとき、使うコマンドはどれですか。",
+  "options": [
+   {
+    "text": "claude --continue",
+    "correct": true,
+    "why": "いちばん新しい会話を再開します（-c でも同じ）。"
+   },
+   {
+    "text": "claude -p \"続き\"",
+    "correct": false,
+    "why": "-p は1回の指示を実行して終わるヘッドレスモードです。"
+   },
+   {
+    "text": "claude を起動して /clear",
+    "correct": false,
+    "why": "空の会話になり、続きにはなりません。"
+   },
+   {
+    "text": "claude を起動して /init",
+    "correct": false,
+    "why": "CLAUDE.md を作るコマンドです。"
+   }
+  ],
+  "point": "いちばん新しい会話 → --continue。一覧から選ぶ → --resume。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-session"
+ },
+ {
+  "id": "plus-cc-033",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "数日前の別の会話を、一覧から選んで再開したいとき、使うコマンドはどれですか。",
+  "options": [
+   {
+    "text": "claude --resume",
+    "correct": true,
+    "why": "一覧や ID から会話を選んで再開します（-r でも同じ）。"
+   },
+   {
+    "text": "claude --continue",
+    "correct": false,
+    "why": "いちばん新しい会話を再開するので、数日前の別の会話は選べません。"
+   },
+   {
+    "text": "claude -p",
+    "correct": false,
+    "why": "1回の指示を実行して終わるヘッドレスモードです。"
+   },
+   {
+    "text": "claude mcp list",
+    "correct": false,
+    "why": "MCP サーバーの一覧を表示するコマンドです。"
+   }
+  ],
+  "point": "--resume＝会話を選んで再開。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-session"
+ },
+ {
+  "id": "plus-cc-034",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "コンテキストのうち何がどれだけ場所を取っているかを知りたいとき、使うコマンドはどれですか。",
+  "options": [
+   {
+    "text": "/context",
+    "correct": true,
+    "why": "コンテキストの使われ方を表示します。"
+   },
+   {
+    "text": "/compact",
+    "correct": false,
+    "why": "会話を要約して空けるコマンドで、内訳は表示しません。"
+   },
+   {
+    "text": "/clear",
+    "correct": false,
+    "why": "会話を空にするコマンドです。"
+   },
+   {
+    "text": "/memory",
+    "correct": false,
+    "why": "CLAUDE.md などを編集するコマンドです。"
+   }
+  ],
+  "point": "/context＝コンテキストの内訳を見る。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-session"
+ },
+ {
+  "id": "plus-cc-035",
+  "domain": "sec",
+  "skill": "Claude Hooks",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude がファイルを編集するたびに、必ずフォーマッタを実行させたいとき、最も適切な方法はどれですか。",
+  "options": [
+   {
+    "text": "PostToolUse のフックで実行する",
+    "correct": true,
+    "why": "ツールの実行後に必ず動くので、編集のたびに確実に整形できます。"
+   },
+   {
+    "text": "PreToolUse のフックで実行する",
+    "correct": false,
+    "why": "編集する前に動くので、編集後のファイルを整形できません。"
+   },
+   {
+    "text": "CLAUDE.md に「編集後は整形して」と書く",
+    "correct": false,
+    "why": "指示なので、忘れられることがあります。"
+   },
+   {
+    "text": "スキルに整形の手順を書いておく",
+    "correct": false,
+    "why": "スキルは使われるときに読まれるやり方の知識で、必ず実行されるとは限りません。"
+   }
+  ],
+  "point": "「必ず」行う → フック。実行前は PreToolUse、実行後は PostToolUse。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-hooks"
+ },
+ {
+  "id": "plus-cc-036",
+  "domain": "sec",
+  "skill": "Claude Hooks",
+  "level": 1,
+  "type": "single",
+  "stem": "PreToolUse のフックで、ツールの実行を止めるときに返す終了コードはどれですか。",
+  "options": [
+   {
+    "text": "2",
+    "correct": true,
+    "why": "終了コード 2 で止めます。理由は標準エラーに書くと Claude に伝わります。"
+   },
+   {
+    "text": "0",
+    "correct": false,
+    "why": "0 は成功で、ツールはそのまま実行されます。"
+   },
+   {
+    "text": "1",
+    "correct": false,
+    "why": "止める合図は 2 です。1 では止まりません。"
+   },
+   {
+    "text": "127",
+    "correct": false,
+    "why": "コマンドが見つからないときなどの値で、止める合図ではありません。"
+   }
+  ],
+  "point": "PreToolUse で止める → 終了コード 2（理由は標準エラーへ）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-hooks"
+ },
+ {
+  "id": "plus-cc-037",
+  "domain": "sec",
+  "skill": "Claude Hooks",
+  "level": 1,
+  "type": "single",
+  "stem": "Edit と Write のツールのときだけフックを動かしたいとき、matcher の書き方として正しいものはどれですか。",
+  "options": [
+   {
+    "text": "Edit|Write",
+    "correct": true,
+    "why": "| で名前を並べると、どちらかに一致したときに動きます。"
+   },
+   {
+    "text": "Edit&Write",
+    "correct": false,
+    "why": "この書き方は使えません。"
+   },
+   {
+    "text": "Edit+Write",
+    "correct": false,
+    "why": "この書き方は使えません。"
+   },
+   {
+    "text": "[Edit][Write]",
+    "correct": false,
+    "why": "この書き方は使えません。"
+   }
+  ],
+  "point": "matcher は Edit|Write のように | で並べる（正規表現も使える）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-hooks"
+ },
+ {
+  "id": "plus-cc-038",
+  "domain": "sec",
+  "skill": "Claude Hooks",
+  "level": 1,
+  "type": "single",
+  "stem": "rm -rf を含むコマンドを、モデルの判断に関係なく確実に止めたいとき、最も適切な方法はどれですか。",
+  "options": [
+   {
+    "text": "PreToolUse のフックで検査して止める",
+    "correct": true,
+    "why": "フックは必ず実行されるので、確実に止められます。deny ルールでも止められます。"
+   },
+   {
+    "text": "CLAUDE.md に「rm -rf は使わない」と書く",
+    "correct": false,
+    "why": "指示なので、確実ではありません。"
+   },
+   {
+    "text": "PostToolUse のフックで検査して止める",
+    "correct": false,
+    "why": "実行の後なので、消えたファイルは戻りません。"
+   },
+   {
+    "text": "スキルに安全な削除の手順を書いておく",
+    "correct": false,
+    "why": "やり方の知識で、強制はできません。"
+   }
+  ],
+  "point": "確実に止める → PreToolUse のフック、または deny ルール。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-hooks"
+ },
+ {
+  "id": "plus-cc-039",
+  "domain": "tools",
+  "skill": "Agentic Customization",
+  "level": 1,
+  "type": "single",
+  "stem": "スキルをたくさん置いても、コンテキストを圧迫しにくい理由はどれですか。",
+  "options": [
+   {
+    "text": "名前と説明だけが常に載り、本文は使うときに読まれる",
+    "correct": true,
+    "why": "段階的に読み込まれます。補助のファイルは、本文が参照したときだけ読まれます。"
+   },
+   {
+    "text": "スキルの本文は、自動で要約されて短くなる",
+    "correct": false,
+    "why": "要約されるのではなく、必要になるまで読み込まれません。"
+   },
+   {
+    "text": "1つの会話で使えるスキルは、1つだけだから",
+    "correct": false,
+    "why": "数の制限があるわけではありません。"
+   },
+   {
+    "text": "スキルは、別のモデルが代わりに読むから",
+    "correct": false,
+    "why": "同じ会話の中で、必要なときに読み込まれます。"
+   }
+  ],
+  "point": "スキルは段階的に読み込まれる：名前と説明 → 本文 → 補助のファイル。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-skills"
+ },
+ {
+  "id": "plus-cc-040",
+  "domain": "tools",
+  "skill": "Agentic Customization",
+  "level": 1,
+  "type": "single",
+  "stem": "プロジェクトでチームと共有するスキルを置く場所として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": ".claude/skills/<名前>/SKILL.md",
+    "correct": true,
+    "why": "プロジェクトのスキルの場所です。個人用は ~/.claude/skills/ に置きます。"
+   },
+   {
+    "text": ".claude/agents/<名前>.md",
+    "correct": false,
+    "why": "サブエージェントを置く場所です。"
+   },
+   {
+    "text": ".claude/settings.json の中",
+    "correct": false,
+    "why": "settings.json は権限やフックなどの設定のファイルです。"
+   },
+   {
+    "text": "./CLAUDE.md の最後",
+    "correct": false,
+    "why": "CLAUDE.md は毎回読まれる決まりで、スキルのように必要なときだけ読む形になりません。"
+   }
+  ],
+  "point": "スキル → .claude/skills/<名前>/SKILL.md。サブエージェント → .claude/agents/。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-skills"
+ },
+ {
+  "id": "plus-cc-041",
+  "domain": "tools",
+  "skill": "Agentic Customization",
+  "level": 1,
+  "type": "single",
+  "stem": "よく使う手順を /deploy で呼び出せるようにしたいと考えています。今から新しく作る方法として、推奨されるものはどれですか。",
+  "options": [
+   {
+    "text": "スキルとして作る",
+    "correct": true,
+    "why": "カスタムコマンドはスキルに統合されました。.claude/commands/ のファイルも今も動きますが、新しく作るならスキルです。"
+   },
+   {
+    "text": "フックとして作る",
+    "correct": false,
+    "why": "フックは決まったタイミングで自動で動く処理で、呼び出して使うものではありません。"
+   },
+   {
+    "text": "CLAUDE.md に手順を書く",
+    "correct": false,
+    "why": "毎回読まれる決まりで、/deploy のように呼び出せません。"
+   },
+   {
+    "text": "settings.json に手順を書く",
+    "correct": false,
+    "why": "動作の設定のファイルで、手順を書く場所ではありません。"
+   }
+  ],
+  "point": "カスタムコマンドはスキルに統合。新しく作るならスキル。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-skills"
+ },
+ {
+  "id": "plus-cc-042",
+  "domain": "tools",
+  "skill": "Agentic Customization",
+  "level": 1,
+  "type": "single",
+  "stem": "/fix-issue 123 と呼び出したとき、スキルの本文で「123」を受け取るために書くものはどれですか。",
+  "options": [
+   {
+    "text": "$ARGUMENTS",
+    "correct": true,
+    "why": "呼び出したときに渡した引数が、$ARGUMENTS に入ります。"
+   },
+   {
+    "text": "$PARAMETERS",
+    "correct": false,
+    "why": "この名前は使えません。"
+   },
+   {
+    "text": "{{args}}",
+    "correct": false,
+    "why": "この書き方は使えません。"
+   },
+   {
+    "text": "%1",
+    "correct": false,
+    "why": "Windows のバッチファイルの書き方で、スキルでは使えません。"
+   }
+  ],
+  "point": "スキルの引数は $ARGUMENTS（$0 なども）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-skills"
+ },
+ {
+  "id": "plus-cc-043",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "サブエージェントの説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "独自の新しいコンテキストで動き、親には要約だけが返る",
+    "correct": true,
+    "why": "大量のファイルを読む作業を任せても、親の会話が散らかりません。"
+   },
+   {
+    "text": "親と同じ会話の中で、すべての内容を共有して動く",
+    "correct": false,
+    "why": "サブエージェントは別のコンテキストで動きます。"
+   },
+   {
+    "text": "結果は親に返らず、ファイルにだけ保存される",
+    "correct": false,
+    "why": "最後の結果（要約）が親に返ります。"
+   },
+   {
+    "text": "親のコンテキストを一度空にしてから動く",
+    "correct": false,
+    "why": "親の会話はそのまま残ります。"
+   }
+  ],
+  "point": "サブエージェント＝別のコンテキスト。親には要約だけ。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-subagents"
+ },
+ {
+  "id": "plus-cc-044",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "コードを調べて報告するだけのサブエージェントを作ります。ツールの設定として、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "tools に読み取りのツールだけを書く",
+    "correct": true,
+    "why": "役割に必要な最小限のツールだけを与えます。"
+   },
+   {
+    "text": "tools を省いて、親のツールをすべて受け継がせる",
+    "correct": false,
+    "why": "省くとすべて受け継ぐので、編集やコマンドの実行もできてしまいます。"
+   },
+   {
+    "text": "bypassPermissions で、確認なしに動かす",
+    "correct": false,
+    "why": "調べるだけの役に、確認を省く必要はありません。"
+   },
+   {
+    "text": "サブエージェントにせず、親の会話で動かす",
+    "correct": false,
+    "why": "大量のファイルを読むと、親のコンテキストが散らかります。"
+   }
+  ],
+  "point": "サブエージェントの tools は役割に必要な最小限に。省くとすべて受け継ぐ。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-subagents"
+ },
+ {
+  "id": "plus-cc-045",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "大量のログを読んで原因を探す作業を、サブエージェントに任せる主な利点はどれですか。",
+  "options": [
+   {
+    "text": "親の会話のコンテキストが、ログで埋まらない",
+    "correct": true,
+    "why": "読んだログは子のコンテキストに入り、親には要約だけが返ります。"
+   },
+   {
+    "text": "API の料金が、まったくかからなくなる",
+    "correct": false,
+    "why": "サブエージェントも料金はかかります。"
+   },
+   {
+    "text": "ログの中の誤りが、自動で正しく直される",
+    "correct": false,
+    "why": "調べて報告する役で、ログを直すわけではありません。"
+   },
+   {
+    "text": "権限の確認が、すべて自動で省かれるようになる",
+    "correct": false,
+    "why": "権限の仕組みは変わりません。"
+   }
+  ],
+  "point": "大量に読む調査はサブエージェントへ。親のコンテキストを守れる。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-subagents"
+ },
+ {
+  "id": "plus-cc-046",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "CI の中で、Claude Code に差分の要約を1回だけさせたいとき、使うものはどれですか。",
+  "options": [
+   {
+    "text": "claude -p \"差分を要約して\"",
+    "correct": true,
+    "why": "ヘッドレスモード（-p）は、対話画面なしで1回の指示を実行して結果を出力します。"
+   },
+   {
+    "text": "claude --continue",
+    "correct": false,
+    "why": "いちばん新しい会話を対話で再開するコマンドです。"
+   },
+   {
+    "text": "claude --resume",
+    "correct": false,
+    "why": "会話を選んで対話で再開するコマンドです。"
+   },
+   {
+    "text": "claude mcp add",
+    "correct": false,
+    "why": "MCP サーバーを追加するコマンドです。"
+   }
+  ],
+  "point": "CI・スクリプト → ヘッドレスモード（claude -p）。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-headless"
+ },
+ {
+  "id": "plus-cc-047",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "ヘッドレスモードの結果を、後の処理でプログラムに読ませたいとき、付けるオプションはどれですか。",
+  "options": [
+   {
+    "text": "--output-format json",
+    "correct": true,
+    "why": "結果・セッション ID・費用などを含む JSON で出力します。"
+   },
+   {
+    "text": "--max-turns 1",
+    "correct": false,
+    "why": "繰り返しの回数の上限で、出力の形は変わりません。"
+   },
+   {
+    "text": "--allowedTools \"Read\"",
+    "correct": false,
+    "why": "確認なしで使えるツールを決めるオプションです。"
+   },
+   {
+    "text": "--continue",
+    "correct": false,
+    "why": "前の会話を再開するオプションです。"
+   }
+  ],
+  "point": "--output-format：text（既定）・json・stream-json。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-headless"
+ },
+ {
+  "id": "plus-cc-048",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "CI で Claude Code を動かすときの権限の扱いとして、最も適切なものはどれですか。",
+  "options": [
+   {
+    "text": "--allowedTools で、必要なツールだけを許可する",
+    "correct": true,
+    "why": "人が確認できない自動実行では、必要な権限だけを許可します。"
+   },
+   {
+    "text": "bypassPermissions で、すべての確認を省く",
+    "correct": false,
+    "why": "隔離されていない CI では、何でも実行できてしまい危険です。"
+   },
+   {
+    "text": "確認が出たら、CI が自動で「はい」と答えるようにする",
+    "correct": false,
+    "why": "すべて許可するのと同じで危険です。"
+   },
+   {
+    "text": "権限の設定は省き、既定のままにしておく",
+    "correct": false,
+    "why": "確認に答える人がいないので、止まったり失敗したりします。"
+   }
+  ],
+  "point": "自動実行では --allowedTools で必要なツールだけ許可する。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-headless"
+ },
+ {
+  "id": "plus-cc-049",
+  "domain": "code",
+  "skill": "Claude Code Operation",
+  "level": 1,
+  "type": "single",
+  "stem": "ヘッドレスモードで、エージェントのループがいつまでも続かないように上限を付けるオプションはどれですか。",
+  "options": [
+   {
+    "text": "--max-turns",
+    "correct": true,
+    "why": "繰り返しの回数に上限を付けます（print モードのみ）。"
+   },
+   {
+    "text": "--output-format",
+    "correct": false,
+    "why": "出力の形を決めるオプションです。"
+   },
+   {
+    "text": "--allowedTools",
+    "correct": false,
+    "why": "確認なしで使えるツールを決めるオプションです。"
+   },
+   {
+    "text": "--resume",
+    "correct": false,
+    "why": "前の会話を選んで再開するオプションです。"
+   }
+  ],
+  "point": "--max-turns でループの回数に上限を付ける。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-headless"
+ },
+ {
+  "id": "plus-cc-050",
+  "domain": "tools",
+  "skill": "MCP Server Development",
+  "level": 1,
+  "type": "single",
+  "stem": "インターネット上で公開されている MCP サーバーを Claude Code に追加するとき、推奨される通信の方式はどれですか。",
+  "options": [
+   {
+    "text": "--transport http",
+    "correct": true,
+    "why": "リモートのサーバーは http が推奨です。sse は非推奨です。"
+   },
+   {
+    "text": "--transport stdio",
+    "correct": false,
+    "why": "stdio はローカルでサーバーを起動するときの方式です。"
+   },
+   {
+    "text": "--transport ws",
+    "correct": false,
+    "why": "--transport は ws を受け付けません。"
+   },
+   {
+    "text": "--transport ftp",
+    "correct": false,
+    "why": "そのような方式はありません。"
+   }
+  ],
+  "point": "リモート → http。ローカルで起動 → stdio。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-mcp"
+ },
+ {
+  "id": "plus-cc-051",
+  "domain": "tools",
+  "skill": "MCP Server Development",
+  "level": 1,
+  "type": "single",
+  "stem": "チーム全員が同じ MCP サーバーを使えるように、project スコープで追加しました。設定が書かれる場所はどれですか。",
+  "options": [
+   {
+    "text": "プロジェクト直下の .mcp.json",
+    "correct": true,
+    "why": "project スコープは .mcp.json に書かれ、Git でチームと共有できます。"
+   },
+   {
+    "text": "./CLAUDE.md",
+    "correct": false,
+    "why": "CLAUDE.md は決まりを書くファイルです。"
+   },
+   {
+    "text": ".claude/settings.local.json",
+    "correct": false,
+    "why": "自分だけの設定のファイルです。"
+   },
+   {
+    "text": "~/.claude/CLAUDE.md",
+    "correct": false,
+    "why": "自分のすべてのプロジェクトの決まりを書くファイルです。"
+   }
+  ],
+  "point": "MCP のスコープ：local（既定）・project（.mcp.json で共有）・user。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-mcp"
+ },
+ {
+  "id": "plus-cc-052",
+  "domain": "tools",
+  "skill": "MCP Server Development",
+  "level": 1,
+  "type": "single",
+  "stem": "claude mcp add --transport stdio mytool -- npx -y my-server の「--」は、何のためにありますか。",
+  "options": [
+   {
+    "text": "Claude のオプションと、起動するコマンドを区切る",
+    "correct": true,
+    "why": "-- の後ろが、MCP サーバーを起動するコマンドとその引数です。"
+   },
+   {
+    "text": "サーバーを、確認なしで実行することを表す",
+    "correct": false,
+    "why": "権限とは関係ありません。"
+   },
+   {
+    "text": "サーバーを、バックグラウンドで動かすことを表す",
+    "correct": false,
+    "why": "動かし方の指定ではありません。"
+   },
+   {
+    "text": "後ろの文字を、コメントとして無視させる",
+    "correct": false,
+    "why": "無視されるのではなく、起動するコマンドとして使われます。"
+   }
+  ],
+  "point": "stdio：claude mcp add <名前> -- <起動するコマンド>。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-mcp"
+ },
+ {
+  "id": "plus-cc-053",
+  "domain": "tools",
+  "skill": "MCP Server Development",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude Code の中で /mcp を実行すると、何ができますか。",
+  "options": [
+   {
+    "text": "MCP サーバーの状態の確認や、認証",
+    "correct": true,
+    "why": "つないだサーバーの状態を確かめ、リモートのサーバーの認証もできます。"
+   },
+   {
+    "text": "新しい MCP サーバーのプログラムの自動作成",
+    "correct": false,
+    "why": "サーバーのプログラムを作る機能ではありません。"
+   },
+   {
+    "text": "MCP サーバーのツールの権限を、すべて許可",
+    "correct": false,
+    "why": "権限は settings.json などのルールで決めます。"
+   },
+   {
+    "text": "MCP サーバーとの会話の要約",
+    "correct": false,
+    "why": "会話の要約は /compact です。"
+   }
+  ],
+  "point": "/mcp＝サーバーの状態の確認・認証。追加は claude mcp add。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-mcp"
+ },
+ {
+  "id": "plus-cc-054",
+  "domain": "tools",
+  "skill": "Agentic Customization",
+  "level": 1,
+  "type": "single",
+  "stem": "Claude Code のプラグインの説明として、正しいものはどれですか。",
+  "options": [
+   {
+    "text": "スキル・エージェント・フック・MCP をまとめて配る仕組み",
+    "correct": true,
+    "why": "チームで同じ道具をそろえたいときに使います。/plugin で入れます。"
+   },
+   {
+    "text": "Claude のモデルを、速く動かすための追加の部品",
+    "correct": false,
+    "why": "モデルの性能を変えるものではありません。"
+   },
+   {
+    "text": "ターミナルの見た目を変える、色のテーマ",
+    "correct": false,
+    "why": "見た目だけの仕組みではありません。"
+   },
+   {
+    "text": "API キーを安全に保存しておく、管理の仕組み",
+    "correct": false,
+    "why": "キーの管理はシークレット管理の仕組みで行います。"
+   }
+  ],
+  "point": "プラグイン＝スキル・エージェント・フック・MCP などのまとまり。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-plugins"
+ },
+ {
+  "id": "plus-cc-055",
+  "domain": "tools",
+  "skill": "Agentic Customization",
+  "level": 1,
+  "type": "single",
+  "stem": "review というプラグインに入っている check というスキルを呼び出す書き方はどれですか。",
+  "options": [
+   {
+    "text": "/review:check",
+    "correct": true,
+    "why": "プラグインのスキルは /プラグイン名:スキル名 で呼びます。"
+   },
+   {
+    "text": "/check@review",
+    "correct": false,
+    "why": "この書き方は使えません。"
+   },
+   {
+    "text": "@review/check",
+    "correct": false,
+    "why": "@ はファイルの指定に使います。"
+   },
+   {
+    "text": "!review check",
+    "correct": false,
+    "why": "! はシェルのコマンドを実行するモードです。"
+   }
+  ],
+  "point": "プラグインのスキル → /プラグイン名:スキル名。",
+  "learn": "ccdv-f/learn/terms.html#t-cc-plugins"
  }
 ]
