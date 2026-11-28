@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCDV-F：開発の流れ（ディスカバリーから運用まで） | Claude 認定資格 学習サイト</title>
+<meta name="description" content="Claude を使ったアプリが、課題を見つけるところ（ディスカバリー）から、本番で動かし続けるところまで、どんな順番で作られるのかを図で追います。各段階で何をして、何を作るのかが分かります。">
+<script>try{var t=JSON.parse(localStorage.getItem('claude-cert:theme'));if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/learn.css">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="../../"><span class="brand-mark">C</span>Claude 認定資格 学習サイト</a>
+    <nav class="site-nav" aria-label="サイト内">
+      <a href="../../">トップ</a>
+      <a href="./" aria-current="page">CCDV-F 学習</a>
+      <a href="../exercises.html">CCDV-F 問題演習</a>
+      <a href="../plus.html">プラスONEチェック</a>
+      <a href="../../learn/messages-api/">Messages API</a>
+    </nav>
+    <button class="theme-toggle" type="button">🌓 自動</button>
+  </div>
+</header>
+
+<main class="learn">
+  <nav class="toc" id="toc" aria-label="目次"></nav>
+  <article class="prose">
+    <p class="breadcrumb"><a href="../../">トップ</a> › <a href="./">CCDV-F 学習</a> › 開発の流れ</p>
+    <h1>開発の流れ（ディスカバリーから運用まで） <span class="badge blue">全分野</span></h1>
+    <p class="lead">Claude を使ったアプリは、いきなりプロンプトを書くところからは始まりません。<b>「何に困っているのか」を見つけるところ（ディスカバリー）から始まり、本番で動かし続けるところまで</b>が1つの流れです。この章では、その流れを図で追います。</p>
+<div class="callout point"><p><b>試験との関係</b>：試験ガイドの「要件の理解（Understanding Requirements、3.4%）」と「システムのライフサイクル（Systems Life Cycle、2.8%）」が直接の範囲です。それに加えて、「どの段階で何をすべきか」を問う形で、設計・評価・デプロイメント・運用の問題にも広く関わります。</p></div>
+
+<h2 id="overview">全体の流れ：8つの段階</h2>
+<p>家を建てるときを思い浮かべてください。いきなり柱を立てる人はいません。まず「誰が住み、何に困っているか」を聞き（①）、「部屋は3つ、予算はいくら」と条件を決め（②）、設計図を描き（③）、完成したら何を確かめるかを決めてから（④）建て始めます（⑤⑥）。引き渡したあとも点検と修理が続きます（⑦⑧）。アプリの開発も同じです。</p>
+<svg class="fig-narrow" viewBox="0 0 360 640" role="img" aria-labelledby="f-overview">
+  <title id="f-overview">開発の8つの段階：ディスカバリー、要件定義、設計、評価の準備、実装とプロンプト、テスト、デプロイメント、運用と改善。運用で見つけた失敗は評価の準備と実装に戻る</title>
+  <defs><marker id="ar-ov" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="30" y="16" width="270" height="50" rx="10" class="d-box-accent"/><text x="46" y="38" class="d-text" font-weight="700">① ディスカバリー</text><text x="46" y="56" class="d-sub">本当の課題を見つける</text>
+  <path d="M165 66 L165 82" class="d-line" marker-end="url(#ar-ov)"/>
+  <rect x="30" y="84" width="270" height="50" rx="10" class="d-box-accent"/><text x="46" y="106" class="d-text" font-weight="700">② 要件定義</text><text x="46" y="124" class="d-sub">「できた」を測れる条件にする</text>
+  <path d="M165 134 L165 150" class="d-line" marker-end="url(#ar-ov)"/>
+  <rect x="30" y="152" width="270" height="50" rx="10" class="d-box-blue"/><text x="46" y="174" class="d-text" font-weight="700">③ 設計</text><text x="46" y="192" class="d-sub">仕組みとモデルを決める</text>
+  <path d="M165 202 L165 218" class="d-line" marker-end="url(#ar-ov)"/>
+  <rect x="30" y="220" width="270" height="50" rx="10" class="d-box-blue"/><text x="46" y="242" class="d-text" font-weight="700">④ 評価の準備</text><text x="46" y="260" class="d-sub">合格の基準と評価データを作る</text>
+  <path d="M165 270 L165 286" class="d-line" marker-end="url(#ar-ov)"/>
+  <rect x="30" y="288" width="270" height="50" rx="10" class="d-box"/><text x="46" y="310" class="d-text" font-weight="700">⑤ 実装・プロンプト</text><text x="46" y="328" class="d-sub">作って、評価で磨く</text>
+  <path d="M165 338 L165 354" class="d-line" marker-end="url(#ar-ov)"/>
+  <rect x="30" y="356" width="270" height="50" rx="10" class="d-box"/><text x="46" y="378" class="d-text" font-weight="700">⑥ テスト</text><text x="46" y="396" class="d-sub">部品と全体が正しく動くか</text>
+  <path d="M165 406 L165 422" class="d-line" marker-end="url(#ar-ov)"/>
+  <rect x="30" y="424" width="270" height="50" rx="10" class="d-box-ok"/><text x="46" y="446" class="d-text" font-weight="700">⑦ デプロイメント</text><text x="46" y="464" class="d-sub">少しずつ本番に出す</text>
+  <path d="M165 474 L165 490" class="d-line" marker-end="url(#ar-ov)"/>
+  <rect x="30" y="492" width="270" height="50" rx="10" class="d-box-ok"/><text x="46" y="514" class="d-text" font-weight="700">⑧ 運用・改善</text><text x="46" y="532" class="d-sub">見張って、直し続ける</text>
+  <path d="M300 517 L335 517 L335 245 L302 245" class="d-line-accent" marker-end="url(#ar-ov)"/>
+  <path d="M335 245 L335 41 L302 41" class="d-line-accent d-dash" marker-end="url(#ar-ov)"/>
+  <text x="350" y="381" text-anchor="middle" class="d-sub" transform="rotate(-90 350 381)">見つけた失敗は④⑤に戻す</text>
+  <text x="350" y="143" text-anchor="middle" class="d-sub" transform="rotate(-90 350 143)">大きく変わるなら①へ</text>
+  <rect x="30" y="572" width="14" height="14" rx="3" class="d-box-accent"/><text x="50" y="584" class="d-sub">決める（①②）</text>
+  <rect x="190" y="572" width="14" height="14" rx="3" class="d-box-blue"/><text x="210" y="584" class="d-sub">考えて準備する（③④）</text>
+  <rect x="30" y="604" width="14" height="14" rx="3" class="d-box"/><text x="50" y="616" class="d-sub">作って確かめる（⑤⑥）</text>
+  <rect x="190" y="604" width="14" height="14" rx="3" class="d-box-ok"/><text x="210" y="616" class="d-sub">届けて育てる（⑦⑧）</text>
+</svg>
+<p>ポイントは2つです。</p>
+<ul>
+<li><b>④ 評価の準備が、⑤ 実装より先にある</b>：何ができたら合格かを先に決めておかないと、作ったものが良いのか判断できません。LLM のアプリでは特に大事な順番です。</li>
+<li><b>⑧で終わらず、輪になっている</b>：LLM のアプリは、入力の傾向やモデルの更新で、コードを変えなくても品質が変わります。本番で見つけた失敗を④⑤に戻して直し続けます。</li>
+</ul>
+<p>この章では、ネットショップの問い合わせメールを担当の窓口に振り分けるアプリを例に、8つの段階を順に見ていきます。<a href="eval.html">評価（eval）とは何か</a> で使った例と同じです。</p>
+
+<h2 id="discovery">① ディスカバリー：本当の課題を見つける</h2>
+<p><b>ディスカバリー</b>（discovery）は「発見」という意味で、開発の最初に<b>「誰が、何に、どれくらい困っているのか」を聞き出して、本当に解くべき課題を見つける</b>段階です。日本語では「ヒアリング」「課題の発見」「現状の調査」などと呼ばれることもあります。</p>
+<p>依頼する人は、困りごとではなく<b>「解決策」の形で依頼してくる</b>ことがよくあります。「なぜ？」を繰り返して、その奥にある課題を見つけます。</p>
+<svg class="fig-narrow" viewBox="0 0 360 380" role="img" aria-labelledby="f-why">
+  <title id="f-why">「チャットボットを作りたい」という依頼を、なぜと掘り下げると、本当の課題は問い合わせの振り分けだと分かる</title>
+  <defs><marker id="ar-why" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="20" y="10" width="320" height="56" rx="10" class="d-box"/><text x="180" y="32" text-anchor="middle" class="d-sub">お客様からの依頼</text><text x="180" y="54" text-anchor="middle" class="d-text" font-weight="700">「AI のチャットボットを作りたい」</text>
+  <path d="M180 66 L180 96" class="d-line" marker-end="url(#ar-why)"/><text x="192" y="86" class="d-sub">なぜ？</text>
+  <rect x="20" y="98" width="320" height="56" rx="10" class="d-box"/><text x="180" y="120" text-anchor="middle" class="d-sub">聞いてみると…</text><text x="180" y="142" text-anchor="middle" class="d-text">問い合わせへの返信が遅いと言われる</text>
+  <path d="M180 154 L180 184" class="d-line" marker-end="url(#ar-why)"/><text x="192" y="174" class="d-sub">なぜ？</text>
+  <rect x="20" y="186" width="320" height="76" rx="10" class="d-box"/><text x="180" y="208" text-anchor="middle" class="d-sub">さらに聞くと…</text><text x="180" y="230" text-anchor="middle" class="d-text">1日300件のメールを人が読んで</text><text x="180" y="250" text-anchor="middle" class="d-text">担当に振り分けるのに、毎日3時間</text>
+  <path d="M180 262 L180 292" class="d-line" marker-end="url(#ar-why)"/>
+  <rect x="20" y="294" width="320" height="76" rx="10" class="d-box-ok"/><text x="180" y="316" text-anchor="middle" class="d-sub">見つかった本当の課題</text><text x="180" y="338" text-anchor="middle" class="d-text" font-weight="700">必要なのは「振り分け（分類）」</text><text x="180" y="358" text-anchor="middle" class="d-text">チャットボットでなくてもよい</text>
+</svg>
+<p>依頼どおりにチャットボットを作っていたら、お客様と会話する複雑な仕組みが必要になり、時間も費用もかかったはずです。課題が「振り分け」だと分かれば、<b>メールを5種類に分類するだけの、ずっと単純なアプリ</b>で解決できます。</p>
+
+<h3>ディスカバリーで確かめる6つのこと</h3>
+<svg class="fig-narrow" viewBox="0 0 360 300" role="img" aria-labelledby="f-six">
+  <title id="f-six">ディスカバリーで確かめる6つのこと：課題、人、今の流れ、データ、成功の指標、制約</title>
+  <rect x="10" y="8" width="164" height="86" rx="10" class="d-box-accent"/><text x="22" y="32" class="d-text" font-weight="700">課題</text><text x="22" y="54" class="d-sub">何に困っている？</text><text x="22" y="74" class="d-sub">どれくらい困っている？</text>
+  <rect x="186" y="8" width="164" height="86" rx="10" class="d-box"/><text x="198" y="32" class="d-text" font-weight="700">人</text><text x="198" y="54" class="d-sub">使う人・決める人</text><text x="198" y="74" class="d-sub">守る人（法務・運用）</text>
+  <rect x="10" y="104" width="164" height="86" rx="10" class="d-box"/><text x="22" y="128" class="d-text" font-weight="700">今の流れ</text><text x="22" y="150" class="d-sub">今はどうやっている？</text><text x="22" y="170" class="d-sub">件数と時間は？</text>
+  <rect x="186" y="104" width="164" height="86" rx="10" class="d-box-accent"/><text x="198" y="128" class="d-text" font-weight="700">データ</text><text x="198" y="150" class="d-sub">何が・どこに・どれだけ</text><text x="198" y="170" class="d-sub">個人情報は含まれる？</text>
+  <rect x="10" y="200" width="164" height="86" rx="10" class="d-box-accent"/><text x="22" y="224" class="d-text" font-weight="700">成功の指標</text><text x="22" y="246" class="d-sub">何がどれだけ</text><text x="22" y="266" class="d-sub">良くなれば成功？</text>
+  <rect x="186" y="200" width="164" height="86" rx="10" class="d-box"/><text x="198" y="224" class="d-text" font-weight="700">制約</text><text x="198" y="246" class="d-sub">予算・期限</text><text x="198" y="266" class="d-sub">規則・既存のシステム</text>
+</svg>
+<div class="table-wrap"><table>
+<tr><th>確かめること</th><th>聞くことの例</th><th>例のアプリでの答え</th></tr>
+<tr><td><b>課題</b></td><td>何に困っていますか。困ると何が起きますか</td><td>振り分けに毎日3時間。返信が遅れて苦情が来る</td></tr>
+<tr><td><b>人</b></td><td>誰が使い、誰が決め、誰の確認が要りますか</td><td>使う：窓口の担当者。決める：サポート部長。確認：情報システム部（個人情報）</td></tr>
+<tr><td><b>今の流れ</b></td><td>今はどんな手順ですか。件数と時間は</td><td>1日300件。2人で読み、5つの窓口に転送している</td></tr>
+<tr><td><b>データ</b></td><td>どんなデータがどこにありますか。機密度は</td><td>メール本文（氏名・住所を含む）。過去1年分の振り分け結果が残っている</td></tr>
+<tr><td><b>成功の指標</b></td><td>何がどれだけ良くなれば成功ですか</td><td>振り分けの時間をゼロに近づける。誤った振り分けは今（約5%）以下に</td></tr>
+<tr><td><b>制約</b></td><td>予算、期限、守るべき規則、つなぐシステムは</td><td>月の予算は3万円。メール本文を社外のログに残さない。既存の受付システムにつなぐ</td></tr>
+</table></div>
+<p>特に大事なのは<b>成功の指標</b>と<b>データ</b>です。成功の指標は、あとで④の評価の合格基準になります。データ（ここでは過去1年分の振り分け結果）は、そのまま④の評価データの材料になります。ディスカバリーで聞き漏らすと、後の段階で困ります。</p>
+
+<h3>そもそも LLM を使うべきか</h3>
+<p>ディスカバリーでは、<b>LLM を使わずに済まないか</b>も考えます。LLM は便利ですが、ふつうのプログラムより遅く、費用がかかり、出力がぶれます。</p>
+<svg class="fig-narrow" viewBox="0 0 360 250" role="img" aria-labelledby="f-llm">
+  <title id="f-llm">その判断を決まったルールで書けるならふつうのプログラム、文の意味を読む必要があるなら LLM を使う</title>
+  <defs><marker id="ar-llm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="20" y="10" width="320" height="56" rx="10" class="d-box-blue"/><text x="180" y="34" text-anchor="middle" class="d-text" font-weight="700">その判断は、決まったルールで</text><text x="180" y="54" text-anchor="middle" class="d-text" font-weight="700">書けるか？</text>
+  <path d="M120 66 L90 116" class="d-line" marker-end="url(#ar-llm)"/><text x="62" y="96" class="d-sub">はい</text>
+  <path d="M240 66 L270 116" class="d-line" marker-end="url(#ar-llm)"/><text x="262" y="92" class="d-sub">いいえ</text>
+  <rect x="10" y="118" width="160" height="94" rx="10" class="d-box-ok"/><text x="90" y="142" text-anchor="middle" class="d-text" font-weight="700">ふつうの</text><text x="90" y="160" text-anchor="middle" class="d-text" font-weight="700">プログラム</text><text x="90" y="182" text-anchor="middle" class="d-sub">速い・安い・毎回同じ</text><text x="90" y="200" text-anchor="middle" class="d-sub">例：郵便番号のチェック</text>
+  <rect x="190" y="118" width="160" height="94" rx="10" class="d-box-accent"/><text x="270" y="142" text-anchor="middle" class="d-text" font-weight="700">LLM を使う</text><text x="270" y="164" text-anchor="middle" class="d-sub">文の意味を読んで判断</text><text x="270" y="182" text-anchor="middle" class="d-sub">表現がばらばらでもよい</text><text x="270" y="200" text-anchor="middle" class="d-sub">例：問い合わせの分類</text>
+  <text x="180" y="238" text-anchor="middle" class="d-sub">迷ったら、いちばん単純な方法から試す</text>
+</svg>
+<p>問い合わせメールは、同じ「返品したい」でも書き方が人によってばらばらです。キーワードの一致のような決まったルールでは振り分けきれないので、文の意味を読める LLM が向いています。</p>
+
+<div class="sample">
+<p class="sample-title">ディスカバリーのメモ（例）</p>
+<ul>
+<li><b>課題</b>：問い合わせメール（1日約300件）を2人で読み、5つの窓口に振り分けている。毎日約3時間。返信の遅れで苦情が出ている。</li>
+<li><b>本当に必要なもの</b>：会話するチャットボットではなく、メールの自動振り分け。</li>
+<li><b>成功の指標</b>：振り分けの作業時間を1日30分以下に。誤った振り分けは今と同じ約5%以下。</li>
+<li><b>データ</b>：過去1年分のメールと振り分け結果（約7万件）。氏名・住所・電話番号を含む。</li>
+<li><b>制約</b>：月3万円以内。メール本文を社外のログに残さない。3か月後に開始したい。</li>
+<li><b>関係者</b>：サポート部長（決める）、窓口の担当者（使う）、情報システム部（個人情報の確認）。</li>
+</ul>
+</div>
+<div class="exam-tip">「依頼された機能をそのまま作る」より「まず課題・利用者・成功の指標を確かめる」が正解になりやすい。「最初に何をすべきか」と問われたら、作り始める前に確かめることを選ぶ。</div>
+
+<h2 id="requirements">② 要件定義：「できた」を測れる条件にする</h2>
+<p><b>要件</b>とは、アプリが満たすべき条件のことです。ディスカバリーで聞いた「困りごと」や「成功の指標」を、<b>あとで「できた・できていない」を判定できる形</b>に書き直します。</p>
+<svg class="fig-narrow" viewBox="0 0 360 270" role="img" aria-labelledby="f-req">
+  <title id="f-req">業務の言葉を測れる要件に言い換える：待たせたくないは5秒以内、間違いは困るは正答率95%以上、予算は1件1円以下</title>
+  <defs><marker id="ar-req" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <text x="78" y="20" text-anchor="middle" class="d-sub">業務の言葉（あいまい）</text><text x="270" y="20" text-anchor="middle" class="d-sub">測れる要件</text>
+  <rect x="8" y="34" width="140" height="64" rx="10" class="d-box"/><text x="78" y="60" text-anchor="middle" class="d-text">お客様を</text><text x="78" y="80" text-anchor="middle" class="d-text">待たせたくない</text>
+  <path d="M150 66 L184 66" class="d-line" marker-end="url(#ar-req)"/>
+  <rect x="188" y="34" width="164" height="64" rx="10" class="d-box-ok"/><text x="270" y="60" text-anchor="middle" class="d-text">1件の処理は</text><text x="270" y="80" text-anchor="middle" class="d-text" font-weight="700">5秒以内</text>
+  <rect x="8" y="114" width="140" height="64" rx="10" class="d-box"/><text x="78" y="151" text-anchor="middle" class="d-text">間違いは困る</text>
+  <path d="M150 146 L184 146" class="d-line" marker-end="url(#ar-req)"/>
+  <rect x="188" y="114" width="164" height="64" rx="10" class="d-box-ok"/><text x="270" y="140" text-anchor="middle" class="d-text">評価データ300件で</text><text x="270" y="160" text-anchor="middle" class="d-text" font-weight="700">正答率95%以上</text>
+  <rect x="8" y="194" width="140" height="64" rx="10" class="d-box"/><text x="78" y="220" text-anchor="middle" class="d-text">予算は</text><text x="78" y="240" text-anchor="middle" class="d-text">月3万円まで</text>
+  <path d="M150 226 L184 226" class="d-line" marker-end="url(#ar-req)"/>
+  <rect x="188" y="194" width="164" height="64" rx="10" class="d-box-ok"/><text x="270" y="220" text-anchor="middle" class="d-text">1件あたりの費用は</text><text x="270" y="240" text-anchor="middle" class="d-text" font-weight="700">3円以下</text>
+</svg>
+<p class="fig-caption">月3万円 ÷（1日300件 × 30日）＝ 1件あたり約3円</p>
+<p>要件は2種類に分けて書きます。</p>
+<div class="compare">
+<div><h4>機能要件：「何をするか」</h4><ul><li>メールを「配送」「返品・交換」「支払い」「苦情」「その他」に分類する</li><li>分類に応じて、担当の窓口のキューに入れる</li><li>判断できないものは人の確認に回す</li></ul></div>
+<div><h4>非機能要件：「どのように」</h4><ul><li>速さ：1件5秒以内</li><li>品質：正答率95%以上</li><li>費用：1件3円以下</li><li>安全：メール本文を社外のログに残さない</li></ul></div>
+</div>
+<p>非機能要件が決まると、③の設計で「どのモデルを使うか」「すぐに返すか、まとめて処理するか」を選べるようになります。例えば「5秒以内」「1件3円以下」なら、速くて安いモデルで足りるかを最初に試します。詳しくは <a href="app.html#requirements">アプリケーションと統合「要件の理解」</a> にあります。</p>
+<div class="exam-tip">「使いやすく」「高品質に」「なるべく速く」は要件として不十分。<b>数字で測れる形</b>に言い換えたものが正解になりやすい。</div>
+
+<h2 id="design">③ 設計：仕組みとモデルを決める</h2>
+<p>要件を満たすために、<b>どんな部品を、どんな順番でつなぐか</b>を決めます。家でいえば設計図です。</p>
+<svg class="fig-narrow" viewBox="0 0 360 420" role="img" aria-labelledby="f-arch">
+  <title id="f-arch">問い合わせ振り分けアプリの設計：メール受信、前処理、Claude で分類、検証、担当の窓口へ。検証に通らないものは人が確認する</title>
+  <defs><marker id="ar-arch" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="20" y="10" width="210" height="56" rx="10" class="d-box"/><text x="36" y="34" class="d-text" font-weight="700">メールが届く</text><text x="36" y="54" class="d-sub">今の受付システムから</text>
+  <path d="M125 66 L125 94" class="d-line" marker-end="url(#ar-arch)"/>
+  <rect x="20" y="96" width="210" height="56" rx="10" class="d-box"/><text x="36" y="120" class="d-text" font-weight="700">前処理（コード）</text><text x="36" y="140" class="d-sub">署名を除く・個人情報を伏せる</text>
+  <path d="M125 152 L125 180" class="d-line" marker-end="url(#ar-arch)"/>
+  <rect x="20" y="182" width="210" height="56" rx="10" class="d-box-accent"/><text x="36" y="206" class="d-text" font-weight="700">Claude で分類</text><text x="36" y="226" class="d-sub">速いモデル・5種類から選ばせる</text>
+  <path d="M125 238 L125 266" class="d-line" marker-end="url(#ar-arch)"/>
+  <rect x="20" y="268" width="210" height="56" rx="10" class="d-box"/><text x="36" y="292" class="d-text" font-weight="700">検証（コード）</text><text x="36" y="312" class="d-sub">5種類のどれかになっている？</text>
+  <path d="M125 324 L125 352" class="d-line" marker-end="url(#ar-arch)"/>
+  <rect x="20" y="354" width="210" height="56" rx="10" class="d-box-ok"/><text x="36" y="378" class="d-text" font-weight="700">担当の窓口へ</text><text x="36" y="398" class="d-sub">キューに入れる</text>
+  <path d="M230 296 L300 296 L300 336" class="d-line" marker-end="url(#ar-arch)"/><text x="242" y="288" class="d-sub">通らない</text>
+  <rect x="248" y="338" width="104" height="72" rx="10" class="d-box-ng"/><text x="300" y="366" text-anchor="middle" class="d-text" font-weight="700">人が確認</text><text x="300" y="388" text-anchor="middle" class="d-sub">「その他」や</text><text x="300" y="404" text-anchor="middle" class="d-sub">判断できない</text>
+</svg>
+<p>図のように、<b>Claude に任せるのは「分類」の1か所だけ</b>です。署名の除去や、答えが5種類のどれかになっているかの確認は、ふつうのコードで確実に行います。設計で決めることは、主に次のとおりです。</p>
+<div class="table-wrap"><table>
+<tr><th>決めること</th><th>例のアプリでの決定</th><th>理由（どの要件から来たか）</th></tr>
+<tr><td><b>構成</b>：ワークフローかエージェントか</td><td>決まった順番で処理するワークフロー</td><td>手順が毎回同じ。いちばん単純な方法で足りる</td></tr>
+<tr><td><b>モデル</b></td><td>まず速くて安いモデルで試す</td><td>1件5秒以内・3円以下。足りなければ上位のモデルを評価する</td></tr>
+<tr><td><b>出力の形</b></td><td>5種類の選択肢に限った構造化出力</td><td>後の処理（キューに入れる）が機械なので、形を決める</td></tr>
+<tr><td><b>失敗したとき</b></td><td>人の確認に回す。API のエラーは待って再試行</td><td>誤りはゼロにならない前提で、行き先を決めておく</td></tr>
+<tr><td><b>安全</b></td><td>個人情報を伏せてから送る。本文はログに残さない</td><td>制約「本文を社外のログに残さない」</td></tr>
+<tr><td><b>観測</b></td><td>分類の結果・処理時間・費用・エラーを記録する</td><td>⑧で品質と費用を見張るため</td></tr>
+</table></div>
+<p>構成の選び方は <a href="agents.html">エージェントとワークフロー</a>、モデルの選び方は <a href="model.html">モデル選択と最適化</a>、安全の仕組みは <a href="security.html">セキュリティと安全</a> で詳しく扱っています。</p>
+<div class="exam-tip">「いきなり自律的なエージェントにする」より「要件を満たすいちばん単純な構成」が正解になりやすい。確実にしたい処理（形の確認、個人情報の除去）はモデルに頼らずコードで行う。</div>
+
+<h2 id="eval-prep">④ 評価の準備：合格の基準とデータを先に作る</h2>
+<p>作り始める前に、<b>「何ができたら合格か（成功基準）」と、それを測るための評価データ</b>を用意します。Anthropic のドキュメントも、まず成功基準を決め、それを測るテストを作ってから、プロンプトの改善に進む順番で説明しています。</p>
+<svg class="fig-narrow" viewBox="0 0 360 250" role="img" aria-labelledby="f-order">
+  <title id="f-order">よくある失敗の順番は、作る、何回か試す、本番に出す、苦情で気づく。おすすめの順番は、基準と評価データ、作る、評価で確かめる、合格したら出す</title>
+  <defs><marker id="ar-ord" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <text x="8" y="20" class="d-text" font-weight="700">✕ よくある失敗の順番</text>
+  <rect x="8" y="30" width="76" height="58" rx="8" class="d-box"/><text x="46" y="64" text-anchor="middle" class="d-sub">作る</text>
+  <path d="M84 59 L94 59" class="d-line" marker-end="url(#ar-ord)"/>
+  <rect x="96" y="30" width="76" height="58" rx="8" class="d-box"/><text x="134" y="56" text-anchor="middle" class="d-sub">何回か</text><text x="134" y="74" text-anchor="middle" class="d-sub">試す</text>
+  <path d="M172 59 L182 59" class="d-line" marker-end="url(#ar-ord)"/>
+  <rect x="184" y="30" width="76" height="58" rx="8" class="d-box"/><text x="222" y="56" text-anchor="middle" class="d-sub">本番に</text><text x="222" y="74" text-anchor="middle" class="d-sub">出す</text>
+  <path d="M260 59 L270 59" class="d-line" marker-end="url(#ar-ord)"/>
+  <rect x="272" y="30" width="80" height="58" rx="8" class="d-box-ng"/><text x="312" y="56" text-anchor="middle" class="d-sub">苦情で</text><text x="312" y="74" text-anchor="middle" class="d-sub">気づく</text>
+  <text x="8" y="128" class="d-text" font-weight="700">◯ おすすめの順番</text>
+  <rect x="8" y="138" width="76" height="58" rx="8" class="d-box-blue"/><text x="46" y="164" text-anchor="middle" class="d-sub">基準と</text><text x="46" y="182" text-anchor="middle" class="d-sub">評価データ</text>
+  <path d="M84 167 L94 167" class="d-line" marker-end="url(#ar-ord)"/>
+  <rect x="96" y="138" width="76" height="58" rx="8" class="d-box"/><text x="134" y="172" text-anchor="middle" class="d-sub">作る</text>
+  <path d="M172 167 L182 167" class="d-line" marker-end="url(#ar-ord)"/>
+  <rect x="184" y="138" width="76" height="58" rx="8" class="d-box"/><text x="222" y="164" text-anchor="middle" class="d-sub">評価で</text><text x="222" y="182" text-anchor="middle" class="d-sub">確かめる</text>
+  <path d="M260 167 L270 167" class="d-line" marker-end="url(#ar-ord)"/>
+  <rect x="272" y="138" width="80" height="58" rx="8" class="d-box-ok"/><text x="312" y="164" text-anchor="middle" class="d-sub">合格したら</text><text x="312" y="182" text-anchor="middle" class="d-sub">出す</text>
+  <text x="180" y="232" text-anchor="middle" class="d-sub">先に基準を決めると、「できた」を数字で言える</text>
+</svg>
+<ul>
+<li><b>成功基準</b>：②の要件をそのまま使います。「評価データ300件で正答率95%以上」「1件5秒以内」「1件3円以下」。</li>
+<li><b>評価データ</b>：ディスカバリーで見つけた「過去1年分の振り分け結果」から300件を選び、個人情報を伏せて使います。よくあるメールだけでなく、返品と苦情の区別が難しいメールや空のメールも入れます。</li>
+</ul>
+<p>評価データの形、採点の方法、結果の読み方は <a href="eval.html">評価（eval）とは何か</a> で詳しく説明しています。</p>
+
+<h2 id="build">⑤ 実装・プロンプト：作って、評価で磨く</h2>
+<p>コードとプロンプトを書きます。最初から完璧なプロンプトは書けないので、<b>書く → 評価する → 間違えた例を読む → 直す</b>を、成功基準を満たすまで繰り返します。</p>
+<svg class="fig-narrow" viewBox="0 0 360 300" role="img" aria-labelledby="f-loop">
+  <title id="f-loop">実装の輪：書く、評価、失敗を読む、直す、を成功基準を満たすまで回す</title>
+  <defs><marker id="ar-loop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-accent"/></marker></defs>
+  <rect x="116" y="10" width="128" height="54" rx="10" class="d-box"/><text x="180" y="34" text-anchor="middle" class="d-text" font-weight="700">① 書く</text><text x="180" y="53" text-anchor="middle" class="d-sub">プロンプト・コード</text>
+  <rect x="245" y="118" width="110" height="60" rx="10" class="d-box-blue"/><text x="300" y="144" text-anchor="middle" class="d-text" font-weight="700">② 評価</text><text x="300" y="164" text-anchor="middle" class="d-sub">300件を流す</text>
+  <rect x="116" y="232" width="128" height="54" rx="10" class="d-box"/><text x="180" y="256" text-anchor="middle" class="d-text" font-weight="700">③ 失敗を読む</text><text x="180" y="275" text-anchor="middle" class="d-sub">何が苦手か探す</text>
+  <rect x="5" y="118" width="110" height="60" rx="10" class="d-box"/><text x="60" y="144" text-anchor="middle" class="d-text" font-weight="700">④ 直す</text><text x="60" y="164" text-anchor="middle" class="d-sub">1か所ずつ変える</text>
+  <path d="M244 37 Q300 37 300 116" class="d-line-accent" marker-end="url(#ar-loop)"/>
+  <path d="M300 178 Q300 259 246 259" class="d-line-accent" marker-end="url(#ar-loop)"/>
+  <path d="M116 259 Q60 259 60 180" class="d-line-accent" marker-end="url(#ar-loop)"/>
+  <path d="M60 118 Q60 37 114 37" class="d-line-accent" marker-end="url(#ar-loop)"/>
+  <text x="180" y="146" text-anchor="middle" class="d-text" font-weight="700">合格するまで回す</text>
+  <text x="180" y="168" text-anchor="middle" class="d-sub">基準を満たしたら⑥へ</text>
+</svg>
+<p>例えば1回目の評価で「返品と苦情の区別が苦手」と分かったら、プロンプトに区別の基準と例を足して、もう一度評価します。このとき、<b>一度に1か所だけ変える</b>と、どの変更が効いたかが分かります。プロンプトはコードと同じように<b>版で管理</b>し、どの版で何点だったかを残します。</p>
+<p>プロンプトの書き方は <a href="prompt.html">プロンプトとコンテキスト</a>、API の使い方は <a href="../../learn/messages-api/">Messages API</a> で扱っています。</p>
+
+<h2 id="test">⑥ テスト：部品と全体が正しく動くか</h2>
+<p>評価が「LLM の出力の質」を測るのに対して、テストは<b>プログラムが決めたとおりに動くか</b>を確かめます。小さい単位から順に確かめます。</p>
+<svg class="fig-narrow" viewBox="0 0 360 290" role="img" aria-labelledby="f-pyr">
+  <title id="f-pyr">テストのピラミッド：下から単体テスト、結合テスト、E2E テスト。下ほど数が多く速い</title>
+  <polygon points="180,10 233,90 127,90" class="d-box-accent"/>
+  <polygon points="127,90 233,90 287,170 73,170" class="d-box-blue"/>
+  <polygon points="73,170 287,170 340,250 20,250" class="d-box-ok"/>
+  <text x="180" y="70" text-anchor="middle" class="d-text" font-weight="700">E2E</text>
+  <text x="180" y="126" text-anchor="middle" class="d-text" font-weight="700">結合テスト</text><text x="180" y="148" text-anchor="middle" class="d-sub">部品のつながり</text>
+  <text x="180" y="206" text-anchor="middle" class="d-text" font-weight="700">単体テスト</text><text x="180" y="228" text-anchor="middle" class="d-sub">関数1つ・API はモックに</text>
+  <text x="180" y="278" text-anchor="middle" class="d-sub">下ほど数が多く速い。上ほど少ないが本物に近い</text>
+</svg>
+<div class="table-wrap"><table>
+<tr><th>テスト</th><th>例のアプリで確かめること</th></tr>
+<tr><td><b>単体テスト</b></td><td>前処理の関数が署名を除き、電話番号を伏せるか。検証の関数が「5種類以外」をはじくか。Claude の応答は決まった答えを返す偽物（モック）に置き換える</td></tr>
+<tr><td><b>結合テスト</b></td><td>受付システムから届いたメールが、前処理 → 分類 → キューまで正しく渡るか</td></tr>
+<tr><td><b>E2E テスト</b></td><td>テスト用のメールを1通送り、担当の窓口の画面に表示されるまでを通して確かめる</td></tr>
+</table></div>
+<p>テストは「毎回同じ結果」を期待するので、出力がぶれる LLM の部分はモックに置き換えるか、評価のほうで割合を測ります。用語は <a href="terms.html#t-test-levels">用語集のテストの種類</a> にあります。</p>
+
+<h2 id="deploy">⑦ デプロイメント：少しずつ本番に出す</h2>
+<p>評価とテストに合格したら、本番で利用者に使ってもらいます。いきなり全員に出すのではなく、<b>一部から始めて、問題がなければ広げます</b>。</p>
+<svg class="fig-narrow" viewBox="0 0 360 280" role="img" aria-labelledby="f-stairs">
+  <title id="f-stairs">段階的なリリース：まず5%、問題がなければ25%、最後に100%。問題が出たら前の版に戻す</title>
+  <defs><marker id="ar-st" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow-accent"/></marker>
+  <marker id="ar-st2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <text x="20" y="20" class="d-sub">新しい版を使う利用者の割合</text>
+  <path d="M20 230 L345 230" class="d-line"/>
+  <rect x="35" y="208" width="70" height="22" rx="4" class="d-box-blue"/><text x="70" y="200" text-anchor="middle" class="d-text" font-weight="700">5%</text>
+  <rect x="140" y="170" width="70" height="60" rx="4" class="d-box-blue"/><text x="175" y="162" text-anchor="middle" class="d-text" font-weight="700">25%</text>
+  <rect x="245" y="60" width="80" height="170" rx="4" class="d-box-ok"/><text x="285" y="52" text-anchor="middle" class="d-text" font-weight="700">100%</text>
+  <path d="M108 219 L136 200" class="d-line" marker-end="url(#ar-st2)"/>
+  <path d="M213 190 L241 150" class="d-line" marker-end="url(#ar-st2)"/>
+  <text x="70" y="250" text-anchor="middle" class="d-sub">まず一部</text><text x="175" y="250" text-anchor="middle" class="d-sub">広げる</text><text x="285" y="250" text-anchor="middle" class="d-sub">全員</text>
+  <text x="180" y="272" text-anchor="middle" class="d-sub">各段階で数日ようすを見て、数字が悪化しないか確かめる</text>
+  <path d="M175 166 C175 110 70 110 70 186" class="d-line-accent d-dash" marker-end="url(#ar-st)"/>
+  <text x="122" y="100" text-anchor="middle" class="d-sub">問題が出たら戻す</text>
+</svg>
+<ul>
+<li><b>カナリアリリース</b>：図のように、一部の利用者から出して広げていく方法。問題が起きても影響が小さく済みます。</li>
+<li><b>ロールバック（切り戻し）</b>：問題が起きたら前の版に戻すこと。<b>出す前に、戻す手順を用意しておきます</b>。プロンプトやモデルの設定を1か所で切り替えられるようにしておくと、すぐに戻せます。</li>
+</ul>
+<p>「デプロイメント」という言葉の意味の広さは <a href="terms.html#deploy">用語集のデプロイメント</a> で説明しています。</p>
+
+<h2 id="operate">⑧ 運用・改善：見張って、直し続ける</h2>
+<p>本番に出したら終わりではありません。LLM のアプリは、<b>コードを1行も変えなくても品質が変わる</b>ことがあります。利用者の書き方が変わる、新しい種類の問い合わせが増える、モデルが更新される、といった理由です。</p>
+<svg class="fig-narrow" viewBox="0 0 360 340" role="img" aria-labelledby="f-ops">
+  <title id="f-ops">運用の流れ：本番で動かし、見張り、変化に気づいたら、失敗例を評価データに足して直すか、大きな変化なら最初から考え直す</title>
+  <defs><marker id="ar-ops" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="d-arrow"/></marker></defs>
+  <rect x="40" y="10" width="280" height="54" rx="10" class="d-box-ok"/><text x="180" y="42" text-anchor="middle" class="d-text" font-weight="700">本番で動かす</text>
+  <path d="M180 64 L180 84" class="d-line" marker-end="url(#ar-ops)"/>
+  <rect x="40" y="86" width="280" height="56" rx="10" class="d-box"/><text x="180" y="110" text-anchor="middle" class="d-text" font-weight="700">見張る（監視）</text><text x="180" y="130" text-anchor="middle" class="d-sub">エラー率・速さ・費用・出力の質</text>
+  <path d="M180 142 L180 162" class="d-line" marker-end="url(#ar-ops)"/>
+  <rect x="40" y="164" width="280" height="56" rx="10" class="d-box-accent"/><text x="180" y="188" text-anchor="middle" class="d-text" font-weight="700">変化に気づく</text><text x="180" y="208" text-anchor="middle" class="d-sub">品質の低下・新しい失敗・費用の増加</text>
+  <path d="M140 220 L92 256" class="d-line" marker-end="url(#ar-ops)"/>
+  <path d="M220 220 L268 256" class="d-line" marker-end="url(#ar-ops)"/>
+  <rect x="10" y="258" width="164" height="74" rx="10" class="d-box-blue"/><text x="92" y="282" text-anchor="middle" class="d-text" font-weight="700">失敗例を評価データへ</text><text x="92" y="302" text-anchor="middle" class="d-sub">→ ⑤で直して</text><text x="92" y="320" text-anchor="middle" class="d-sub">→ ⑦で少しずつ出す</text>
+  <rect x="186" y="258" width="164" height="74" rx="10" class="d-box"/><text x="268" y="282" text-anchor="middle" class="d-text" font-weight="700">大きな変化</text><text x="268" y="302" text-anchor="middle" class="d-sub">→ ①から考え直す</text><text x="268" y="320" text-anchor="middle" class="d-sub">例：新しい窓口ができた</text>
+</svg>
+<div class="table-wrap"><table>
+<tr><th>運用ですること</th><th>例のアプリでは</th></tr>
+<tr><td><b>監視</b></td><td>「その他」に入る割合、人の確認に回る件数、処理時間、1日の費用を毎日見る。担当者が窓口を付け替えた件数を「誤りの数」として数える</td></tr>
+<tr><td><b>改善</b></td><td>付け替えられたメールを評価データに足し、プロンプトを直して評価し、少しずつ出す</td></tr>
+<tr><td><b>モデルの更新への備え</b></td><td>使うモデルの版を固定しておく。提供終了が告知されたら、新しいモデルを評価データで比べてから移行する</td></tr>
+<tr><td><b>大きな変化</b></td><td>「定期便」という新しい窓口ができた → 分類の種類が変わるので、①②から考え直す</td></tr>
+</table></div>
+<p>監視に使う用語（インストルメンテーション、オブザーバビリティ、テレメトリ）は <a href="terms.html#ops">用語集の運用と観測</a>、ライフサイクルの要点は <a href="app.html#lifecycle">アプリケーションと統合「システムのライフサイクル」</a> にあります。</p>
+<div class="exam-tip">「エラーは出ていないのに、品質が下がった」→ エラー率の監視だけでは気づけない。出力の質を継続して見張り、失敗例を評価データに足す。「モデルが更新されて挙動が変わった」→ 版の固定と、評価してからの切り替え。</div>
+
+<h2 id="thread">8つの段階をつなぐ1本の糸</h2>
+<p>8つの段階はばらばらではありません。①で決めた<b>成功の指標</b>が、形を変えながら最後まで使われます。</p>
+<svg class="fig-narrow" viewBox="0 0 360 372" role="img" aria-labelledby="f-thread">
+  <title id="f-thread">成功の指標が、ディスカバリーから運用まで形を変えて使われる</title>
+  <path d="M50 30 L50 340" class="d-line-accent"/>
+  <rect x="10" y="10" width="80" height="56" rx="10" class="d-box-accent"/><text x="50" y="34" text-anchor="middle" class="d-text" font-weight="700">①</text><text x="50" y="54" text-anchor="middle" class="d-sub">見つける</text>
+  <rect x="100" y="10" width="250" height="56" rx="10" class="d-box"/><text x="114" y="34" class="d-sub">成功の指標</text><text x="114" y="54" class="d-text">振り分けを速く、正確に</text>
+  <rect x="10" y="82" width="80" height="56" rx="10" class="d-box-accent"/><text x="50" y="106" text-anchor="middle" class="d-text" font-weight="700">②</text><text x="50" y="126" text-anchor="middle" class="d-sub">要件</text>
+  <rect x="100" y="82" width="250" height="56" rx="10" class="d-box"/><text x="114" y="106" class="d-sub">測れる要件</text><text x="114" y="126" class="d-text">正答率95%以上・5秒以内</text>
+  <rect x="10" y="154" width="80" height="56" rx="10" class="d-box-blue"/><text x="50" y="178" text-anchor="middle" class="d-text" font-weight="700">④</text><text x="50" y="198" text-anchor="middle" class="d-sub">評価</text>
+  <rect x="100" y="154" width="250" height="56" rx="10" class="d-box"/><text x="114" y="178" class="d-sub">成功基準と評価データ</text><text x="114" y="198" class="d-text">300件で95%以上かを測る</text>
+  <rect x="10" y="226" width="80" height="56" rx="10" class="d-box-ok"/><text x="50" y="250" text-anchor="middle" class="d-text" font-weight="700">⑦</text><text x="50" y="270" text-anchor="middle" class="d-sub">出す</text>
+  <rect x="100" y="226" width="250" height="56" rx="10" class="d-box"/><text x="114" y="250" class="d-sub">リリースの判定</text><text x="114" y="270" class="d-text">基準を満たせば本番へ</text>
+  <rect x="10" y="298" width="80" height="56" rx="10" class="d-box-ok"/><text x="50" y="322" text-anchor="middle" class="d-text" font-weight="700">⑧</text><text x="50" y="342" text-anchor="middle" class="d-sub">見張る</text>
+  <rect x="100" y="298" width="250" height="56" rx="10" class="d-box"/><text x="114" y="322" class="d-sub">監視の指標</text><text x="114" y="342" class="d-text">本番でも同じ物差しで見る</text>
+</svg>
+<p>最初に成功の指標を決めておかないと、要件も、評価の基準も、リリースの判定も、監視で見る数字も決まりません。<b>ディスカバリーが最初に来る理由</b>はここにあります。</p>
+
+<h2 id="deliverables">各段階で作るもの</h2>
+<div class="table-wrap"><table>
+<tr><th>段階</th><th>答える問い</th><th>作るもの（成果物）</th></tr>
+<tr><td>① ディスカバリー</td><td>誰が、何に、どれくらい困っている？</td><td>課題の整理メモ、関係者の一覧、成功の指標</td></tr>
+<tr><td>② 要件定義</td><td>何を、どこまでできれば合格？</td><td>機能要件・非機能要件の一覧（数字つき）</td></tr>
+<tr><td>③ 設計</td><td>どんな仕組みで実現する？</td><td>構成図、モデルの選定理由、失敗時の扱い、設計の判断の記録</td></tr>
+<tr><td>④ 評価の準備</td><td>合格をどう測る？</td><td>成功基準、評価データ、採点の方法</td></tr>
+<tr><td>⑤ 実装・プロンプト</td><td>作ったものは基準を満たす？</td><td>コード、版を管理したプロンプト、評価の結果</td></tr>
+<tr><td>⑥ テスト</td><td>プログラムは決めたとおりに動く？</td><td>単体・結合・E2E のテスト</td></tr>
+<tr><td>⑦ デプロイメント</td><td>安全に本番に出せる？</td><td>リリースの計画（段階と判定の基準）、切り戻しの手順</td></tr>
+<tr><td>⑧ 運用・改善</td><td>本番で品質を保てている？</td><td>監視の画面と通知、改善の記録、更新した評価データ</td></tr>
+</table></div>
+
+<h2 id="mistakes">よくある間違い</h2>
+<div class="table-wrap"><table>
+<tr><th>よくある間違い</th><th>何が困るか</th><th>正しくは</th></tr>
+<tr><td>依頼された機能をそのまま作り始める</td><td>本当の課題とずれ、作り直しになる</td><td>①で課題と成功の指標を確かめてから</td></tr>
+<tr><td>要件が「速く」「正確に」だけ</td><td>完成したかどうか判定できない</td><td>②で数字にする（5秒以内、95%以上）</td></tr>
+<tr><td>最初から自律的なエージェントにする</td><td>遅く、高く、予測しにくい</td><td>③で要件を満たすいちばん単純な構成を選ぶ</td></tr>
+<tr><td>何回か試して良さそうなので出す</td><td>出力のぶれや一部の入力での失敗に気づけない</td><td>④⑤で評価データを使って数字で判定する</td></tr>
+<tr><td>いきなり全員に出す</td><td>問題が起きると全員に影響する</td><td>⑦で一部から出し、戻す手順を用意する</td></tr>
+<tr><td>出したら終わり</td><td>品質の低下やモデルの更新に気づけない</td><td>⑧で見張り、失敗を評価データに戻す</td></tr>
+</table></div>
+
+<div class="key-points"><h3>この章のまとめ</h3><ul>
+<li>開発は ①ディスカバリー → ②要件定義 → ③設計 → ④評価の準備 → ⑤実装 → ⑥テスト → ⑦デプロイメント → ⑧運用・改善 の流れ。⑧から④⑤（大きな変化なら①）に戻る輪になっている。</li>
+<li>ディスカバリーは「本当の課題」を見つける段階。依頼は解決策の形で来るので、「なぜ？」で掘り下げる。成功の指標とデータを必ず確かめる。</li>
+<li>要件は数字で測れる形に。それがそのまま評価の成功基準になる。</li>
+<li>設計は、要件を満たすいちばん単純な構成から。確実にしたい処理はコードで。</li>
+<li>評価の準備は実装より先。作ったら評価で磨き、合格したら一部から本番に出す。</li>
+<li>LLM のアプリはコードを変えなくても品質が変わる。出した後も見張って直し続ける。</li>
+</ul></div>
+
+    <div class="page-nav">
+      <a class="btn" href="./">← CCDV-F 学習の目次</a>
+      <a class="btn primary" href="eval.html">評価（eval）とは何か →</a>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">非公式の学習用コンテンツです。試験範囲は各試験の現行ガイド（v1.0）にもとづきます。</footer>
+<script type="module" src="../../assets/js/learn.js"></script>
+</body>
+</html>

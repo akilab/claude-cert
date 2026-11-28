@@ -69,3 +69,7 @@
 .term h3 small { font-size: 13px; font-weight: 400; color: var(--ink-3); margin-left: 6px; }
 .term .diff { font-size: 14px; background: var(--surface-2); border-radius: 8px; padding: 6px 12px; }
 .term:target { background: var(--accent-soft); border-radius: 10px; padding-left: 12px; padding-right: 12px; }
+
+/* スマホでも文字が小さくならないよう、縦長に描いた図（幅 360 の viewBox） */
+.prose svg.fig-narrow { display: block; width: 100%; max-width: 440px; margin: 18px auto; }
+.prose .fig-caption { text-align: center; font-size: 13px; color: var(--ink-2); margin: -8px 0 18px; }
